@@ -1,0 +1,19 @@
+{
+  "name": "cryptoarb",
+  "version": "1.0.0",
+  "description": "Arbitrage Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bibbycodes/cryptoArb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bibbycodes/cryptoArb/issues"
+  },
+  "homepage": "https://github.com/bibbycodes/cryptoArb#readme"
+}
