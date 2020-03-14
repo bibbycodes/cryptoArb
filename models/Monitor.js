@@ -11,34 +11,34 @@ const market = {
   quote: "USDT"
 }
 
-binance.subscribeTicker(market)
-coinbase.subscribeTicker(market)
-coinbase.subscribeTrades(market)
-kraken.subscribeTicker(market)
+// binance.subscribeTicker(market)
 
 // binance.on("ticker", snapshot => {
 //   console.log(snapshot)
 // })
 
-coinbase.on("trade", trade => {
-  console.log(trade)
-})
-
-coinbase.on("ticker", snapshot => {
-  console.log(snapshot)
-})
-
-kraken.on("ticker", snapshot => {
-  console.log(snapshot)
-})
-
 
 class Monitor {
-  constructor(){
+  constructor(exchange){
+    this.exchange = exchange.toLowerCase()
     this.pk = process.env.CB_PK
     this.sk = process.env.CB_SK
     this.passphrase = process.env.CB_PASS
     this.apiUrl = "https://api-public.sandbox.pro.coinbase.com"
+  }
+
+  monitor(symbols) {
+    if (this.exchnage == "kraken") {
+      this.monitorKR(symbols)
+    }
+
+    if (this.exchange == "coinbase") {
+      this.monitorCB(symbols)
+    }
+
+    // if (this.exchange == "Binance") {
+
+    // }
   }
 
   monitorCB(symbols) {
@@ -95,8 +95,26 @@ class Monitor {
       }
     })
   }
+
+  formatSymbols(symbols) {
+    let output = []
+    for (let symbol of symbols) {
+      symbol = symbol.split(/[\/ -]/)
+      if (this.exchange == "kraken") {
+        symbol = symbol.join("/")
+        output.push(symbol)
+      }
+      if (this.exchange == "coinbase") {
+        symbol = symbol.join("-")
+        output.push(symbol)
+      }
+    }
+    return output
+  }
 }
 
-cb = new Monitor()
+kr = new Monitor("Coinbase")
+console.log(kr.formatSymbols(["BTC/USD"]))
 
-cb.monitorKR(['BTC/USD', 'BTC/EUR'])
+// kr.monitorKR(['BTC/USD', 'BTC/EUR'])
+// cb.monitorCB(['BTC-USD', 'BTC-EUR'])
