@@ -47,14 +47,10 @@ class Monitor {
     const ws = new WebSocket(wsUrl)
     const subscribePayload = {
       "type": "subscribe",
-      "product_ids": ["BTC-USD", "ETH-USD"],
+      "product_ids": ["BTC-USD", "ETH-EUR"],
       "channels": [
         "ticker",
-        "heartbeat",
-        {
-          "name": "ticker",
-          "product_ids": ["BTC-USD", "ETH-USD"]
-        }
+        "level2",
       ]
     }
 
@@ -65,7 +61,15 @@ class Monitor {
     ws.on('message', message => {
       message = JSON.parse(message)
       if (message.type == "ticker") {
-        console.log(message.price)
+        console.log(message)
+      }
+
+      if (message.type == "snapshot") {
+        console.log(message)
+      }
+
+      if (message.type == "l2update") {
+        console.log(message)
       }
     })
   }
