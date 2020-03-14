@@ -1,6 +1,7 @@
 require('dotenv').config()
 const WebSocket = require('ws')
 const ccxws = require('ccxws');
+const Format = require('./Format')
 const binance = new ccxws.binance()
 const coinbase = new ccxws.coinbasepro()
 const kraken = new ccxws.kraken()
@@ -28,7 +29,8 @@ class Monitor {
   }
 
   monitor(symbols) {
-    if (this.exchnage == "kraken") {
+    symbols = Format.symbols(symbols, this.exchange)
+    if (this.exchange == "kraken") {
       this.monitorKR(symbols)
     }
 
@@ -95,26 +97,11 @@ class Monitor {
       }
     })
   }
-
-  formatSymbols(symbols) {
-    let output = []
-    for (let symbol of symbols) {
-      symbol = symbol.split(/[\/ -]/)
-      if (this.exchange == "kraken") {
-        symbol = symbol.join("/")
-        output.push(symbol)
-      }
-      if (this.exchange == "coinbase") {
-        symbol = symbol.join("-")
-        output.push(symbol)
-      }
-    }
-    return output
-  }
 }
 
-kr = new Monitor("Coinbase")
-console.log(kr.formatSymbols(["BTC/USD"]))
+kr = new Monitor("Kraken")
+console.log(kr)
+kr.monitor(['BTC/USD', 'BTC-EUR'])
 
 // kr.monitorKR(['BTC/USD', 'BTC/EUR'])
 // cb.monitorCB(['BTC-USD', 'BTC-EUR'])
