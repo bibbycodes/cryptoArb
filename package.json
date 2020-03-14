@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/bibbycodes/cryptoArb/issues"
   },
-  "homepage": "https://github.com/bibbycodes/cryptoArb#readme"
+  "homepage": "https://github.com/bibbycodes/cryptoArb#readme",
+  "dependencies": {
+    "ccxt": "^1.23.76",
+    "ccxws": "^0.29.6",
+    "dotenv": "^8.2.0",
+    "ws": "^7.2.1"
+  }
 }
