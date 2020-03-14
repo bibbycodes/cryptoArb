@@ -41,13 +41,12 @@ class Monitor {
     this.apiUrl = "https://api-public.sandbox.pro.coinbase.com"
   }
 
-  // symbols is array of symbols ie "ETH-USD"
   monitorCB(symbols) {
     const wsUrl = "wss://ws-feed-public.sandbox.pro.coinbase.com"
     const ws = new WebSocket(wsUrl)
     const subscribePayload = {
       "type": "subscribe",
-      "product_ids": ["BTC-USD", "ETH-EUR"],
+      "product_ids": symbols,
       "channels": [
         "ticker",
         "level2",
@@ -73,8 +72,31 @@ class Monitor {
       }
     })
   }
+
+  monitorKR(symbols) {
+    const wsUrl = "wss://ws.kraken.com"
+    const ws = new WebSocket(wsUrl)
+    const subscribePayload = {
+      "event": "subscribe",
+      "pair": symbols,
+      "subscription": {
+        "name": "ticker"
+      }
+    }
+
+    ws.on("open", () => {
+      ws.send(JSON.stringify(subscribePayload))
+    })
+
+    ws.on("message", message => {
+      message = JSON.parse(message)
+      if (message.event != "heartbeat") {
+        console.log(message)
+      }
+    })
+  }
 }
 
 cb = new Monitor()
 
-cb.monitorCB(['ETH-USD', "ETH-EUR"])
+cb.monitorKR(['BTC/USD', 'BTC/EUR'])
