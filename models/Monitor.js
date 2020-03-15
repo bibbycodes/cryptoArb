@@ -5,9 +5,6 @@ const Format = require('./Format')
 // const coinbase = new ccxws.coinbasepro()
 // const kraken = new ccxws.kraken()
 
-
-
-
 class Monitor {
   constructor(exchange){
     this.exchange = exchange.toLowerCase()
@@ -54,13 +51,13 @@ class Monitor {
         console.log(message)
       }
 
-      if (message.type == "snapshot") {
-        console.log(message)
-      }
+      // if (message.type == "snapshot") {
+      //   console.log(message)
+      // }
 
-      if (message.type == "l2update") {
-        console.log(message)
-      }
+      // if (message.type == "l2update") {
+      //   console.log(message)
+      // }
     })
   }
 
@@ -97,22 +94,19 @@ class Monitor {
         quote: symbol.slice(3)
       }
 
-      console.log(market)
-
       binance.subscribeTicker(market)
       binance.on("ticker", ticker => {
         console.log(Object.keys(ticker))
-        // console.log(ticker)
+        console.log(ticker)
       })
     }
   }
 }
 
-// binance = new Monitor("Binance")
-// binance.monitor(['BTC/USD', 'BTC-NGN'])
-
-// kraken = new Monitor("Kraken")
-// kraken.monitor(['BTC/USD', 'BTC/EUR'])
-
+binance = new Monitor("Binance")
 cb = new Monitor("Coinbase")
+kraken = new Monitor("Kraken")
+
+binance.monitor(['BTC/USD', 'BTC-NGN'])
 cb.monitor(['BTC/USD', 'BTC/EUR'])
+kraken.monitor(['BTC/USD', 'BTC/EUR'])
