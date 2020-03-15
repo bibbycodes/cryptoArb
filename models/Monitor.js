@@ -2,16 +2,18 @@ require('dotenv').config()
 const WebSocket = require('ws')
 const ccxws = require('ccxws');
 const Format = require('./Format')
-// const coinbase = new ccxws.coinbasepro()
-// const kraken = new ccxws.kraken()
 
 class Monitor {
   constructor(exchange){
     this.exchange = exchange.toLowerCase()
-    this.pk = process.env.CB_PK
-    this.sk = process.env.CB_SK
-    this.passphrase = process.env.CB_PASS
-    this.apiUrl = "https://api-public.sandbox.pro.coinbase.com"
+    this.cbPrice = 0
+    this.bnPrice = 0
+    this.krPrice = 0
+    this.arbDiff = 0
+    // this.pk = process.env.CB_PK
+    // this.sk = process.env.CB_SK
+    // this.passphrase = process.env.CB_PASS
+    // this.apiUrl = "https://api-public.sandbox.pro.coinbase.com"
   }
 
   monitor(symbols) {
@@ -45,10 +47,10 @@ class Monitor {
       ws.send(JSON.stringify(subscribePayload))
     })
    
-    ws.on('message', message => {
-      message = JSON.parse(message)
-      if (message.type == "ticker") {
-        console.log(message)
+    ws.on('message', ticker => {
+      ticker = JSON.parse(ticker)
+      if (ticker.type == "ticker") {
+        console.log("Coinbase", ticker)
       }
 
       // if (message.type == "snapshot") {
@@ -79,8 +81,8 @@ class Monitor {
     ws.on("message", ticker => {
       ticker = JSON.parse(ticker)
       if (ticker.event != "heartbeat") {
-        console.log(ticker)
         // console.log(Object.keys(ticker))
+        console.log("Kraken", ticker)
       }
     })
   }
@@ -96,17 +98,24 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", ticker => {
-        console.log(Object.keys(ticker))
-        console.log(ticker)
+        // console.log(Object.keys(ticker))
+        // console.log("Binance", ticker)
+        this.bnPrice = ticker.last / 470
+        console.log(this.bnPrice)
       })
     }
   }
+
+  monitorArbRate() {
+    this.arbDiff = (this.bnPrice - this.cbPrice)
+    console.log(this.arbDiff)
+  }
 }
 
-binance = new Monitor("Binance")
-cb = new Monitor("Coinbase")
-kraken = new Monitor("Kraken")
+monitor = new Monitor("Binance")
+// cb = new Monitor("Coinbase")
+// kraken = new Monitor("Kraken")
 
-binance.monitor(['BTC/USD', 'BTC-NGN'])
-cb.monitor(['BTC/USD', 'BTC/EUR'])
-kraken.monitor(['BTC/USD', 'BTC/EUR'])
+binance.monitor(['BTC-NGN'])
+// cb.monitor(['BTC/USD'])
+// kraken.monitor(['BTC/USD'])
