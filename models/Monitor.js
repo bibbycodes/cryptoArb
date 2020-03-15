@@ -79,10 +79,11 @@ class Monitor {
       ws.send(JSON.stringify(subscribePayload))
     })
 
-    ws.on("message", message => {
-      message = JSON.parse(message)
-      if (message.event != "heartbeat") {
-        console.log(message)
+    ws.on("message", ticker => {
+      ticker = JSON.parse(ticker)
+      if (ticker.event != "heartbeat") {
+        console.log(ticker)
+        // console.log(Object.keys(ticker))
       }
     })
   }
@@ -100,7 +101,8 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", ticker => {
-        console.log(ticker)
+        console.log(Object.keys(ticker))
+        // console.log(ticker)
       })
     }
   }
@@ -109,8 +111,8 @@ class Monitor {
 // binance = new Monitor("Binance")
 // binance.monitor(['BTC/USD', 'BTC-NGN'])
 
-kraken = new Monitor("Kraken")
-kraken.monitor(['BTC/USD', 'BTC/EUR'])
+// kraken = new Monitor("Kraken")
+// kraken.monitor(['BTC/USD', 'BTC/EUR'])
 
-// cb = new Monitor("Coinbase")
-// cb.monitor(['BTC/USD', 'BTC/EUR'])
+cb = new Monitor("Coinbase")
+cb.monitor(['BTC/USD', 'BTC/EUR'])
