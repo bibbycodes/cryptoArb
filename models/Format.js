@@ -18,7 +18,7 @@ class Format {
         if (symbol[1] == "USD") {
           symbol[1] = "USDT"
         }
-        
+
         symbol = symbol.join("")
         output.push(symbol)
       }

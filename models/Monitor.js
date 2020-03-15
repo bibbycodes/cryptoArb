@@ -29,7 +29,6 @@ class Monitor {
     }
 
     if (this.exchange == "binance") {
-      console.log("A")
       this.monitorBnTicker(symbols)
     }
   }
@@ -89,27 +88,29 @@ class Monitor {
   }
 
   monitorBnTicker(symbols) {
-    const binance = new ccxws.binance()
-    console.log(symbols[0])
-    const market = {
-      id: symbols[0],
-      base: symbols[0].slice(0, 3),
-      quote: symbols[0].slice(3)
+    for (let symbol of symbols) {
+      let binance = new ccxws.binance()
+      const market = {
+        id: symbol,
+        base: symbol.slice(0, 3),
+        quote: symbol.slice(3)
+      }
+
+      console.log(market)
+
+      binance.subscribeTicker(market)
+      binance.on("ticker", ticker => {
+        console.log(ticker)
+      })
     }
-    
-    binance.subscribeTicker(market)
-    
-    binance.on("ticker", ticker => {
-      console.log(ticker)
-    })
   }
 }
 
-binance = new Monitor("Binance")
-binance.monitor(['BTC/USD', 'BTC-EUR'])
+// binance = new Monitor("Binance")
+// binance.monitor(['BTC/USD', 'BTC-NGN'])
 
 kraken = new Monitor("Kraken")
 kraken.monitor(['BTC/USD', 'BTC/EUR'])
 
-cb = new Monitor("Coinbase")
-cb.monitor(['BTC/USD', 'BTC/EUR'])
+// cb = new Monitor("Coinbase")
+// cb.monitor(['BTC/USD', 'BTC/EUR'])
