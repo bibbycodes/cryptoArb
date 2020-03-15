@@ -54,8 +54,8 @@ class Monitor {
     ws.on('message', ticker => {
       ticker = JSON.parse(ticker)
       if (ticker.type == "ticker") {
-        console.log({"Coinbase BTC/USD": ticker.price})
-        this.cbPrice = ticker.price
+        this.cbPrice = parseFloat(ticker.price)
+        console.log({"Coinbase BTC/USD": this.cbPrice})
         this.compare(this.cbPrice, this.bnPrice, "USD/BTC on COINBASE to NGN/BTC on BINANCE")
         this.compare(this.cbPrice, this.krPrice, "USD/BTC on COINBASE to USD/BTC on KRAKEN")
       }
@@ -85,8 +85,8 @@ class Monitor {
     ws.on("message", ticker => {
       ticker = JSON.parse(ticker)
       if (!ticker.event) {
-        this.krPrice = ticker[1].b[0]
-        console.log({"Kraken": this.krPrice})
+        this.krPrice = parseFloat(ticker[1].b[0])
+        console.log({"Kraken BTC/USD": this.krPrice})
         this.compare(this.krPrice, this.cbPrice, "USD/BTC on KRAKEN to USD/BTC on COINBASE")
         this.compare(this.bnPrice, this.krPrice, "USD/BTC on KRAKEN to NGN/BTC on BINANCE")
       }
@@ -105,7 +105,7 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", ticker => {
-        this.bnPrice = ticker.last / 368.03
+        this.bnPrice = parseFloat((ticker.last / 368.03).toFixed(2))
         console.log({"Binance NGN/BTC": this.bnPrice})
         this.compare(this.bnPrice, this.cbPrice, "NGN/BTC on BINANCE to USD/BTC on COINBASE")
         this.compare(this.bnPrice, this.krPrice, "NGN/BTC on BINANCE to USD/BTC on KRAKEN")
