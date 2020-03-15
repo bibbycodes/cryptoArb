@@ -114,9 +114,11 @@ class Monitor {
   }
 
   compare(priceA, priceB, name) {
+    let relativeDifference = ((priceA - priceB) / (Math.max(priceA, priceB)) * 100).toFixed(2)
     let priceDiff = priceA - priceB
-    let arbRate = (priceDiff / priceB) * 100
+    let arbRate = ((priceDiff / priceB) * 100).toFixed(2)
     console.log(`Arb Rate for ${name} is ${arbRate}%`)
+    console.log(`Relative Difference for ${name} is ${relativeDifference}%`)
     return [priceDiff, arbRate]
   }
 }
