@@ -54,11 +54,18 @@ class Monitor {
     ws.on('message', ticker => {
       ticker = JSON.parse(ticker)
       if (ticker.type == "ticker") {
-        this.symbols[`${ticker.product_id} Coinbase`] = ticker.price
+        let price = parseFloat(ticker.price)
+        let quote = ticker.product_id.split("-")[1]
+        let base = ticker.product_id.split("-")[0]
+        this.symbols[`${ticker.product_id} coinbase`] = {
+          price: price,
+          pair: ticker.product_id,
+          exchange: "coinbase",
+          base: base,
+          quote: quote
+        }
         this.comparePairs(this.symbols)
       }
-
-    // console.log(this.symbols)
     })
   }
 
@@ -92,17 +99,24 @@ class Monitor {
     ws.on("message", ticker => {
       ticker = JSON.parse(ticker)
       if (!ticker.event) {
-        this.krPrice = parseFloat(ticker[1].b[0])
-        console.log({"Kraken BTC/USD": this.krPrice})
-        this.relativeDifference(this.krPrice, this.cbPrice, "USD/BTC on KRAKEN to USD/BTC on COINBASE")
-        this.relativeDifference(this.bnPrice, this.krPrice, "USD/BTC on KRAKEN to NGN/BTC on BINANCE")
+        let price = parseFloat(ticker[1].b[0])
+        let pair = ticker[3]
+        let base = pair.split("/")[0]
+        let quote = pair.split("/")[1]
+        this.symbols[`${pair} kraken`] = {
+          price: price,
+          pair: pair,
+          exchange: "kraken",
+          base: base,
+          quote: quote
+        }
+        this.comparePairs(this.symbols)
       }
     })
   }
 
   binanceTicker(symbols) {
     for (let symbol of symbols) {
-      // this.pairs.push([symbol, "Binance"])
       let binance = new ccxws.binance()
       const market = {
         id: symbol,
@@ -122,16 +136,17 @@ class Monitor {
 
   comparePairs(pairs) {
     let arrayOfPairs = []
-    console.log(this.symbols)
+    // convert object to array
     for (const pair_name in pairs) {
-      arrayOfPairs.push([pair_name, pairs[pair_name]])
+      arrayOfPairs.push(pairs[pair_name])
     }
     for (let i = 0; i < arrayOfPairs.length; i++) {
-      let priceA = arrayOfPairs[i][1]
-      let nameA = arrayOfPairs[i][0]
+      let priceA = arrayOfPairs[i].price
+      let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange}`
+
       for (let j = 0; j < arrayOfPairs.length; j ++) {
-        let priceB = arrayOfPairs[j][1]
-        let nameB = arrayOfPairs[j][0]
+        let priceB = arrayOfPairs[j].price
+        let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange}`
         this.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
       }
     }
@@ -148,12 +163,12 @@ class Monitor {
 async function fetchCoinbasePairs() {
   let monitor = new Monitor()
   let pairs = await monitor.fetchPairsCoinbase()
+  monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
   monitor.coinbaseTicker(pairs)
 }
 
 fetchCoinbasePairs()
 // monitor.coinbaseTicker(['BTC-USD'])
-// monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
 // monitor.binanceTicker(['BTCNGN'])
 
 // monitor.binanceTicker(['BTCNGN'])
