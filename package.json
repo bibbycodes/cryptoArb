@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bibbycodes/cryptoArb#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "ccxt": "^1.23.76",
     "ccxws": "^0.29.6",
     "dotenv": "^8.2.0",

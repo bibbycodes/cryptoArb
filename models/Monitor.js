@@ -2,6 +2,7 @@ require('dotenv').config()
 const WebSocket = require('ws')
 const ccxws = require('ccxws');
 const Format = require('./Format')
+const axios = require("axios")
 
 class Monitor {
   constructor(exchange){
@@ -10,6 +11,7 @@ class Monitor {
     }
 
     this.pairs = []
+    this.symbols = {}
     this.cbPrice = 0
     this.bnPrice = 0
     this.krPrice = 0
@@ -20,25 +22,23 @@ class Monitor {
   monitor(symbols) {
     symbols = Format.symbols(symbols, this.exchange)
     if (this.exchange == "kraken") {
-      this.krTicker(symbols)
+      this.krakenTicker(symbols)
     }
 
     if (this.exchange == "coinbase") {
-      this.cbTicker(symbols)
+      this.coinbaseTicker(symbols)
     }
 
     if (this.exchange == "binance") {
-      this.bnTicker(symbols)
+      this.binanceTicker(symbols)
     }
   }
 
-  cbTicker(symbols) {
+  coinbaseTicker(symbols) {
     symbols = Format.symbols(symbols, "coinbase")
-    for (let symbol of symbols) {
-      this.pairs.push([symbol, "Coinbase"])
-    }
     const wsUrl = "wss://ws-feed-public.sandbox.pro.coinbase.com"
     const ws = new WebSocket(wsUrl)
+    
     const subscribePayload = {
       "type": "subscribe",
       "product_ids": symbols,
@@ -54,15 +54,22 @@ class Monitor {
     ws.on('message', ticker => {
       ticker = JSON.parse(ticker)
       if (ticker.type == "ticker") {
-        this.cbPrice = parseFloat(ticker.price)
-        console.log({"Coinbase BTC/USD": this.cbPrice})
-        this.compare(this.cbPrice, this.bnPrice, "USD/BTC on COINBASE to NGN/BTC on BINANCE")
-        this.compare(this.cbPrice, this.krPrice, "USD/BTC on COINBASE to USD/BTC on KRAKEN")
+        this.symbols[`${ticker.product_id} Coinbase`] = ticker.price
+        this.comparePairs(this.symbols)
       }
+
+    // console.log(this.symbols)
     })
   }
 
-  krTicker(symbols) {
+  async fetchPairsCoinbase() {
+    let base_url = "https://api.pro.coinbase.com"
+    let response = await axios.get(base_url + '/products')
+    let pairs = response.data.map(pair => pair.id)
+    return pairs
+  }
+
+  krakenTicker(symbols) {
     symbols = Format.symbols(symbols, "kraken")
     for (let symbol of symbols) {
       this.pairs.push([symbol, "Kraken"])
@@ -87,15 +94,15 @@ class Monitor {
       if (!ticker.event) {
         this.krPrice = parseFloat(ticker[1].b[0])
         console.log({"Kraken BTC/USD": this.krPrice})
-        this.compare(this.krPrice, this.cbPrice, "USD/BTC on KRAKEN to USD/BTC on COINBASE")
-        this.compare(this.bnPrice, this.krPrice, "USD/BTC on KRAKEN to NGN/BTC on BINANCE")
+        this.relativeDifference(this.krPrice, this.cbPrice, "USD/BTC on KRAKEN to USD/BTC on COINBASE")
+        this.relativeDifference(this.bnPrice, this.krPrice, "USD/BTC on KRAKEN to NGN/BTC on BINANCE")
       }
     })
   }
 
-  bnTicker(symbols) {
+  binanceTicker(symbols) {
     for (let symbol of symbols) {
-      this.pairs.push([symbol, "Binance"])
+      // this.pairs.push([symbol, "Binance"])
       let binance = new ccxws.binance()
       const market = {
         id: symbol,
@@ -107,29 +114,50 @@ class Monitor {
       binance.on("ticker", ticker => {
         this.bnPrice = parseFloat((ticker.last / 368.03).toFixed(2))
         console.log({"Binance NGN/BTC": this.bnPrice})
-        this.compare(this.bnPrice, this.cbPrice, "NGN/BTC on BINANCE to USD/BTC on COINBASE")
-        this.compare(this.bnPrice, this.krPrice, "NGN/BTC on BINANCE to USD/BTC on KRAKEN")
+        this.relativeDifference(this.bnPrice, this.cbPrice, "NGN/BTC on BINANCE to USD/BTC on COINBASE")
+        this.relativeDifference(this.bnPrice, this.krPrice, "NGN/BTC on BINANCE to USD/BTC on KRAKEN")
       })
     }
   }
 
-  compare(priceA, priceB, name) {
+  comparePairs(pairs) {
+    let arrayOfPairs = []
+    console.log(this.symbols)
+    for (const pair_name in pairs) {
+      arrayOfPairs.push([pair_name, pairs[pair_name]])
+    }
+    for (let i = 0; i < arrayOfPairs.length; i++) {
+      let priceA = arrayOfPairs[i][1]
+      let nameA = arrayOfPairs[i][0]
+      for (let j = 0; j < arrayOfPairs.length; j ++) {
+        let priceB = arrayOfPairs[j][1]
+        let nameB = arrayOfPairs[j][0]
+        this.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
+      }
+    }
+  }
+
+  relativeDifference(priceA, priceB, message) {
     let relativeDifference = ((priceA - priceB) / (Math.max(priceA, priceB)) * 100).toFixed(2)
-    let priceDiff = priceA - priceB
-    let arbRate = ((priceDiff / priceB) * 100).toFixed(2)
-    console.log(`Arb Rate for ${name} is ${arbRate}%`)
-    console.log(`Relative Difference for ${name} is ${relativeDifference}%`)
-    return [priceDiff, arbRate]
+    console.log(`Arb Rate for ${message} is ${relativeDifference}%`)
+    return [relativeDifference]
   }
 }
 
-monitor = new Monitor()
-// monitor.cbTicker(['BTC-USD'])
-// monitor.krTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
-// monitor.bnTicker(['BTCNGN'])
 
-monitor.bnTicker(['BTCNGN'])
-monitor.cbTicker(['BTC-USD'])
-monitor.krTicker(['BTC/USD'])
+async function fetchCoinbasePairs() {
+  let monitor = new Monitor()
+  let pairs = await monitor.fetchPairsCoinbase()
+  monitor.coinbaseTicker(pairs)
+}
 
-console.log(monitor.pairs)
+fetchCoinbasePairs()
+// monitor.coinbaseTicker(['BTC-USD'])
+// monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
+// monitor.binanceTicker(['BTCNGN'])
+
+// monitor.binanceTicker(['BTCNGN'])
+// monitor.coinbaseTicker(['BTC-USD', 'ETH-USD'])
+// monitor.krakenTicker(['BTC/USD'])
+
+// console.log(monitor.pairs)
