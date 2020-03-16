@@ -126,10 +126,26 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", ticker => {
-        this.bnPrice = parseFloat((ticker.last / 368.03).toFixed(2))
-        console.log({"Binance NGN/BTC": this.bnPrice})
-        this.relativeDifference(this.bnPrice, this.cbPrice, "NGN/BTC on BINANCE to USD/BTC on COINBASE")
-        this.relativeDifference(this.bnPrice, this.krPrice, "NGN/BTC on BINANCE to USD/BTC on KRAKEN")
+        console.log(ticker)
+        let price = parseFloat((ticker.last))
+        let quote = ticker.quote
+        let base = ticker.base
+        let pair = `${base}-${quote}`
+
+        if (quote == "NGN") {
+          price = price / 368
+        }
+        this.symbols[`${pair} binance`] = {
+          price: price,
+          pair: pair,
+          exchange: "binance",
+          base: base,
+          quote: quote
+        }
+        this.comparePairs(this.symbols)
+        // console.log({"Binance NGN/BTC": this.bnPrice})
+        // this.relativeDifference(this.bnPrice, this.cbPrice, "NGN/BTC on BINANCE to USD/BTC on COINBASE")
+        // this.relativeDifference(this.bnPrice, this.krPrice, "NGN/BTC on BINANCE to USD/BTC on KRAKEN")
       })
     }
   }
@@ -140,14 +156,19 @@ class Monitor {
     for (const pair_name in pairs) {
       arrayOfPairs.push(pairs[pair_name])
     }
+    // compare all pairs
     for (let i = 0; i < arrayOfPairs.length; i++) {
       let priceA = arrayOfPairs[i].price
-      let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange}`
+      let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange} : ${priceA}`
 
       for (let j = 0; j < arrayOfPairs.length; j ++) {
         let priceB = arrayOfPairs[j].price
-        let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange}`
-        this.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
+        let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange} : ${priceB}`
+        if (i == j) {
+          continue
+        } else {
+          this.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
+        }
       }
     }
   }
@@ -165,11 +186,11 @@ async function fetchCoinbasePairs() {
   let pairs = await monitor.fetchPairsCoinbase()
   monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
   monitor.coinbaseTicker(pairs)
+  monitor.binanceTicker(['BTCNGN', 'BTCUSDT'])
 }
 
 fetchCoinbasePairs()
 // monitor.coinbaseTicker(['BTC-USD'])
-// monitor.binanceTicker(['BTCNGN'])
 
 // monitor.binanceTicker(['BTCNGN'])
 // monitor.coinbaseTicker(['BTC-USD', 'ETH-USD'])
