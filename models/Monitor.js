@@ -57,13 +57,6 @@ class Monitor {
     })
   }
 
-  async fetchPairsCoinbase() {
-    let base_url = "https://api.pro.coinbase.com"
-    let response = await axios.get(base_url + '/products')
-    let pairs = response.data.map(pair => pair.id)
-    return pairs
-  }
-
   krakenTicker(symbols) {
     symbols = Format.symbols(symbols, "kraken")
     for (let symbol of symbols) {
@@ -148,27 +141,11 @@ class Monitor {
 
   relativeDifference(priceA, priceB, message) {
     let relativeDifference = ((priceA - priceB) / (Math.max(priceA, priceB)) * 100).toFixed(2)
-    // console.log(`Arb Rate for ${message} is ${relativeDifference}%`)
     return [relativeDifference]
   }
 }
 
-
-async function fetchCoinbasePairs() {
-  let monitor = new Monitor()
-  let pairs = await monitor.fetchPairsCoinbase()
-  monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
-  monitor.coinbaseTicker(pairs)
-  monitor.binanceTicker(['BTCNGN', 'BTCUSDT'])
-}
-
-
-
-fetchCoinbasePairs()
-// monitor.coinbaseTicker(['BTC-USD'])
-
-// monitor.binanceTicker(['BTCNGN'])
-// monitor.coinbaseTicker(['BTC-USD', 'ETH-USD'])
-// monitor.krakenTicker(['BTC/USD'])
-
-// console.log(monitor.pairs)
+let monitor = new Monitor()
+monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'ETH/USD'])
+monitor.coinbaseTicker(['BTC-USD', 'BTC-EUR', 'ETH-USD'])
+monitor.binanceTicker(['BTCNGN', 'BTCUSDT'])
