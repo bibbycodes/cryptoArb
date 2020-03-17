@@ -17,9 +17,17 @@
   },
   "homepage": "https://github.com/bibbycodes/cryptoArb#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "ccxt": "^1.23.76",
     "ccxws": "^0.29.6",
+    "center-align": "^1.0.1",
+    "cheerio": "^1.0.0-rc.3",
+    "columnify": "^1.5.4",
     "dotenv": "^8.2.0",
-    "ws": "^7.2.1"
+    "parse5": "^5.1.1",
+    "ws": "^7.2.1",
+    "xmldom": "^0.3.0",
+    "xmlserializer": "^0.6.1",
+    "xpath": "0.0.27"
   }
 }
