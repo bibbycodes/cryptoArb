@@ -2,21 +2,14 @@ require('dotenv').config()
 const WebSocket = require('ws')
 const ccxws = require('ccxws');
 const Format = require('./Format')
+const Calculate = require('./Calculate')
 const axios = require("axios")
 
 class Monitor {
   constructor(exchange){
-    if (exchange) {
-      this.exchange = exchange.toLowerCase()
-    }
-
+    this.exchange = exchange
     this.pairs = []
     this.symbols = {}
-    this.cbPrice = 0
-    this.bnPrice = 0
-    this.krPrice = 0
-    this.arbDiff = 0
-    this.arbRate = 0
   }
 
   monitor(symbols) {
@@ -57,13 +50,8 @@ class Monitor {
         let price = parseFloat(ticker.price)
         let quote = ticker.product_id.split("-")[1]
         let base = ticker.product_id.split("-")[0]
-        this.symbols[`${ticker.product_id} coinbase`] = {
-          price: price,
-          pair: ticker.product_id,
-          exchange: "coinbase",
-          base: base,
-          quote: quote
-        }
+        let tickerObject = Format.ticker(price, ticker.product_id, "coinbase", base, quote)
+        this.symbols[`${ticker.product_id} coinbase`] = tickerObject
         this.comparePairs(this.symbols)
       }
     })
@@ -101,15 +89,10 @@ class Monitor {
       if (!ticker.event) {
         let price = parseFloat(ticker[1].b[0])
         let pair = ticker[3]
-        let base = pair.split("/")[0]
-        let quote = pair.split("/")[1]
-        this.symbols[`${pair} kraken`] = {
-          price: price,
-          pair: pair,
-          exchange: "kraken",
-          base: base,
-          quote: quote
-        }
+        let base = ticker[3].split("/")[0]
+        let quote = ticker[3].split("/")[1]
+        let tickerObject = Format.ticker(price, pair, "kraken", base,quote)
+        this.symbols[`${pair} kraken`] = tickerObject
         this.comparePairs(this.symbols)
       }
     })
@@ -126,32 +109,18 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", ticker => {
-        console.log(ticker)
+        let pair = `${ticker.quote}-${ticker.base}`
         let price = parseFloat((ticker.last))
-        let quote = ticker.quote
-        let base = ticker.base
-        let pair = `${base}-${quote}`
-
-        if (quote == "NGN") {
-          price = price / 368
-        }
-        this.symbols[`${pair} binance`] = {
-          price: price,
-          pair: pair,
-          exchange: "binance",
-          base: base,
-          quote: quote
-        }
+        let tickerObject = Format.ticker(price, pair, "binance", ticker.base, ticker.quote)
+        this.symbols[`${pair} binance`] = tickerObject
         this.comparePairs(this.symbols)
-        // console.log({"Binance NGN/BTC": this.bnPrice})
-        // this.relativeDifference(this.bnPrice, this.cbPrice, "NGN/BTC on BINANCE to USD/BTC on COINBASE")
-        // this.relativeDifference(this.bnPrice, this.krPrice, "NGN/BTC on BINANCE to USD/BTC on KRAKEN")
       })
     }
   }
 
   comparePairs(pairs) {
     let arrayOfPairs = []
+    let matrix = []
     // convert object to array
     for (const pair_name in pairs) {
       arrayOfPairs.push(pairs[pair_name])
@@ -160,9 +129,10 @@ class Monitor {
     for (let i = 0; i < arrayOfPairs.length; i++) {
       let priceA = arrayOfPairs[i].price
       let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange} : ${priceA}`
-
+      let sub_arr = []
       for (let j = 0; j < arrayOfPairs.length; j ++) {
         let priceB = arrayOfPairs[j].price
+        sub_arr.push(Calculate.relativeDifference(priceA, priceB))
         let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange} : ${priceB}`
         if (i == j) {
           continue
@@ -170,12 +140,15 @@ class Monitor {
           this.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
         }
       }
+      matrix.push(sub_arr)
+      // console.log(matrix)
+      Format.matrix(matrix)
     }
   }
 
   relativeDifference(priceA, priceB, message) {
     let relativeDifference = ((priceA - priceB) / (Math.max(priceA, priceB)) * 100).toFixed(2)
-    console.log(`Arb Rate for ${message} is ${relativeDifference}%`)
+    // console.log(`Arb Rate for ${message} is ${relativeDifference}%`)
     return [relativeDifference]
   }
 }
@@ -188,6 +161,8 @@ async function fetchCoinbasePairs() {
   monitor.coinbaseTicker(pairs)
   monitor.binanceTicker(['BTCNGN', 'BTCUSDT'])
 }
+
+
 
 fetchCoinbasePairs()
 // monitor.coinbaseTicker(['BTC-USD'])
