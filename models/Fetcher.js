@@ -46,6 +46,19 @@ class Fetcher {
     return res.data
   }
 
+  static async transferWiseRates(source, target) {
+    if (["USDC", "USDT"].includes(target)) {
+      target = "USD"
+    }
+    let res = await axios.get(
+      `https://api.sandbox.transferwise.tech/v1/rates?source=${source}&target=${target}`,
+      {headers: {Authorization:` Bearer ${process.env.TW_KEY}`}}
+    ).catch(err => console.log(err))
+
+    console.log(res.data)
+    return res.data[0].rate
+  }
+
   async coinbasePairs() {
     let base_url = "https://api.pro.coinbase.com"
     let response = await axios.get(base_url + '/products')
