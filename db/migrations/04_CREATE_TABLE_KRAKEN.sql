@@ -1,7 +1,7 @@
 CREATE TABLE kraken_ticker (
   id SERIAL PRIMARY KEY,
   exchange VARCHAR(120) NOT NULL,
-  timestamp BIGINT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  timestamp BIGINT NOT NULL,
   ask_price NUMERIC(10,4),
   ask_lot_volume NUMERIC(10,4),
   ask_whole_lot_volume NUMERIC(10,4),
@@ -22,5 +22,5 @@ CREATE TABLE kraken_ticker (
   high_price_24h NUMERIC(10,4),
   open_price NUMERIC(10, 4),
   open_price_24h NUMERIC(10, 4),
-  pair VARCHAR(10) NOT NULL,
+  pair VARCHAR(10) NOT NULL
 );

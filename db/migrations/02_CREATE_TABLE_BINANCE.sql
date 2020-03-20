@@ -4,7 +4,7 @@ CREATE TABLE binance_ticker (
   pair VARCHAR(10) NOT NULL,
   base VARCHAR(10) NOT NULL,
   quote VARCHAR(10) NOT NULL,
-  timestamp BIGINT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  timestamp BIGINT NOT NULL,
   last NUMERIC(10, 4),
   open_price NUMERIC(10, 4),
   close_price NUMERIC(10,4),
@@ -16,5 +16,5 @@ CREATE TABLE binance_ticker (
   change_percent NUMERIC(10,4),
   bid_price NUMERIC(10,4),
   ask_price NUMERIC(10,4),
-  ask_volume NUMERIC(10,4),
+  ask_volume NUMERIC(10,4)
 );

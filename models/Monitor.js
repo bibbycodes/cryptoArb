@@ -4,6 +4,7 @@ const ccxws = require('ccxws');
 const Format = require('./Format')
 const Calculate = require('./Calculate')
 const Fetcher = require('./Fetcher')
+const DB = require('./dbConn')
 const axios = require("axios")
 
 class Monitor {
@@ -48,14 +49,18 @@ class Monitor {
     ws.on('message', async (ticker) => {
       ticker = JSON.parse(ticker)
       if (ticker.type == "ticker") {
+        let queryString = Format.coinbaseTickerDbString(ticker, "coinbase")
+        let db = new DB()
+        db.query(queryString)
         let price = parseFloat(ticker.price)
         let quote = ticker.product_id.split("-")[1]
         let base = ticker.product_id.split("-")[0]
-        let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
-        price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.ticker(price, ticker.product_id, "coinbase", base, quote)
-        this.symbols[`${ticker.product_id} coinbase`] = tickerObject
-        this.comparePairs(this.symbols)
+        // let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
+        // price = price/parseFloat(exchangeRate)
+        // let tickerObject = Format.tickerObject(price, ticker.product_id, "coinbase", base, quote)
+        // console.log(tickerObject)
+        // this.symbols[`${ticker.product_id} coinbase`] = tickerObject
+        // this.comparePairs(this.symbols)
       }
     })
   }
@@ -89,7 +94,7 @@ class Monitor {
         let quote = ticker[3].split("/")[1]
         let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
         price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.ticker(price, pair, "kraken", base, quote)
+        let tickerObject = Format.tickerObject(price, pair, "kraken", base, quote)
         this.symbols[`${pair} kraken`] = tickerObject
         this.comparePairs(this.symbols)
       }
@@ -107,11 +112,12 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", async (ticker) => {
+        console.log(ticker)
         let pair = `${ticker.quote}-${ticker.base}`
         let price = parseFloat((ticker.last))
         let exchangeRate = await Fetcher.transferWiseRates("USD", ticker.quote)
         price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.ticker(price, pair, "binance", ticker.base, ticker.quote)
+        let tickerObject = Format.tickerObject(price, pair, "binance", ticker.base, ticker.quote)
         this.symbols[`${pair} binance`] = tickerObject
         this.comparePairs(this.symbols)
       })
@@ -154,6 +160,6 @@ class Monitor {
 }
 
 let monitor = new Monitor()
-monitor.krakenTicker(['BTC/USD', 'BTC/EUR'])
-monitor.coinbaseTicker(['BTC-USD', 'BTC-EUR', 'ETH-USD'])
-monitor.binanceTicker(['BTCNGN', "BTCUSDT"])
+// monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
+monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP'])
+// monitor.binanceTicker(["BTCUSDT", "BTCGBP", "BTCEUR"])

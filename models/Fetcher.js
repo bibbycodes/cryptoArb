@@ -54,8 +54,6 @@ class Fetcher {
       `https://api.sandbox.transferwise.tech/v1/rates?source=${source}&target=${target}`,
       {headers: {Authorization:` Bearer ${process.env.TW_KEY}`}}
     ).catch(err => console.log(err))
-
-    console.log(res.data)
     return res.data[0].rate
   }
 
@@ -66,6 +64,5 @@ class Fetcher {
     return pairs
   }
 }
-
 
 module.exports = Fetcher

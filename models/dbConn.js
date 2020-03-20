@@ -3,7 +3,7 @@ const { Client } = require('pg')
 
 class DbConn {
   constructor() {
-    this.port = process.env.DB_PORT;
+    this.port = process.env.DB_PORT || 5432;
     if (process.env.NODE_ENV == 'test'){
       this.user = process.env.DB_USER_LOCAL || "postgres";
       this.db_name = process.env.TEST_DB_NAME;
@@ -39,6 +39,7 @@ class DbConn {
 
   async query(query) {
     try {
+      console.log(this.uri)
       await this.start()
       let result =  await this.client.query(query)
       await this.close()
