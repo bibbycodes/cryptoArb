@@ -68,14 +68,31 @@ class Format {
     values = values.substring(0, values.length - 2)
 
     let queryString = `INSERT INTO coinbase_ticker (${columns}) VALUES (${values})`
-    console.log(queryString)
     return queryString
   }
 
   static krakenTickerDbString(ticker) {
     let object = Parse.krakenTicker(ticker)
-    console.log(object)
-    return object
+    let columns = ""
+    let values = ""
+
+    for (let key in object) {
+      let value = object[key]
+
+      if (key == "pair") {
+        value = `'${value}'`
+      }
+
+      columns += `${key}, `
+      values += `${value}, `
+    }
+
+    columns = columns.substring(0, columns.length - 2)
+    values = values.substring(0, values.length - 2)
+
+    let queryString = `INSERT INTO kraken_ticker (${columns}) VALUES (${values})`
+    return queryString
+
   }
 
   static matrix(matrix) {

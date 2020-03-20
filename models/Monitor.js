@@ -89,14 +89,15 @@ class Monitor {
     ws.on("message", async (ticker) => {
       ticker = JSON.parse(ticker)
       if (!ticker.event) {
-        console.log(ticker)
+        let queryString = Format.krakenTickerDbString(ticker)
+        let db = new DB()
+        db.query(queryString)
         let price = parseFloat(ticker[1].b[0])
         let pair = ticker[3]
         let base = ticker[3].split("/")[0]
         let quote = ticker[3].split("/")[1]
         // let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
         // price = price/parseFloat(exchangeRate)
-        let queryString = Format.krakenTickerDbString(ticker)
         let tickerObject = Format.tickerObject(price, pair, "kraken", base, quote)
         // this.symbols[`${pair} kraken`] = tickerObject
         // this.comparePairs(this.symbols)

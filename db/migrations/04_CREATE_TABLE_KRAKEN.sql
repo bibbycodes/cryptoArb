@@ -12,7 +12,7 @@ CREATE TABLE kraken_ticker (
   close_lot_volume NUMERIC,
   volume_today NUMERIC,
   volume_24h NUMERIC,
-  weighted_averge_price NUMERIC,
+  weighted_average_price NUMERIC,
   weighted_average_price_24h NUMERIC,
   number_of_trades INTEGER NOT NULL,
   number_of_trades_24h INTEGER NOT NULL,

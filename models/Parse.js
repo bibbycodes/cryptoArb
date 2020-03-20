@@ -4,7 +4,7 @@ class Parse {
       timestamp : Date.now(),
       ask_price : ticker[1].a[0],
       ask_lot_volume : ticker[1].a[2],
-      ask_while_lot_volume : ticker[1].a[1],
+      ask_whole_lot_volume : ticker[1].a[1],
       bid_price : ticker[1].b[0],
       bid_lot_volume : ticker[1].b[2],
       bid_whole_lot_volume : ticker[1].b[1],
@@ -28,4 +28,4 @@ class Parse {
   }
 }
 
-module.exports = Parser
+module.exports = Parse
