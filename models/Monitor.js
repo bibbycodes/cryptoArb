@@ -118,12 +118,15 @@ class Monitor {
       binance.on("ticker", async (ticker) => {
         console.log(ticker)
         let pair = `${ticker.quote}-${ticker.base}`
-        let price = parseFloat((ticker.last))
-        let exchangeRate = await Fetcher.transferWiseRates("USD", ticker.quote)
-        price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.tickerObject(price, pair, "binance", ticker.base, ticker.quote)
-        this.symbols[`${pair} binance`] = tickerObject
-        this.comparePairs(this.symbols)
+        let queryString = Format.binanceTickerDbString(ticker)
+        let db = new DB()
+        db.query(queryString)
+        // let price = parseFloat((ticker.last))
+        // let exchangeRate = await Fetcher.transferWiseRates("USD", ticker.quote)
+        // price = price/parseFloat(exchangeRate)
+        // let tickerObject = Format.tickerObject(price, pair, "binance", ticker.base, ticker.quote)
+        // this.symbols[`${pair} binance`] = tickerObject
+        // this.comparePairs(this.symbols)
       })
     }
   }
@@ -164,7 +167,8 @@ class Monitor {
 }
 
 let monitor = new Monitor()
-monitor.krakenTicker(['BTC/USD'])
+// monitor.krakenTicker(['BTC/USD'])
 // monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP'])
-// monitor.binanceTicker(["BTCUSDT", "BTCGBP", "BTCEUR"])
+monitor.binanceTicker(["BTCUSDT"])
 // ['BTC/USD', 'BTC/EUR', 'BTC/GBP']
+// ["BTCUSDT", "BTCGBP", "BTCEUR"]

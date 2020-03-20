@@ -30,7 +30,7 @@ class Format {
     return output
   }
 
-  static tickerObject(price, pair, exchange, base, quote, ) {
+  static tickerObject(price, pair, exchange, base, quote) {
     return {
       price: price,
       pair: pair,
@@ -93,6 +93,31 @@ class Format {
     let queryString = `INSERT INTO kraken_ticker (${columns}) VALUES (${values})`
     return queryString
 
+  }
+
+  static binanceTickerDbString(ticker) {
+    let columns = ""
+    let values = ""
+    ticker = Parse.binanceTicker(ticker)
+
+    ticker["pair"] = `'${ticker["base"]}${ticker["quote"]}'`
+
+    for (let key in ticker) {
+      let value = ticker[key]
+
+      if (['base', 'quote'].includes(key)) {
+        value = `'${value}'`
+      }
+
+      columns += `${key}, `
+      values += `${value}, `
+    }
+
+    columns = columns.substring(0, columns.length - 2)
+    values = values.substring(0, values.length - 2)
+
+    let queryString = `INSERT INTO binance_ticker (${columns}) VALUES (${values})`
+    return queryString
   }
 
   static matrix(matrix) {

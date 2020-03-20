@@ -26,6 +26,27 @@ class Parse {
     }
     return object
   }
+
+  static binanceTicker(ticker) {
+    let object = {
+      pair : ticker.base + ticker.quote,
+      base : ticker.base,
+      quote : ticker.quote,
+      timestamp : ticker.timestamp,
+      last_price : ticker.last,
+      open_price : ticker.open,
+      high_price : ticker.high,
+      low_price : ticker.low,
+      volume : ticker.volume,
+      quote_volume : ticker.quoteVolume,
+      change : ticker.change,
+      change_percent : ticker.changePercent,
+      bid_price : ticker.bid,
+      ask_price : ticker.ask,
+      ask_volume : ticker.askVolume
+    }
+    return object
+  }
 }
 
 module.exports = Parse
