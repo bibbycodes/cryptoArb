@@ -55,6 +55,7 @@ class Monitor {
         let price = parseFloat(ticker.price)
         let quote = ticker.product_id.split("-")[1]
         let base = ticker.product_id.split("-")[0]
+        // key has been deleted
         // let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
         // price = price/parseFloat(exchangeRate)
         // let tickerObject = Format.tickerObject(price, ticker.product_id, "coinbase", base, quote)
@@ -88,15 +89,17 @@ class Monitor {
     ws.on("message", async (ticker) => {
       ticker = JSON.parse(ticker)
       if (!ticker.event) {
+        console.log(ticker)
         let price = parseFloat(ticker[1].b[0])
         let pair = ticker[3]
         let base = ticker[3].split("/")[0]
         let quote = ticker[3].split("/")[1]
-        let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
-        price = price/parseFloat(exchangeRate)
+        // let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
+        // price = price/parseFloat(exchangeRate)
+        let queryString = Format.krakenTickerDbString(ticker)
         let tickerObject = Format.tickerObject(price, pair, "kraken", base, quote)
-        this.symbols[`${pair} kraken`] = tickerObject
-        this.comparePairs(this.symbols)
+        // this.symbols[`${pair} kraken`] = tickerObject
+        // this.comparePairs(this.symbols)
       }
     })
   }
@@ -160,6 +163,7 @@ class Monitor {
 }
 
 let monitor = new Monitor()
-// monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
-monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP'])
+monitor.krakenTicker(['BTC/USD'])
+// monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP'])
 // monitor.binanceTicker(["BTCUSDT", "BTCGBP", "BTCEUR"])
+// ['BTC/USD', 'BTC/EUR', 'BTC/GBP']

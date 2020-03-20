@@ -1,5 +1,7 @@
 const columnify = require('columnify')
 const center = require('center-align');
+const Parse = require('./Parse')
+
 class Format {
   static symbols(symbols, exchange) {
     let output = []
@@ -38,7 +40,7 @@ class Format {
     }
   }
 
-  static coinbaseTickerDbString(ticker, exchange) {
+  static coinbaseTickerDbString(ticker) {
     let columns = ""
     let values = ""
 
@@ -65,26 +67,19 @@ class Format {
     columns = columns.substring(0, columns.length - 2)
     values = values.substring(0, values.length - 2)
 
-    let queryString = `INSERT INTO ${exchange}_ticker (${columns}) VALUES (${values})`
+    let queryString = `INSERT INTO coinbase_ticker (${columns}) VALUES (${values})`
     console.log(queryString)
     return queryString
   }
 
-  static matrix(matrix) {
-    console.log(columnify(matrix))
+  static krakenTickerDbString(ticker) {
+    let object = Parse.krakenTicker(ticker)
+    console.log(object)
+    return object
+  }
 
-    // for (let el of matrix) {
-    //   let row_string = ""
-    //   // console.log(el)
-    //   for (let rate of el) {
-    //     // console.log(rate)
-    //     rate = center(rate, 7)
-    //     row_string = row_string + ` ${rate.toString()}`
-    //     // console.log(row_string)
-    //   }
-    //   console.table(row_string)
-    // }
-    console.log("\n")
+  static matrix(matrix) {
+    return columnify(matrix)
   }
 }
 
