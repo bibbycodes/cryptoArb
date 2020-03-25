@@ -13,10 +13,12 @@
       "frameworkVersion": ">=1.43.0",
       "timeout": 900,
       "environment": {
-        "DB_HOST": "postgres",
+        "DB_HOST": "crypto-arb.c3nrbcecxqrn.eu-west-2.rds.amazonaws.com",
+        "DB_PASS": "afriex2020",
         "DB_USER": "postgres",
-        "DB_NAME": "exchange_rate",
-        "TW_KEY": "dc73baf7-2fb6-463f-895b-a629f222ddff"
+        "DB_NAME": "crypto_arb",
+        "TW_KEY": "dc73baf7-2fb6-463f-895b-a629f222ddff",
+        "NODE_ENV": "production"
       },
       "versionFunctions": true,
       "remoteFunctionData": null,
@@ -168,7 +170,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/exchange-rate/dev/1584902753224-2020-03-22T18:45:53.224Z/exchange-rate.zip"
+                "S3Key": "serverless/exchange-rate/dev/1585169262184-2020-03-25T20:47:42.184Z/exchange-rate.zip"
               },
               "FunctionName": "exchange-rate-dev-getRatings",
               "Handler": "handler.getExchangeRate",
@@ -183,10 +185,12 @@
               "Timeout": 900,
               "Environment": {
                 "Variables": {
-                  "DB_HOST": "postgres",
+                  "DB_HOST": "crypto-arb.c3nrbcecxqrn.eu-west-2.rds.amazonaws.com",
+                  "DB_PASS": "afriex2020",
                   "DB_USER": "postgres",
-                  "DB_NAME": "exchange_rate",
-                  "TW_KEY": "dc73baf7-2fb6-463f-895b-a629f222ddff"
+                  "DB_NAME": "crypto_arb",
+                  "TW_KEY": "dc73baf7-2fb6-463f-895b-a629f222ddff",
+                  "NODE_ENV": "production"
                 }
               }
             },
@@ -195,14 +199,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "GetRatingsLambdaVersionMno4Ra1gQQHVAxHDIowKYh12jHv85IaJsnMplo6hONo": {
+          "GetRatingsLambdaVersionqSyeu6yOJ1hK94GyIfyHGPbW1wfDj7YQ2qp1lOcmVZg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetRatingsLambdaFunction"
               },
-              "CodeSha256": "/+27Rmmj8XV/Fwo5ahW/ldT5HOQeGbO11fjULH15HV8="
+              "CodeSha256": "C2XikqPGNWNbKZ1o1AgL7Re/4nJ2AGBDPbSJQjvxldE="
             }
           },
           "GetRatingsEventsRuleSchedule1": {
@@ -252,7 +256,7 @@
           "GetRatingsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetRatingsLambdaVersionMno4Ra1gQQHVAxHDIowKYh12jHv85IaJsnMplo6hONo"
+              "Ref": "GetRatingsLambdaVersionqSyeu6yOJ1hK94GyIfyHGPbW1wfDj7YQ2qp1lOcmVZg"
             }
           }
         }
@@ -341,7 +345,7 @@
         "timeout": 900,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetRatingsLambdaVersionMno4Ra1gQQHVAxHDIowKYh12jHv85IaJsnMplo6hONo"
+        "versionLogicalId": "GetRatingsLambdaVersionqSyeu6yOJ1hK94GyIfyHGPbW1wfDj7YQ2qp1lOcmVZg"
       }
     },
     "serviceFilename": "serverless.yml",
@@ -350,7 +354,7 @@
     "artifact": "/Users/bibbycodes/Documents/Projects/cryptoArb/exchange_rate_function/.serverless/exchange-rate.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/exchange-rate/dev/1584902753224-2020-03-22T18:45:53.224Z",
+    "artifactDirectoryName": "serverless/exchange-rate/dev/1585169262184-2020-03-25T20:47:42.184Z",
     "artifact": "exchange-rate.zip"
   }
 }

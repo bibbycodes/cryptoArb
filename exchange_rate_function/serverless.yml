@@ -8,9 +8,11 @@ provider:
   timeout: 900 # in seconds
   environment:
     DB_HOST: ${file(./secrets.json):DB_HOST}
+    DB_PASS: ${file(./secrets.json):DB_PASS}
     DB_USER: ${file(./secrets.json):DB_USER}
     DB_NAME: ${file(./secrets.json):DB_NAME}
     TW_KEY: ${file(./secrets.json):TW_KEY}
+    NODE_ENV: production
 functions:
   getRatings:
     handler: handler.getExchangeRate

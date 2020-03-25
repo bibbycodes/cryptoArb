@@ -22,9 +22,10 @@ class DbConn {
         user: "postgres",
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
-        host: process.env.HOST,
+        host: process.env.DB_HOST,
         port: 5432
       }
+      console.log(this.config)
       this.client = new Client(this.config)
     }
   }

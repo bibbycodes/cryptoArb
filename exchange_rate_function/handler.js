@@ -1,1 +1,1 @@
-exports.getExchangeRate = require('./get_ratings').func;
+exports.getExchangeRate = require('./getRates').func;

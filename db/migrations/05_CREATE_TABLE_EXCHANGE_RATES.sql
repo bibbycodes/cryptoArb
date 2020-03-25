@@ -1,5 +1,6 @@
-CREATE TABLE exchange_rates (
+CREATE TABLE tw_exchange_rates (
   id SERIAL PRIMARY KEY,
-  symbol VARCHAR(10),
-  rate NUMERIC(10,4),
-)
+  source VARCHAR(10),
+  target VARCHAR(10),
+  rate NUMERIC
+);
