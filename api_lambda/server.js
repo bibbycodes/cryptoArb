@@ -5,14 +5,13 @@ const PORT = process.env.PORT || 5000;
 const app = express()
 const dbConn = require('./dbConn')
 const bodyParser = require('body-parser')
-// const cors = require('cors');
-
-// app.use(cors())
 app.use(bodyParser.json())
 
-app.get('/rates', (req, res) => {
-
-  res.send("Hello")
+app.get('/rates', async (req, res) => {
+  let db = new dbConn()
+  let result = await db.query('SELECT * FROM tw_exchange_rates;').catch(err => console.log(err))
+  let rates = result.rows
+  res.json(rates)
 })
 
 app.listen(PORT, () => {
