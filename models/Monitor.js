@@ -98,8 +98,8 @@ class Monitor {
         let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
         price = price/parseFloat(exchangeRate)
         let tickerObject = Format.tickerObject(price, pair, "kraken", base, quote)
-        // this.symbols[`${pair} kraken`] = tickerObject
-        // this.comparePairs(this.symbols)
+        this.symbols[`${pair} kraken`] = tickerObject
+        this.comparePairs(this.symbols)
       }
     })
   }
