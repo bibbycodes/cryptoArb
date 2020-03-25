@@ -59,7 +59,6 @@ class Monitor {
         let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
         price = price/parseFloat(exchangeRate)
         let tickerObject = Format.tickerObject(price, ticker.product_id, "coinbase", base, quote)
-        console.log(tickerObject)
         this.symbols[`${ticker.product_id} coinbase`] = tickerObject
         this.comparePairs(this.symbols)
       }
@@ -96,8 +95,8 @@ class Monitor {
         let pair = ticker[3]
         let base = ticker[3].split("/")[0]
         let quote = ticker[3].split("/")[1]
-        // let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
-        // price = price/parseFloat(exchangeRate)
+        let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
+        price = price/parseFloat(exchangeRate)
         let tickerObject = Format.tickerObject(price, pair, "kraken", base, quote)
         // this.symbols[`${pair} kraken`] = tickerObject
         // this.comparePairs(this.symbols)
@@ -116,7 +115,6 @@ class Monitor {
 
       binance.subscribeTicker(market)
       binance.on("ticker", async (ticker) => {
-        console.log(ticker)
         let pair = `${ticker.quote}-${ticker.base}`
         let queryString = Format.binanceTickerDbString(ticker)
         let db = new DB()
