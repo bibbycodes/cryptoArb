@@ -8,24 +8,12 @@ require('dotenv').config()
 
 class Fetcher {
   static async googleExchangeRate(base, quote) {
-    // let res = await axios.get(`https://www.google.com/search?q=${base}+${quote}`).catch(err => console.log(err))
-    // let res = await axios.post(
-    //   'https://us-central1-cryptoarb-271400.cloudfunctions.net/exchange_rate', 
-    //   { 
-    //     base: base, 
-    //     quote: quote
-    //   })
-    // .catch(err => console.log(err))
-    // console.log(res.data)
     let document = parse5.parse(res.data.toString());
     let xhtml = xmlser.serializeToString(document)
     let doc = new dom().parseFromString(xhtml)
     const select = xpath.useNamespaces({"x": "http://www.w3.org/1999/xhtml"});
     let nodes = select("//div", doc)
-    console.log(nodes)
-    // $('div[aria-label="Currency exchange rate converter"]').html()
     console.log($('div[class="g obcontainer"]').html())
-    console.log(res.data)
     return res
   }
 
@@ -38,22 +26,24 @@ class Fetcher {
     if (quote == "USDT") {
       quote = "USD"
     }
+
     let res = await axios.get(`http://data.fixer.io/api/latest?access_key=${key}&symbols=${base},${quote}`)
     let resBase = parseFloat(res.data.rates[base])
     let resQuote = parseFloat(res.data.rates[quote])
     let converted = resBase / resQuote
-    console.log(converted, base, quote)
-    return res.data
+    return converted
   }
 
   static async transferWiseRates(source, target) {
     if (["USDC", "USDT"].includes(target)) {
       target = "USD"
     }
+
     let res = await axios.get(
       `https://api.sandbox.transferwise.tech/v1/rates?source=${source}&target=${target}`,
       {headers: {Authorization:` Bearer ${process.env.TW_KEY}`}}
     ).catch(err => console.log(err))
+    
     return res.data[0].rate
   }
 

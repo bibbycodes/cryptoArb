@@ -1,6 +1,3 @@
-
-
-
 exports.func = async () => {
   require('dotenv').config()
   const axios = require('axios')
@@ -11,6 +8,5 @@ exports.func = async () => {
   ).catch(err => console.log(err))
 
   let rates = res.data
-  
-
+  return res.data
 }

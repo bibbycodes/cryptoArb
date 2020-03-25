@@ -56,12 +56,12 @@ class Monitor {
         let quote = ticker.product_id.split("-")[1]
         let base = ticker.product_id.split("-")[0]
         // key has been deleted
-        // let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
-        // price = price/parseFloat(exchangeRate)
-        // let tickerObject = Format.tickerObject(price, ticker.product_id, "coinbase", base, quote)
-        // console.log(tickerObject)
-        // this.symbols[`${ticker.product_id} coinbase`] = tickerObject
-        // this.comparePairs(this.symbols)
+        let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
+        price = price/parseFloat(exchangeRate)
+        let tickerObject = Format.tickerObject(price, ticker.product_id, "coinbase", base, quote)
+        console.log(tickerObject)
+        this.symbols[`${ticker.product_id} coinbase`] = tickerObject
+        this.comparePairs(this.symbols)
       }
     })
   }
@@ -121,12 +121,12 @@ class Monitor {
         let queryString = Format.binanceTickerDbString(ticker)
         let db = new DB()
         db.query(queryString)
-        // let price = parseFloat((ticker.last))
-        // let exchangeRate = await Fetcher.transferWiseRates("USD", ticker.quote)
-        // price = price/parseFloat(exchangeRate)
-        // let tickerObject = Format.tickerObject(price, pair, "binance", ticker.base, ticker.quote)
-        // this.symbols[`${pair} binance`] = tickerObject
-        // this.comparePairs(this.symbols)
+        let price = parseFloat((ticker.last))
+        let exchangeRate = await Fetcher.transferWiseRates("USD", ticker.quote)
+        price = price/parseFloat(exchangeRate)
+        let tickerObject = Format.tickerObject(price, pair, "binance", ticker.base, ticker.quote)
+        this.symbols[`${pair} binance`] = tickerObject
+        this.comparePairs(this.symbols)
       })
     }
   }
@@ -134,10 +134,12 @@ class Monitor {
   comparePairs(pairs) {
     let arrayOfPairs = []
     let matrix = []
+
     // convert object to array
     for (const pair_name in pairs) {
       arrayOfPairs.push(pairs[pair_name])
     }
+
     // compare all pairs
     for (let i = 0; i < arrayOfPairs.length; i++) {
       let priceA = arrayOfPairs[i].price
@@ -150,11 +152,13 @@ class Monitor {
         if (i == j) {
           continue
         } else {
-          this.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
+          Calculate.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
         }
       }
+      
       matrix.push(sub_arr)
       // console.log(matrix)
+      console.log(Format.matrix(matrix))
       Format.matrix(matrix)
     }
   }
@@ -167,8 +171,7 @@ class Monitor {
 }
 
 let monitor = new Monitor()
-// monitor.krakenTicker(['BTC/USD'])
-// monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP'])
-monitor.binanceTicker(["BTCUSDT"])
-// ['BTC/USD', 'BTC/EUR', 'BTC/GBP']
-// ["BTCUSDT", "BTCGBP", "BTCEUR"]
+
+monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
+monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
+monitor.binanceTicker(["BTCUSDT", "BTCGBP", "BTCEUR", 'BTCNGN'])

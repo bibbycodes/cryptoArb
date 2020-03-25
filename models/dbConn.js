@@ -39,7 +39,6 @@ class DbConn {
 
   async query(query) {
     try {
-      console.log(this.uri)
       await this.start()
       let result =  await this.client.query(query)
       await this.close()
