@@ -1,0 +1,16 @@
+{
+  "name": "exchange_rate_function",
+  "version": "1.0.0",
+  "description": "",
+  "main": "get_ratings.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "pg": "^7.18.2"
+  }
+}

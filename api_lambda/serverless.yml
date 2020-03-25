@@ -1,0 +1,13 @@
+service: crypto-arb-api
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: 'eu-west-2'
+  frameworkVersion: ">=1.43.0"
+  # environment:
+functions:
+  cryptoArbApi:
+    handler: server.handler
+    events:
+      - schedule: rate(2 minutes)
