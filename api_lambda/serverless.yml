@@ -10,4 +10,5 @@ functions:
   cryptoArbApi:
     handler: server.handler
     events:
-      - schedule: rate(2 minutes)
+      - http: ANY /
+      - http: 'ANY {proxy+}'
