@@ -25,7 +25,6 @@ class DbConn {
         host: process.env.DB_HOST,
         port: 5432
       }
-      console.log(this.config)
       this.client = new Client(this.config)
     }
   }

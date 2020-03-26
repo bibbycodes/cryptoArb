@@ -146,7 +146,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/crypto-arb-api/dev/1585173773437-2020-03-25T22:02:53.437Z/crypto-arb-api.zip"
+          "S3Key": "serverless/crypto-arb-api/dev/1585178779969-2020-03-25T23:26:19.969Z/crypto-arb-api.zip"
         },
         "FunctionName": "crypto-arb-api-dev-cryptoArbApi",
         "Handler": "server.handler",
@@ -158,21 +158,30 @@
           ]
         },
         "Runtime": "nodejs12.x",
-        "Timeout": 6
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "DB_HOST": "crypto-arb.c3nrbcecxqrn.eu-west-2.rds.amazonaws.com",
+            "DB_PASS": "afriex2020",
+            "DB_USER": "postgres",
+            "DB_NAME": "crypto_arb",
+            "NODE_ENV": "production"
+          }
+        }
       },
       "DependsOn": [
         "CryptoArbApiLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "CryptoArbApiLambdaVersionZjdY6xRv99jnRROpplVFTiXcRcYj56nKRXxUpZA": {
+    "CryptoArbApiLambdaVersion6v3EjqkP5DJiHGEYb38eklsthuxNcaHnqPB601hDU": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "CryptoArbApiLambdaFunction"
         },
-        "CodeSha256": "vicayobuVzVX25K15gvfrBcqOzkGF2ArH52IRj18QVs="
+        "CodeSha256": "zvL4qCRz4zafAigwVCR7IOZl+KKqAcTX/JgvRuS6is4="
       }
     },
     "ApiGatewayRestApi": {
@@ -291,7 +300,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1585173768997": {
+    "ApiGatewayDeployment1585178776381": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -351,7 +360,7 @@
     "CryptoArbApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "CryptoArbApiLambdaVersionZjdY6xRv99jnRROpplVFTiXcRcYj56nKRXxUpZA"
+        "Ref": "CryptoArbApiLambdaVersion6v3EjqkP5DJiHGEYb38eklsthuxNcaHnqPB601hDU"
       }
     },
     "ServiceEndpoint": {

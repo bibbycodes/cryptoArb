@@ -5,9 +5,9 @@ const Format = require('./Format')
 const Calculate = require('./Calculate')
 const Fetcher = require('./Fetcher')
 const DB = require('./dbConn')
-const axios = require("axios")
+const axios = require('axios')
 
-class Monitor {
+class MonitorWs {
   constructor(exchange){
     this.exchange = exchange
     this.pairs = []
@@ -16,29 +16,29 @@ class Monitor {
 
   monitor(symbols) {
     symbols = Format.symbols(symbols, this.exchange)
-    if (this.exchange == "kraken") {
+    if (this.exchange == 'kraken') {
       this.krakenTicker(symbols)
     }
 
-    if (this.exchange == "coinbase") {
+    if (this.exchange == 'coinbase') {
       this.coinbaseTicker(symbols)
     }
 
-    if (this.exchange == "binance") {
+    if (this.exchange == 'binance') {
       this.binanceTicker(symbols)
     }
   }
 
   coinbaseTicker(symbols) {
-    symbols = Format.symbols(symbols, "coinbase")
-    const wsUrl = "wss://ws-feed-public.sandbox.pro.coinbase.com"
+    symbols = Format.symbols(symbols, 'coinbase')
+    const wsUrl = 'wss://ws-feed-public.sandbox.pro.coinbase.com'
     const ws = new WebSocket(wsUrl)
     
     const subscribePayload = {
-      "type": "subscribe",
-      "product_ids": symbols,
-      "channels": [
-        "ticker",
+      'type': 'subscribe',
+      'product_ids': symbols,
+      'channels': [
+        'ticker',
       ]
     }
 
@@ -48,17 +48,17 @@ class Monitor {
    
     ws.on('message', async (ticker) => {
       ticker = JSON.parse(ticker)
-      if (ticker.type == "ticker") {
-        let queryString = Format.coinbaseTickerDbString(ticker, "coinbase")
+      if (ticker.type == 'ticker') {
+        let queryString = Format.coinbaseTickerDbString(ticker, 'coinbase')
         let db = new DB()
         db.query(queryString)
         let price = parseFloat(ticker.price)
-        let quote = ticker.product_id.split("-")[1]
-        let base = ticker.product_id.split("-")[0]
+        let quote = ticker.product_id.split('-')[1]
+        let base = ticker.product_id.split('-')[0]
         // key has been deleted
-        let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
+        let exchangeRate = await Fetcher.transferWiseRates('USD', quote)
         price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.tickerObject(price, ticker.product_id, "coinbase", base, quote)
+        let tickerObject = Format.tickerObject(price, ticker.product_id, 'coinbase', base, quote)
         this.symbols[`${ticker.product_id} coinbase`] = tickerObject
         this.comparePairs(this.symbols)
       }
@@ -66,26 +66,26 @@ class Monitor {
   }
 
   krakenTicker(symbols) {
-    symbols = Format.symbols(symbols, "kraken")
+    symbols = Format.symbols(symbols, 'kraken')
     for (let symbol of symbols) {
-      this.pairs.push([symbol, "Kraken"])
+      this.pairs.push([symbol, 'Kraken'])
     }
 
-    const wsUrl = "wss://ws.kraken.com"
+    const wsUrl = 'wss://ws.kraken.com'
     const ws = new WebSocket(wsUrl)
     const subscribePayload = {
-      "event": "subscribe",
-      "pair": symbols,
-      "subscription": {
-        "name": "ticker"
+      'event': 'subscribe',
+      'pair': symbols,
+      'subscription': {
+        'name': 'ticker'
       }
     }
 
-    ws.on("open", () => {
+    ws.on('open', () => {
       ws.send(JSON.stringify(subscribePayload))
     })
 
-    ws.on("message", async (ticker) => {
+    ws.on('message', async (ticker) => {
       ticker = JSON.parse(ticker)
       if (!ticker.event) {
         let queryString = Format.krakenTickerDbString(ticker)
@@ -93,11 +93,11 @@ class Monitor {
         db.query(queryString)
         let price = parseFloat(ticker[1].b[0])
         let pair = ticker[3]
-        let base = ticker[3].split("/")[0]
-        let quote = ticker[3].split("/")[1]
-        let exchangeRate = await Fetcher.transferWiseRates("USD", quote)
+        let base = ticker[3].split('/')[0]
+        let quote = ticker[3].split('/')[1]
+        let exchangeRate = await Fetcher.transferWiseRates('USD', quote)
         price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.tickerObject(price, pair, "kraken", base, quote)
+        let tickerObject = Format.tickerObject(price, pair, 'kraken', base, quote)
         this.symbols[`${pair} kraken`] = tickerObject
         this.comparePairs(this.symbols)
       }
@@ -114,15 +114,15 @@ class Monitor {
       }
 
       binance.subscribeTicker(market)
-      binance.on("ticker", async (ticker) => {
+      binance.on('ticker', async (ticker) => {
         let pair = `${ticker.quote}-${ticker.base}`
         let queryString = Format.binanceTickerDbString(ticker)
         let db = new DB()
         db.query(queryString)
         let price = parseFloat((ticker.last))
-        let exchangeRate = await Fetcher.transferWiseRates("USD", ticker.quote)
+        let exchangeRate = await Fetcher.transferWiseRates('USD', ticker.quote)
         price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.tickerObject(price, pair, "binance", ticker.base, ticker.quote)
+        let tickerObject = Format.tickerObject(price, pair, 'binance', ticker.base, ticker.quote)
         this.symbols[`${pair} binance`] = tickerObject
         this.comparePairs(this.symbols)
       })
@@ -155,21 +155,14 @@ class Monitor {
       }
       
       matrix.push(sub_arr)
-      // console.log(matrix)
       console.log(Format.matrix(matrix))
       Format.matrix(matrix)
     }
   }
-
-  relativeDifference(priceA, priceB, message) {
-    let relativeDifference = ((priceA - priceB) / (Math.max(priceA, priceB)) * 100).toFixed(2)
-    // console.log(message)
-    return [relativeDifference]
-  }
 }
 
-let monitor = new Monitor()
+let monitorWs = new MonitorWs()
 
-monitor.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
-monitor.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
-monitor.binanceTicker(["BTCUSDT", "BTCGBP", "BTCEUR", 'BTCNGN'])
+monitorWs.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
+monitorWs.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
+monitorWs.binanceTicker(['BTCUSDT', 'BTCGBP', 'BTCEUR', 'BTCNGN'])

@@ -146,7 +146,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/exchange-rate/dev/1585169262184-2020-03-25T20:47:42.184Z/exchange-rate.zip"
+          "S3Key": "serverless/exchange-rate/dev/1585178982852-2020-03-25T23:29:42.852Z/exchange-rate.zip"
         },
         "FunctionName": "exchange-rate-dev-getRatings",
         "Handler": "handler.getExchangeRate",
@@ -175,20 +175,20 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "GetRatingsLambdaVersionqSyeu6yOJ1hK94GyIfyHGPbW1wfDj7YQ2qp1lOcmVZg": {
+    "GetRatingsLambdaVersionnSGjfx9giXDIVTJp2svNEyIQ3AXCN2OFrpuDpG3jQg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetRatingsLambdaFunction"
         },
-        "CodeSha256": "C2XikqPGNWNbKZ1o1AgL7Re/4nJ2AGBDPbSJQjvxldE="
+        "CodeSha256": "IkAjQp8GtauB8CTe+WiWPPolTMBt9xDHU21ToJNiqZo="
       }
     },
     "GetRatingsEventsRuleSchedule1": {
       "Type": "AWS::Events::Rule",
       "Properties": {
-        "ScheduleExpression": "rate(2 minutes)",
+        "ScheduleExpression": "rate(1 hour)",
         "State": "ENABLED",
         "Targets": [
           {
@@ -232,7 +232,7 @@
     "GetRatingsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetRatingsLambdaVersionqSyeu6yOJ1hK94GyIfyHGPbW1wfDj7YQ2qp1lOcmVZg"
+        "Ref": "GetRatingsLambdaVersionnSGjfx9giXDIVTJp2svNEyIQ3AXCN2OFrpuDpG3jQg"
       }
     }
   }

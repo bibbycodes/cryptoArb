@@ -9,7 +9,7 @@ app.use(bodyParser.json())
 
 app.get('/rates', async (req, res) => {
   let db = new dbConn()
-  let result = await db.query('SELECT * FROM tw_exchange_rates;').catch(err => console.log(err))
+  let result = await db.query('SELECT * FROM tw_exchange_rates_history;').catch(err => console.log(err))
   let rates = result.rows
   res.json(rates)
 })

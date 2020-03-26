@@ -123,6 +123,22 @@ class Format {
   static matrix(matrix) {
     return columnify(matrix)
   }
+
+  static orderBookDbString(orderBook) {
+    let timestamp = orderBook.timestamp
+    let exchange = orderBook.exchange
+    let pair = orderBook.pair
+    let ask = orderBook.ask
+    let askVolume = orderBook.askVolume
+    let bid = orderBook.bid
+    let bidVolume = orderBook.bidVolume
+
+    return `
+      INSERT INTO order_book_best 
+      (timestamp, exchange, pair, ask, ask_volume, bid, bid_volume)
+      VALUES (${timestamp}, '${exchange}', '${pair}', ${ask}, ${askVolume}, ${bid}, ${bidVolume})
+      `
+  }
 }
 
 module.exports = Format
