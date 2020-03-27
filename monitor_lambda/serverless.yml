@@ -5,7 +5,6 @@ provider:
   runtime: nodejs12.x
   region: 'eu-west-2'
   frameworkVersion: ">=1.43.0"
-  timeout: 900 # in seconds
   environment:
     DB_HOST: ${file(./secrets.json):DB_HOST}
     DB_PASS: ${file(./secrets.json):DB_PASS}
@@ -13,7 +12,7 @@ provider:
     DB_NAME: ${file(./secrets.json):DB_NAME}
     NODE_ENV: production
 functions:
-  getRatings:
+  getBooks:
     handler: handler.getBooks
     events:
       - schedule: rate(5 minutes)

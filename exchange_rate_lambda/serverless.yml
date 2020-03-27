@@ -15,6 +15,6 @@ provider:
     NODE_ENV: production
 functions:
   getRatings:
-    handler: handler.getExchangeRate
+    handler: handler.getRates
     events:
       - schedule: rate(1 hour)

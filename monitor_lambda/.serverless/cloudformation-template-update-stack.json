@@ -56,10 +56,10 @@
         }
       }
     },
-    "GetRatingsLogGroup": {
+    "GetBooksLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/getBooks-dev-getRatings"
+        "LogGroupName": "/aws/lambda/getBooks-dev-getBooks"
       }
     },
     "IamRoleLambdaExecution": {
@@ -139,16 +139,16 @@
         }
       }
     },
-    "GetRatingsLambdaFunction": {
+    "GetBooksLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/getBooks/dev/1585304509816-2020-03-27T10:21:49.816Z/getBooks.zip"
+          "S3Key": "serverless/getBooks/dev/1585335082985-2020-03-27T18:51:22.985Z/getBooks.zip"
         },
-        "FunctionName": "getBooks-dev-getRatings",
+        "FunctionName": "getBooks-dev-getBooks",
         "Handler": "handler.getBooks",
         "MemorySize": 1024,
         "Role": {
@@ -158,7 +158,7 @@
           ]
         },
         "Runtime": "nodejs12.x",
-        "Timeout": 900,
+        "Timeout": 6,
         "Environment": {
           "Variables": {
             "DB_HOST": "crypto-arb.c3nrbcecxqrn.eu-west-2.rds.amazonaws.com",
@@ -170,21 +170,21 @@
         }
       },
       "DependsOn": [
-        "GetRatingsLogGroup",
+        "GetBooksLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "GetRatingsLambdaVersionsizvTG7XolFkIqm0VKCGgCODT1ourpVHiXOu1k8juk": {
+    "GetBooksLambdaVersioneZNlHx1XeWnJKEqwKquR84qiVKT1NHwOqR7VqrUeJc": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "GetRatingsLambdaFunction"
+          "Ref": "GetBooksLambdaFunction"
         },
-        "CodeSha256": "DCTaGM7a0+Q9DwEdG8kyhbhp0jVKVJOXe758fWExqg0="
+        "CodeSha256": "x/SamxUafCOGbPs9u4G8z5thIjf6zWTcCpDHogZzm2E="
       }
     },
-    "GetRatingsEventsRuleSchedule1": {
+    "GetBooksEventsRuleSchedule1": {
       "Type": "AWS::Events::Rule",
       "Properties": {
         "ScheduleExpression": "rate(5 minutes)",
@@ -193,21 +193,21 @@
           {
             "Arn": {
               "Fn::GetAtt": [
-                "GetRatingsLambdaFunction",
+                "GetBooksLambdaFunction",
                 "Arn"
               ]
             },
-            "Id": "getRatingsSchedule"
+            "Id": "getBooksSchedule"
           }
         ]
       }
     },
-    "GetRatingsLambdaPermissionEventsRuleSchedule1": {
+    "GetBooksLambdaPermissionEventsRuleSchedule1": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "GetRatingsLambdaFunction",
+            "GetBooksLambdaFunction",
             "Arn"
           ]
         },
@@ -215,7 +215,7 @@
         "Principal": "events.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "GetRatingsEventsRuleSchedule1",
+            "GetBooksEventsRuleSchedule1",
             "Arn"
           ]
         }
@@ -228,10 +228,10 @@
         "Ref": "ServerlessDeploymentBucket"
       }
     },
-    "GetRatingsLambdaFunctionQualifiedArn": {
+    "GetBooksLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetRatingsLambdaVersionsizvTG7XolFkIqm0VKCGgCODT1ourpVHiXOu1k8juk"
+        "Ref": "GetBooksLambdaVersioneZNlHx1XeWnJKEqwKquR84qiVKT1NHwOqR7VqrUeJc"
       }
     }
   }

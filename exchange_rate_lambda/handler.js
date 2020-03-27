@@ -1,1 +1,1 @@
-exports.getExchangeRate = require('./getRates').func;
+exports.getRates = require('./getRates').func;
