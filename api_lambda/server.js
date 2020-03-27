@@ -20,11 +20,18 @@ app.get('/rates/last/:source/:target', async (req, res) => {
   let target = req.params.target.toUpperCase()
   let result = await db.query(
     `SELECT * FROM tw_exchange_rates_history
-    WHERE source='${source}' AND target='${target}';`
+    WHERE source='${source}' AND target='${target}'
+    ORDER BY timestamp desc
+    LIMIT 1;`
     ).catch(err => console.log(err))
-  let rates = result.rows
-  console.log(result.rows)
-  res.json(rates)
+  let latest = result.rows
+  // let latest = rates.map(rate => {
+  //   if (time - rate.timestamp < 3600000) {
+  //     return rate
+  //   }
+  // })
+  console.log(latest)
+  res.json(latest)
 })
 
 
