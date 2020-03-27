@@ -1,19 +1,29 @@
-service: crypto-arb-api
+service: cryptoArb
 
 provider:
   name: aws
   runtime: nodejs12.x
   region: 'eu-west-2'
   frameworkVersion: ">=1.43.0"
+  # timeout: 900 # in seconds
   environment:
     DB_HOST: ${file(./secrets.json):DB_HOST}
     DB_PASS: ${file(./secrets.json):DB_PASS}
     DB_USER: ${file(./secrets.json):DB_USER}
     DB_NAME: ${file(./secrets.json):DB_NAME}
+    TW_KEY: ${file(./secrets.json):TW_KEY}
     NODE_ENV: production
 functions:
+  getBooks:
+    handler: monitor/handler.getBooks
+    events:
+      - schedule: rate(5 minutes)
   cryptoArbApi:
-    handler: server.handler
+    handler: api_lambda/server.handler
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+  getRatings:
+    handler: handler.getExchangeRate
+    events:
+      - schedule: rate(1 hour)
