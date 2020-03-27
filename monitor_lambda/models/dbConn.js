@@ -18,7 +18,6 @@ class DbConn {
       this.uri = `postgres://${this.user}@${this.db_ip}:${this.port}/${this.db_name}`;
       this.client = new Client(this.uri)
     } else if (process.env.NODE_ENV == 'production') {
-      // aws
       this.config = {
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
@@ -28,7 +27,7 @@ class DbConn {
       }
       this.client = new Client(this.config)
     } else {
-      console.log("hey")
+      throw new Error('config not present, check NODE_ENV')
     }
   }
 

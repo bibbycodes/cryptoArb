@@ -168,7 +168,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/crypto-arb-api/dev/1585259495423-2020-03-26T21:51:35.423Z/crypto-arb-api.zip"
+                "S3Key": "serverless/crypto-arb-api/dev/1585307916421-2020-03-27T11:18:36.421Z/crypto-arb-api.zip"
               },
               "FunctionName": "crypto-arb-api-dev-cryptoArbApi",
               "Handler": "server.handler",
@@ -196,14 +196,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "CryptoArbApiLambdaVersion6v3EjqkP5DJiHGEYb38eklsthuxNcaHnqPB601hDU": {
+          "CryptoArbApiLambdaVersionyGUZ5knLUhfbUpfxwW7LD1fvnxnIuYoIZHtmHRh4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CryptoArbApiLambdaFunction"
               },
-              "CodeSha256": "zvL4qCRz4zafAigwVCR7IOZl+KKqAcTX/JgvRuS6is4="
+              "CodeSha256": "zzQD+Xi+WCIZyrXQbL7U8tADsmi2zqcfCKvCwBTVpY4="
             }
           },
           "ApiGatewayRestApi": {
@@ -322,7 +322,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1585259487000": {
+          "ApiGatewayDeployment1585307906956": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -382,7 +382,7 @@
           "CryptoArbApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CryptoArbApiLambdaVersion6v3EjqkP5DJiHGEYb38eklsthuxNcaHnqPB601hDU"
+              "Ref": "CryptoArbApiLambdaVersionyGUZ5knLUhfbUpfxwW7LD1fvnxnIuYoIZHtmHRh4"
             }
           },
           "ServiceEndpoint": {
@@ -497,7 +497,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "CryptoArbApiLambdaVersion6v3EjqkP5DJiHGEYb38eklsthuxNcaHnqPB601hDU"
+        "versionLogicalId": "CryptoArbApiLambdaVersionyGUZ5knLUhfbUpfxwW7LD1fvnxnIuYoIZHtmHRh4"
       }
     },
     "serviceFilename": "serverless.yml",
@@ -506,7 +506,7 @@
     "artifact": "/Users/bibbycodes/Documents/Projects/cryptoArb/api_lambda/.serverless/crypto-arb-api.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/crypto-arb-api/dev/1585259495423-2020-03-26T21:51:35.423Z",
+    "artifactDirectoryName": "serverless/crypto-arb-api/dev/1585307916421-2020-03-27T11:18:36.421Z",
     "artifact": "crypto-arb-api.zip"
   }
 }

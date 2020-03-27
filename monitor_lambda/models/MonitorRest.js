@@ -9,28 +9,33 @@ class MonitorRest {
   static async orderBook(ex, pair) {
     try {
       let exchange = new ccxt[ex]()
-      let orderBook = await exchange.fetchOrderBook(pair)
-      let timestamp = Date.now()
+      let markets = await exchange.loadMarkets()
 
-      let best =  {
-        timestamp: timestamp,
-        exchange: ex,
-        pair : pair,
-        ask : orderBook.asks[0][0],
-        askVolume : orderBook.asks[0][1],
-        bid : orderBook.bids[0][0],
-        bidVolume : orderBook.bids[0][1]
+      if (markets[pair]) {
+        let orderBook = await exchange.fetchOrderBook(pair)
+        let timestamp = Date.now()
+
+        let best =  {
+          timestamp: timestamp,
+          exchange: ex,
+          pair : pair,
+          ask : orderBook.asks[0][0],
+          askVolume : orderBook.asks[0][1],
+          bid : orderBook.bids[0][0],
+          bidVolume : orderBook.bids[0][1]
+        }
+
+        let db = new dbConn()
+        let queryString = Format.orderBookDbString(best)
+        await db.query(queryString)
+
+        return best
+      } else {
+        throw new Error('Pair not Present')
       }
-
-      let db = new dbConn()
-      let queryString = Format.orderBookDbString(best)
-      await db.query(queryString)
-
-      return best
     } catch (err){
       console.log(err)
     }
-    
   }
 
   static async ticker(ex, pair) {
@@ -47,7 +52,6 @@ class MonitorRest {
       close: ticker.close,
       timestamp: ticker.timestamp,
     }
-
     return tickerObj
   }
 }

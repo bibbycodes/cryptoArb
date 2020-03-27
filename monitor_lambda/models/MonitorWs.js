@@ -5,7 +5,6 @@ const Format = require('./Format')
 const Calculate = require('./Calculate')
 const Fetcher = require('./Fetcher')
 const DB = require('./dbConn')
-const axios = require('axios')
 
 class MonitorWs {
   constructor(exchange){

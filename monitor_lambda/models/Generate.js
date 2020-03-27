@@ -4,10 +4,10 @@ class Generate {
     for (let curr of currencies) {
       for (let cryp of cryptos) {
         if (curr == "NGN" && cryp != 'BTC') {
-          continue
+          break
         }
         if (curr == cryp) {
-          continue
+          break
         }
         let pair = `${cryp}/${curr}`
         pairs.push(pair)
@@ -17,8 +17,4 @@ class Generate {
   }
 }
 
-let cryptos = ['BTC', 'ETH', 'XRP', 'LTC', 'XMR', 'DASH']
-let currencires = ['GBP', 'NGN', 'BTC', 'ETH', 'EUR']
-
-console.log(Generate.pairs(cryptos, currencires))
 module.exports = Generate

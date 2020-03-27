@@ -169,7 +169,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/getBooks/dev/1585267637346-2020-03-27T00:07:17.346Z/getBooks.zip"
+                "S3Key": "serverless/getBooks/dev/1585304509816-2020-03-27T10:21:49.816Z/getBooks.zip"
               },
               "FunctionName": "getBooks-dev-getRatings",
               "Handler": "handler.getBooks",
@@ -197,14 +197,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "GetRatingsLambdaVersion6EP0Yd1l9RHXrgxgWMkU9S3MtgWi3trQIGJMS9c4Jb0": {
+          "GetRatingsLambdaVersionsizvTG7XolFkIqm0VKCGgCODT1ourpVHiXOu1k8juk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetRatingsLambdaFunction"
               },
-              "CodeSha256": "bNJZyvP1M+K0kg1T7l9MRQ4eLJ7TicplqwLOffeyrEk="
+              "CodeSha256": "DCTaGM7a0+Q9DwEdG8kyhbhp0jVKVJOXe758fWExqg0="
             }
           },
           "GetRatingsEventsRuleSchedule1": {
@@ -254,7 +254,7 @@
           "GetRatingsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetRatingsLambdaVersion6EP0Yd1l9RHXrgxgWMkU9S3MtgWi3trQIGJMS9c4Jb0"
+              "Ref": "GetRatingsLambdaVersionsizvTG7XolFkIqm0VKCGgCODT1ourpVHiXOu1k8juk"
             }
           }
         }
@@ -343,7 +343,7 @@
         "timeout": 900,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetRatingsLambdaVersion6EP0Yd1l9RHXrgxgWMkU9S3MtgWi3trQIGJMS9c4Jb0"
+        "versionLogicalId": "GetRatingsLambdaVersionsizvTG7XolFkIqm0VKCGgCODT1ourpVHiXOu1k8juk"
       }
     },
     "serviceFilename": "serverless.yml",
@@ -352,7 +352,7 @@
     "artifact": "/Users/bibbycodes/Documents/Projects/cryptoArb/monitor_lambda/.serverless/getBooks.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/getBooks/dev/1585267637346-2020-03-27T00:07:17.346Z",
+    "artifactDirectoryName": "serverless/getBooks/dev/1585304509816-2020-03-27T10:21:49.816Z",
     "artifact": "getBooks.zip"
   }
 }
