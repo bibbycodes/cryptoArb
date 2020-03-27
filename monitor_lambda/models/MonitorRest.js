@@ -7,28 +7,30 @@ const axios = require('axios')
 
 class MonitorRest {
   static async orderBook(ex, pair) {
-    let exchange = new ccxt[ex]()
-    let orderBook = await exchange.fetchOrderBook(pair)
-    let timestamp = Date.now()
+    try {
+      let exchange = new ccxt[ex]()
+      let orderBook = await exchange.fetchOrderBook(pair)
+      let timestamp = Date.now()
 
-    let best =  {
-      timestamp: timestamp,
-      exchange: ex,
-      pair : pair,
-      ask : orderBook.asks[0][0],
-      askVolume : orderBook.asks[0][1],
-      bid : orderBook.bids[0][0],
-      bidVolume : orderBook.bids[0][1]
+      let best =  {
+        timestamp: timestamp,
+        exchange: ex,
+        pair : pair,
+        ask : orderBook.asks[0][0],
+        askVolume : orderBook.asks[0][1],
+        bid : orderBook.bids[0][0],
+        bidVolume : orderBook.bids[0][1]
+      }
+
+      let db = new dbConn()
+      let queryString = Format.orderBookDbString(best)
+      await db.query(queryString)
+
+      return best
+    } catch (err){
+      console.log(err)
     }
-
-    console.log(typeof best.timestamp)
-
-    let db = new dbConn()
-    let queryString = Format.orderBookDbString(best)
-
-    await db.query(queryString)
-
-    return best
+    
   }
 
   static async ticker(ex, pair) {
@@ -49,7 +51,5 @@ class MonitorRest {
     return tickerObj
   }
 }
-
-MonitorRest.orderBook('binance', 'BTC/USDT')
 
 module.exports = MonitorRest

@@ -1,9 +1,10 @@
-require('dotenv').config();
+require('dotenv').config({path:__dirname + '../.env'})
 const { Client } = require('pg')
 // refactor to generalise
 class DbConn {
   constructor() {
     this.port = process.env.DB_PORT || 5432;
+    
     if (process.env.NODE_ENV == 'test'){
       this.user = process.env.DB_USER_LOCAL || "postgres";
       this.db_name = process.env.TEST_DB_NAME;
@@ -19,13 +20,15 @@ class DbConn {
     } else if (process.env.NODE_ENV == 'production') {
       // aws
       this.config = {
-        user: "postgres",
+        user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DB_NAME,
-        host: process.env.HOST,
+        host: process.env.DB_HOST,
         port: 5432
       }
       this.client = new Client(this.config)
+    } else {
+      console.log("hey")
     }
   }
 

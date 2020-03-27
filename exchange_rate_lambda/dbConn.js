@@ -4,6 +4,7 @@ const { Client } = require('pg')
 class DbConn {
   constructor() {
     this.port = process.env.DB_PORT || 5432;
+
     if (process.env.NODE_ENV == 'test'){
       console.log('test')
       this.user = process.env.DB_USER_LOCAL || "postgres";
