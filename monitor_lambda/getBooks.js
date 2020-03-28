@@ -2,7 +2,7 @@ exports.func = async () => {
   const MonitorRest = require('./models/MonitorRest')
   const Generate = require('./models/Generate')
   let cryptos = ['BTC', 'ETH', 'LTC',]
-  let currencires = ['GBP', 'NGN', 'EUR']
+  let currencires = ['GBP', 'NGN', 'EUR', 'USD']
   let symbols = Generate.pairs(cryptos, currencires)
   let exchanges = ['binance', 'kraken', 'coinbasepro', 'bittrex', 'poloniex']
 
