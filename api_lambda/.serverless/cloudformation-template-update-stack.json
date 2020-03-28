@@ -146,7 +146,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/crypto-arb-api/dev/1585335328730-2020-03-27T18:55:28.730Z/crypto-arb-api.zip"
+          "S3Key": "serverless/crypto-arb-api/dev/1585408899522-2020-03-28T15:21:39.522Z/crypto-arb-api.zip"
         },
         "FunctionName": "crypto-arb-api-dev-cryptoArbApi",
         "Handler": "server.handler",
@@ -300,7 +300,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1585335320921": {
+    "ApiGatewayDeployment1585408890117": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
