@@ -116,9 +116,9 @@ class MonitorWs {
       binance.subscribeTicker(market)
       binance.on('ticker', async (ticker) => {
         let pair = `${ticker.quote}-${ticker.base}`
-        let queryString = Format.binanceTickerDbString(ticker)
-        let db = new DB()
-        db.query(queryString)
+        //let queryString = Format.binanceTickerDbString(ticker)
+        //let db = new DB()
+        //db.query(queryString)
         let price = parseFloat((ticker.last))
         // let exchangeRate = await Fetcher.transferWiseRates('USD', ticker.quote)
         let busbPair
