@@ -1,5 +1,6 @@
 require('dotenv').config()
 const WebSocket = require('ws')
+const MonitorRest = require('./MonitorRest')
 const ccxws = require('ccxws');
 const Format = require('./Format')
 const Calculate = require('./Calculate')
@@ -119,9 +120,25 @@ class MonitorWs {
         let db = new DB()
         db.query(queryString)
         let price = parseFloat((ticker.last))
-        let exchangeRate = await Fetcher.transferWiseRates('USD', ticker.quote)
-        price = price/parseFloat(exchangeRate)
+        // let exchangeRate = await Fetcher.transferWiseRates('USD', ticker.quote)
+        let busbPair
+        if (ticker.quote == 'NGN') {
+          busbPair = `BUSD/${ticker.quote}`
+          let busbRate = await MonitorRest.ticker('binance', busbPair)
+          let exchangeRate = busbRate.last
+          price = price/parseFloat(exchangeRate)
+        } else {
+          busbPair = `${ticker.quote}/BUSD`
+          let busbRate = await MonitorRest.ticker('binance', busbPair)
+          let exchangeRate =  busbRate.last
+          price = price * parseFloat(exchangeRate)
+        }
+        
+        // let busbRate = await MonitorRest.ticker('binance', busbPair)
+        // let exchangeRate = busbRate.last
+        // price = price/parseFloat(exchangeRate)
         let tickerObject = Format.tickerObject(price, pair, 'binance', ticker.base, ticker.quote)
+        // console.log(this.symbols)
         this.symbols[`${pair} binance`] = tickerObject
         this.comparePairs(this.symbols)
       })
@@ -129,6 +146,7 @@ class MonitorWs {
   }
 
   comparePairs(pairs) {
+    // console.log(pairs)
     let arrayOfPairs = []
     let matrix = []
 
@@ -139,17 +157,18 @@ class MonitorWs {
 
     // compare all pairs
     for (let i = 0; i < arrayOfPairs.length; i++) {
-      let priceA = arrayOfPairs[i].price
-      let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange} : ${priceA}`
+      let source = arrayOfPairs[i].price
+      // let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange} : ${source}`
       let sub_arr = []
       for (let j = 0; j < arrayOfPairs.length; j ++) {
-        let priceB = arrayOfPairs[j].price
-        sub_arr.push(Calculate.relativeDifference(priceA, priceB))
-        let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange} : ${priceB}`
+        let target = arrayOfPairs[j].price
+        // console.log(sub_arr)
+        sub_arr.push(Calculate.relativeDifference(source, target))
+        // let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange} : ${target}`
         if (i == j) {
           continue
         } else {
-          Calculate.relativeDifference(priceA, priceB, `${nameA} to ${nameB}`)
+          Calculate.relativeDifference(source, target)
         }
       }
       
@@ -162,6 +181,6 @@ class MonitorWs {
 
 let monitorWs = new MonitorWs()
 
-monitorWs.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
-monitorWs.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
-monitorWs.binanceTicker(['BTCUSDT', 'BTCGBP', 'BTCEUR', 'BTCNGN'])
+// monitorWs.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
+// monitorWs.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
+monitorWs.binanceTicker(['BTCEUR', 'BTCNGN'])

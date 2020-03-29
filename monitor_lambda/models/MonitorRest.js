@@ -25,9 +25,9 @@ class MonitorRest {
           bidVolume : orderBook.bids[0][1]
         }
 
-        let db = new dbConn()
-        let queryString = Format.orderBookDbString(best)
-        await db.query(queryString)
+        // let db = new dbConn()
+        // let queryString = Format.orderBookDbString(best)
+        // await db.query(queryString)
 
         return best
       } else {
@@ -40,8 +40,7 @@ class MonitorRest {
 
   static async ticker(ex, pair) {
     let exchange = new ccxt[ex]()
-    let ticker = await exchange.fetchTicker(pair).catch(err => console.log(err))
-        
+    let ticker = await exchange.fetchTicker(pair).catch(err => console.log(err))  
     let tickerObj = {
       exchange : ex,
       pair: pair,
