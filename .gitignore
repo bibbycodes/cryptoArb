@@ -1,7 +1,7 @@
-api_lambda/node_modules/
-	api_lambda/secrets.json
-	exchange_rate_lambda/node_modules/
-	exchange_rate_lambda/secrets.json
-	monitor_lambda/node_modules/
-	node_modules/
-	yarn.lock
+api_lambda/node_modules
+api_lambda/secrets.json
+exchange_rate_lambda/node_modules
+exchange_rate_lambda/secrets.json
+monitor_lambda/node_modules
+node_modules
+yarn.lock
