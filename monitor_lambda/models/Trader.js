@@ -73,10 +73,10 @@ class Trader{
 
 }
 
-
-let trader = new Trader();
-// (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize )
-trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 0.0084, 4.38);
+module.exports = Trader
+// let trader = new Trader();
+// // (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize )
+// trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 0.0084, 4.38);
 
 
 
