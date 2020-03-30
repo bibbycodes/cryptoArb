@@ -15,26 +15,54 @@ const binance = new Binance({
 
 
 
-
-//pairs are BUSD/NGN, EUR/BUSD, BTCEUR, BTCNGN
-
 class Trader{
 
     constructor (){
-        console.log("I AM THE CONSTRUCTOR");
+        console.log("Let the trading begin!!!");
     }
 
-    fullTrade(sourceArbPair, arbTargetPair, targetBasePair, baseSourcePair, amount, direction){
+    fullTrade (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize ){ 
 
+        binance.balance((error, balances) => {
+            if ( error ) return console.error(error);
+            console.log("EUR balance: ", balances.EUR.available);
+            console.log("BTC balance: ", balances.BTC.available);
+            console.log("NGN balance: ", balances.NGN.available);
+            console.log("BNB balance: ", balances.BNB.available);
         
-        let tradeAmount = amount
-
         
-       
-        
-
-
-
+        let tradeAmount 
+        binance.marketBuy(srcArb, arbSize).then( response => {
+            
+            if (response.status == "FILLED") {
+                tradeAmount = Number((parseFloat(response.executedQty) - (parseFloat(response.executedQty) * 0.01)).toFixed(3))
+                
+                return binance.marketSell(arbDest, arbSize).then( result => {
+                    if (result.status == "FILLED"){
+                        
+                        return binance.marketBuy(destBase, baseSize).then( result => {
+                            
+                            tradeAmount = Number((parseFloat(result.executedQty) - (parseFloat(result.executedQty) * 0.01)).toFixed(2))
+                            
+                            return binance.marketSell(baseSrc, baseSize).then( result => {
+                                
+                                binance.balance((error, balances) => {
+                                    if ( error ) return console.error(error);
+                                    console.log("EUR balance: ", balances.EUR.available);
+                                    console.log("BTC balance: ", balances.BTC.available);
+                                    console.log("NGN balance: ", balances.NGN.available);
+                                    console.log("BNB balance: ", balances.BNB.available);
+                                    
+                                })
+                            })
+                        })
+                    }
+                })
+            } 
+        }).catch(err => console.log(err.body, err.message))
+    
+        });
+    
     }
 
         
@@ -46,44 +74,9 @@ class Trader{
 }
 
 
-let trader = function(){ 
-
-    binance.balance((error, balances) => {
-        if ( error ) return console.error(error);
-        console.log("EUR balance: ", balances.EUR.available);
-        console.log("BTC balance: ", balances.BTC.available);
-        console.log("NGN balance: ", balances.NGN.available);
-        console.log("BNB balance: ", balances.BNB.available);
-    });
-    
-    let tradeAmount 
-    binance.marketBuy('BTCEUR', 0.004).then( response => {
-        console.log("1st trade", response) 
-        if (response.status == "FILLED") {
-            tradeAmount = Number((parseFloat(response.executedQty) - (parseFloat(response.executedQty) * 0.01)).toFixed(3))
-            console.log("TRADE AMOUNT 2", tradeAmount)
-            return binance.marketSell('BTCNGN', tradeAmount).then( result => {
-                if (result.status == "FILLED"){
-                    console.log("2nd trade", result)
-                    // we cannot use trade amount for the next trade
-                    return binance.marketBuy('BNBNGN', 1.5).then( result => {
-                        console.log("3rd trade", result)
-                        tradeAmount = Number((parseFloat(result.executedQty) - (parseFloat(result.executedQty) * 0.01)).toFixed(2))
-                        console.log("Final trade amount", tradeAmount)
-                        return binance.marketSell('BNBEUR', tradeAmount).then( result => {
-                            console.log("4th trade", result)
-                        })
-                    })
-                }
-            })
-        } 
-    }).catch(err => console.log(err.body, err.message))
-
-}()
+let trader = new Trader();
+// (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize )
+trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 0.0084, 4.38);
 
 
 
-
-
-// let trader = new Trader();
-// trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 0.005);
