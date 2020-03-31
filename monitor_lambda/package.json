@@ -18,6 +18,7 @@
   "homepage": "https://github.com/bibbycodes/cryptoArb#readme",
   "dependencies": {
     "axios": "^0.19.2",
+    "binance-api-node": "^0.9.17",
     "ccxt": "^1.23.76",
     "ccxws": "^0.29.6",
     "center-align": "^1.0.1",
