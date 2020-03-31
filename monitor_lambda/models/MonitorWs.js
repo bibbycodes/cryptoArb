@@ -241,7 +241,7 @@ let monitorWs = new MonitorWs()
 
 // monitorWs.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
 // monitorWs.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
-monitorWs.binancePairs(['USDT', 'EUR', 'NGN'], 'BTC', 'BUSD')
+monitorWs.binancePairs(['EUR', 'NGN'], 'BTC', 'BNB')
 // binancePairs(fiat_currencies, crypto, converter)
 // monitorWs.evaluateTrade(source, target, crytpo, base)
 // monitorWs.tickerBinance('BTC', 'EUR')
