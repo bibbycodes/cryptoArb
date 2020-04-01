@@ -4,8 +4,10 @@ const MonitorRest = require('./MonitorRest')
 const ccxws = require('ccxws');
 const Format = require('./Format')
 const Calculate = require('./Calculate')
+const Generate = require('./Generate')
 const Fetcher = require('./Fetcher')
 const DB = require('./dbConn')
+const ccxt = require('ccxt')
 
 class MonitorWs {
   constructor(exchange){
@@ -104,45 +106,104 @@ class MonitorWs {
     })
   }
 
-  binanceTicker(symbols) {
-    for (let symbol of symbols) {
-      let binance = new ccxws.binance()
-      const market = {
-        id: symbol,
-        base: symbol.slice(0, 3),
-        quote: symbol.slice(3)
-      }
-
-      binance.subscribeTicker(market)
-      binance.on('ticker', async (ticker) => {
-        let pair = `${ticker.quote}-${ticker.base}`
-        //let queryString = Format.binanceTickerDbString(ticker)
-        //let db = new DB()
-        //db.query(queryString)
-        let price = parseFloat((ticker.last))
-        // let exchangeRate = await Fetcher.transferWiseRates('USD', ticker.quote)
-        let busbPair
-        if (ticker.quote == 'NGN') {
-          busbPair = `BUSD/${ticker.quote}`
-          let busbRate = await MonitorRest.ticker('binance', busbPair)
-          let exchangeRate = busbRate.last
-          price = price/parseFloat(exchangeRate)
-        } else {
-          busbPair = `${ticker.quote}/BUSD`
-          let busbRate = await MonitorRest.ticker('binance', busbPair)
-          let exchangeRate =  busbRate.last
-          price = price * parseFloat(exchangeRate)
+  binancePairs(fiat_currencies, crypto, converter) {
+    for (let i of fiat_currencies) {
+      for (let j of fiat_currencies) {
+        console.log(i, j)
+        if (i == j) {
+          break
         }
-        
-        // let busbRate = await MonitorRest.ticker('binance', busbPair)
-        // let exchangeRate = busbRate.last
-        // price = price/parseFloat(exchangeRate)
-        let tickerObject = Format.tickerObject(price, pair, 'binance', ticker.base, ticker.quote)
-        // console.log(this.symbols)
-        this.symbols[`${pair} binance`] = tickerObject
-        this.comparePairs(this.symbols)
-      })
+        console.log(Generate.tradePairs(i, j, crypto, converter))
+      }
+      // let base = symbol[0]
+      // let quote = symbol[1]
+      console.log(crypto, i)
+      this.tickerBinance(crypto, i, converter)
     }
+  }
+
+  // async tickerBinance(base, quote) {
+  //   let binance = new ccxws.binance()
+
+  //   const market = {
+  //     id: `${base}${quote}`,
+  //     base: base,
+  //     quote: quote
+  //   }
+
+  //   console.log(market)
+
+  //   binance.subscribeTicker(market)
+  //   binance.on('ticker', async (ticker) => {
+  //     let pair = `${ticker.quote}-${ticker.base}`
+  //     //let queryString = Format.binanceTickerDbString(ticker)
+  //     //let db = new DB()
+  //     //db.query(queryString)
+  //     let price = parseFloat((ticker.last))
+  //     // let exchangeRate = await Fetcher.transferWiseRates('USD', ticker.quote)
+  //     let converterPair
+
+  //     if (ticker.quote == 'NGN') {
+  //       converterPair = `BUSD/${ticker.quote}`
+  //       let converterRate = await MonitorRest.ticker('binance', converterPair)
+  //       let exchangeRate = converterRate.last
+  //       price = price/parseFloat(exchangeRate)
+  //     } else {
+  //       converterPair = `${ticker.quote}/BUSD`
+  //       let converterRate = await MonitorRest.ticker('binance', converterPair)
+  //       let exchangeRate =  converterRate.last
+  //       price = price * parseFloat(exchangeRate)
+  //     }
+      
+  //     let tickerObject = Format.tickerObject(price, pair, 'binance', ticker.base, ticker.quote)
+  //     this.symbols[`${pair} binance`] = tickerObject
+  //     console.log(this.symbols)
+  //     this.comparePairs(this.symbols)
+  //   })
+  // }
+
+  async tickerBinance(crypto, fiat, converter) {
+    let binance = new ccxws.binance()
+    let binanceRest = new ccxt['binance']()
+    let markets = binanceRest.loadMarkets()
+
+    const market = {
+      id: `${crypto}${fiat}`,
+      base: crypto,
+      quote: fiat
+    }
+
+    console.log(market)
+
+    binance.subscribeTicker(market)
+    binance.on('ticker', async (ticker) => {
+      let pair = `${ticker.quote}-${ticker.base}`
+      console.log(pair)
+      //let queryString = Format.binanceTickerDbString(ticker)
+      //let db = new DB()
+      //db.query(queryString)
+      let price = parseFloat((ticker.last))
+
+      let converterPair = `${converter}/${ticker.quote}`
+      let validPairs = ["BUSD/USDT", "BUSD/NGN", "BNB/USDT", "BNB/EUR", "BNB/NGN"]
+
+      if ((validPairs.includes(converterPair))) {
+        let converterRate = await MonitorRest.ticker('binance', converterPair)
+        let exchangeRate = converterRate.last
+        price = price/parseFloat(exchangeRate)
+      } else {
+        converterPair = `${ticker.quote}/${converter}`
+        console.log("Switching", converterPair)
+        let converterRate = await MonitorRest.ticker('binance', converterPair)
+        let exchangeRate =  converterRate.last
+        price = price * parseFloat(exchangeRate)
+      }
+      
+      let tickerObject = Format.tickerObject(price, pair, 'binance', ticker.base, ticker.quote, converter)
+      this.symbols[`${pair} binance`] = tickerObject
+      // console.log(this.symbols)
+      this.comparePairs(this.symbols)
+    })
   }
 
   comparePairs(pairs) {
@@ -158,13 +219,10 @@ class MonitorWs {
     // compare all pairs
     for (let i = 0; i < arrayOfPairs.length; i++) {
       let source = arrayOfPairs[i].price
-      // let nameA = `${arrayOfPairs[i].pair} ${arrayOfPairs[i].exchange} : ${source}`
       let sub_arr = []
       for (let j = 0; j < arrayOfPairs.length; j ++) {
         let target = arrayOfPairs[j].price
-        // console.log(sub_arr)
         sub_arr.push(Calculate.relativeDifference(source, target))
-        // let nameB = `${arrayOfPairs[j].pair} ${arrayOfPairs[j].exchange} : ${target}`
         if (i == j) {
           continue
         } else {
@@ -183,4 +241,7 @@ let monitorWs = new MonitorWs()
 
 // monitorWs.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
 // monitorWs.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
-monitorWs.binanceTicker(['BTCEUR', 'BTCNGN'])
+monitorWs.binancePairs(['EUR', 'NGN'], 'BTC', 'BNB')
+// binancePairs(fiat_currencies, crypto, converter)
+// monitorWs.evaluateTrade(source, target, crytpo, base)
+// monitorWs.tickerBinance('BTC', 'EUR')

@@ -30,13 +30,14 @@ class Format {
     return output
   }
 
-  static tickerObject(price, pair, exchange, base, quote) {
+  static tickerObject(price, pair, exchange, base, quote, converter) {
     return {
       price: price,
       pair: pair,
       exchange: exchange,
       base: base,
-      quote: quote
+      quote: quote,
+      converter: converter
     }
   }
 

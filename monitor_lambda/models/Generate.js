@@ -15,6 +15,49 @@ class Generate {
     }
     return pairs
   }
+  // trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 35);
+  static tradePairs(source, target, crypto, converter) {
+    let trade1 = {
+      // buy bitcoin with euro
+      pair : `${source}${crypto}`,
+      from : source,
+      to   : crypto,
+      side : 'buy'
+    }
+
+    let trade2 = {
+      // sell bitcoin for naira
+      pair : `${crypto}${target}`,
+      from : crypto,
+      to   : target,
+      side : 'sell'
+    }
+
+    let trade3 = {
+      // buy busd with naira
+      pair : `${converter}${target}`,
+      from : target,
+      to   : converter,
+      side : 'buy'
+    }
+
+    let trade4 = {
+      // sell busd for euro
+      pair : `${converter}${source}`,
+      from : converter,
+      to   : source,
+      side : 'sell'
+    }
+
+    return {
+      trade1,
+      trade2,
+      trade3,
+      trade4
+    }
+  }
 }
+
+console.log(Generate.tradePairs('EUR','NGN','BTC','BUSD'))
 
 module.exports = Generate
