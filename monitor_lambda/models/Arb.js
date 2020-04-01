@@ -12,9 +12,9 @@ const Generate = require('./Generate')
 
 class Arb {
   constructor(startCurr, endCurr, crypto, converter) {
-    // this.startCurr = startCurr
-    // this.endCurr = endCurr
-    // this.crypto = crypto
+    this.startCurr = startCurr
+    this.endCurr = endCurr
+    this.crypto = crypto
     this.converter = converter
     this.tradePairs = Generate.tradePairs(startCurr, endCurr, crypto, converter)
     this.rates = {}
@@ -38,10 +38,6 @@ class Arb {
   }
 
   getArb() {
-    // for (let key in this.rates) {
-    //   let rate = this.rates[key].ask
-    //   console.log(rate)
-    // }
     let EURBTC = this.ratesArr[0].ask
     let BTCNGN = this.ratesArr[1].bid
     let NGNBNB = this.ratesArr[2].ask
@@ -55,19 +51,12 @@ class Arb {
     } else {
       endCurrAmount = converterAmount * BNBEUR
     }
-    console.log(Calculate.relativeDifference(endCurrAmount, EURBTC))
+    return Calculate.relativeDifference(endCurrAmount, EURBTC)
   }
 
   add(ticker) {
     this.symbols[`${ticker.pair} ${ticker.exchange}`] = ticker
   }
 }
-
-let arb = new Arb('EUR', 'NGN', 'BTC', 'BUSD')
-// console.log(arb.tradePairs)
-arb.getRates().then(rates => {
-  // console.log(arb.ratesArr)
-  arb.getArb()
-})
 
 module.exports = Arb
