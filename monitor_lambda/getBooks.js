@@ -22,10 +22,13 @@
 async function mon() {
   const MonitorRest = require('./models/MonitorRest')
   const Generate = require('./models/Generate')
-  let cryptos = ['BTC', 'ETH', 'LTC', 'USDT', 'USDC', 'BGBP', 'XRP', 'NEO']
-  let currencires = ['GBP', 'NGN', 'EUR', 'USD', 'USDC', 'ETH', 'USDT', 'LTC', 'BGBP']
+  const Arb = require('./models/Arb')
+
+  let cryptos = ['BTC']
+  let currencires = ['NGN', 'EUR']
   let symbols = Generate.pairs(cryptos, currencires)
-  let exchanges = ['bittrex', 'poloniex', 'gemini']
+  let exchanges = ['binance']
+  let arb = new Arb()
 
   for (let exchange of exchanges) {
     for (let symbol of symbols) {
@@ -35,9 +38,17 @@ async function mon() {
           continue
         }
       }
-      await MonitorRest.orderBook(exchange, symbol)
+      let ticker = await MonitorRest.orderBook(exchange, symbol)
+
+      if (ticker != "Pair not Present") {
+        console.log(ticker)
+        arb.add(ticker)
+      }
     }
   }
+
+  console.log('syymbols', arb.symbols)
+  arb.comparePairs(arb.symbols, 'BUSD')
 }
 
 mon()

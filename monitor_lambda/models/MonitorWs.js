@@ -185,14 +185,16 @@ class MonitorWs {
       let price = parseFloat((ticker.last))
 
       let converterPair = `${converter}/${ticker.quote}`
-      let validPairs = ["BUSD/USDT", "BUSD/NGN", "BNB/USDT", "BNB/EUR", "BNB/NGN"]
+      let validPairs = ["BUSD/USDT", "BUSD/NGN", "BNB/USDT", "BNB/EUR", "BNB/NGN", "BUSB/EUR"]
 
       if ((validPairs.includes(converterPair))) {
         let converterRate = await MonitorRest.ticker('binance', converterPair)
         let exchangeRate = converterRate.last
         price = price/parseFloat(exchangeRate)
       } else {
+        console.log(pair)
         converterPair = `${ticker.quote}/${converter}`
+        console.log(pair)
         console.log("Switching", converterPair)
         let converterRate = await MonitorRest.ticker('binance', converterPair)
         let exchangeRate =  converterRate.last
@@ -201,7 +203,7 @@ class MonitorWs {
       
       let tickerObject = Format.tickerObject(price, pair, 'binance', ticker.base, ticker.quote, converter)
       this.symbols[`${pair} binance`] = tickerObject
-      // console.log(this.symbols)
+      console.log(this.symbols)
       this.comparePairs(this.symbols)
     })
   }
@@ -241,7 +243,7 @@ let monitorWs = new MonitorWs()
 
 // monitorWs.krakenTicker(['BTC/USD', 'BTC/EUR', 'BTC/GBP'])
 // monitorWs.coinbaseTicker(['BTC-USD', 'BTC-GBP', 'BTC-EUR'])
-monitorWs.binancePairs(['EUR', 'NGN'], 'BTC', 'BNB')
+monitorWs.binancePairs(['EUR', 'NGN'], 'BTC', 'BUSD')
 // binancePairs(fiat_currencies, crypto, converter)
 // monitorWs.evaluateTrade(source, target, crytpo, base)
 // monitorWs.tickerBinance('BTC', 'EUR')

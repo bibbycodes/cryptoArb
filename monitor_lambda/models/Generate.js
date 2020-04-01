@@ -19,7 +19,7 @@ class Generate {
   static tradePairs(source, target, crypto, converter) {
     let trade1 = {
       // buy bitcoin with euro
-      pair : `${source}${crypto}`,
+      pair : `${crypto}/${source}`,
       from : source,
       to   : crypto,
       side : 'buy'
@@ -27,7 +27,7 @@ class Generate {
 
     let trade2 = {
       // sell bitcoin for naira
-      pair : `${crypto}${target}`,
+      pair : `${crypto}/${target}`,
       from : crypto,
       to   : target,
       side : 'sell'
@@ -35,19 +35,32 @@ class Generate {
 
     let trade3 = {
       // buy busd with naira
-      pair : `${converter}${target}`,
+      pair : `${converter}/${target}`,
       from : target,
       to   : converter,
       side : 'buy'
     }
 
-    let trade4 = {
-      // sell busd for euro
-      pair : `${converter}${source}`,
-      from : converter,
-      to   : source,
-      side : 'sell'
+    let trade4
+    if (converter == "BNB") {
+      trade4 = {
+        // sell busd for euro
+        pair : `${converter}/${source}`,
+        from : converter,
+        to   : source,
+        side : 'sell'
+      }
+    } else if (converter == "BUSD") {
+      trade4 = {
+        // sell busd for euro
+        pair : `${source}/${converter}`,
+        from : converter,
+        to   : source,
+        side : 'sell'
+      }
     }
+
+
 
     return {
       trade1,
@@ -58,6 +71,6 @@ class Generate {
   }
 }
 
-console.log(Generate.tradePairs('EUR','NGN','BTC','BUSD'))
+// console.log(Generate.tradePairs('EUR','NGN','BTC','BUSD'))
 
 module.exports = Generate
