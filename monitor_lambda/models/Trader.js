@@ -5,6 +5,7 @@
 // 100,000 orders per 24hrs.
 
 const Generate = require('./Generate')
+const Arb = require('./Arb')
 
 
 const Binance = require('node-binance-api');
@@ -55,18 +56,36 @@ class Trader{
 }
 
 module.exports = Trader
+// let busd = new Arb('EUR', 'NGN', 'BTC', 'BUSD')
+let bnb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
+
+// busd.getRates().then(rates => {
+//   let tradePairs = busd.tradePairs
+//   let busdArbRate = busd.getArb()
+//   let message = `ArbRate: ${busdArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
+//   Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BUSD EUR NGN: ${busdArbRate}`, message)
+// })
+
+bnb.getRates().then(rates => {
+  let tradePairs = bnb.tradePairs
+  let bnbArbRate = bnb.getArb()
+  console.log(bnbArbRate)
+  // let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
+  // Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BNB EUR NGN: ${bnbArbRate}`, message)
+})
+
 let tradePairs = Generate.tradePairs('EUR','NGN','BTC','BNB')
 
 console.log(tradePairs)
 let trader = new Trader();
 // trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 0.0084, 4.38);
 trader.fullTrade(
-  tradePairs.trade4.tradePair, 
-  tradePairs.trade3.tradePair, 
-  tradePairs.trade2.tradePair, 
   tradePairs.trade1.tradePair, 
-  4.38, 
-  0.0084
+  tradePairs.trade2.tradePair, 
+  tradePairs.trade3.tradePair, 
+  tradePairs.trade4.tradePair, 
+  0.0084,
+  4.38
 );
 
 
