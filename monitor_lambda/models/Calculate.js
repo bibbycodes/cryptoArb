@@ -1,6 +1,6 @@
 class Calculate {
-  static relativeDifference(priceA, priceB, mesaage) {
-    let relativeDifference = ((priceA - priceB) / (Math.max(priceA, priceB)) * 100).toFixed(2)
+  static relativeDifference(source, destination) {
+    let relativeDifference = ((source - destination) / (Math.max(source, destination)) * 100).toFixed(2)
     return [relativeDifference]
   }
 
@@ -8,6 +8,7 @@ class Calculate {
     let fees = {
       binance : 0.01
     }
+    
     return tradeAmount - (tradeAmount * fees[exchange])
   }
 

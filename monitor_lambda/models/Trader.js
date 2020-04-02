@@ -4,7 +4,7 @@
 // 10 orders per second. 
 // 100,000 orders per 24hrs.
 
-
+const Generate = require('./Generate')
 
 
 const Binance = require('node-binance-api');
@@ -16,67 +16,58 @@ const binance = new Binance({
 
 
 class Trader{
+  constructor (){
+      console.log("Let the trading begin!!!");
+  }
 
-    constructor (){
-        console.log("Let the trading begin!!!");
-    }
-
-    fullTrade (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize ){ 
-
-        binance.balance((error, balances) => {
-            if ( error ) return console.error(error);
-            console.log("EUR balance: ", balances.EUR.available);
-            console.log("BTC balance: ", balances.BTC.available);
-            console.log("NGN balance: ", balances.NGN.available);
-            console.log("BNB balance: ", balances.BNB.available);
-        
-        
-        let tradeAmount 
-        binance.marketBuy(srcArb, arbSize).then( response => {
-            
-            if (response.status == "FILLED") {
-                tradeAmount = Number((parseFloat(response.executedQty) - (parseFloat(response.executedQty) * 0.01)).toFixed(3))
-                
-                return binance.marketSell(arbDest, arbSize).then( result => {
-                    if (result.status == "FILLED"){
-                        
-                        return binance.marketBuy(destBase, baseSize).then( result => {
-                            
-                            tradeAmount = Number((parseFloat(result.executedQty) - (parseFloat(result.executedQty) * 0.01)).toFixed(2))
-                            
-                            return binance.marketSell(baseSrc, baseSize).then( result => {
-                                
-                                binance.balance((error, balances) => {
-                                    if ( error ) return console.error(error);
-                                    console.log("EUR balance: ", balances.EUR.available);
-                                    console.log("BTC balance: ", balances.BTC.available);
-                                    console.log("NGN balance: ", balances.NGN.available);
-                                    console.log("BNB balance: ", balances.BNB.available);
-                                    
-                                })
-                            })
-                        })
-                    }
+  fullTrade (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize ){ 
+    binance.balance((error, balances) => {
+        if ( error ) return console.error(error);
+        console.log("EUR balance: ", balances.EUR.available);
+        console.log("BTC balance: ", balances.BTC.available);
+        console.log("NGN balance: ", balances.NGN.available);
+        console.log("BNB balance: ", balances.BNB.available);
+    
+    let tradeAmount 
+    binance.marketBuy(srcArb, arbSize).then( response => {
+        if (response.status == "FILLED") {
+          tradeAmount = Number((parseFloat(response.executedQty) - (parseFloat(response.executedQty) * 0.01)).toFixed(3))
+          return binance.marketSell(arbDest, arbSize).then( result => {
+            if (result.status == "FILLED"){
+              return binance.marketBuy(destBase, baseSize).then( result => {  
+                tradeAmount = Number((parseFloat(result.executedQty) - (parseFloat(result.executedQty) * 0.01)).toFixed(2))
+                return binance.marketSell(baseSrc, baseSize).then( result => {
+                  binance.balance((error, balances) => {
+                    if ( error ) return console.error(error);
+                    console.log("EUR balance: ", balances.EUR.available);
+                    console.log("BTC balance: ", balances.BTC.available);
+                    console.log("NGN balance: ", balances.NGN.available);
+                    console.log("BNB balance: ", balances.BNB.available);
+                  })
                 })
-            } 
-        }).catch(err => console.log(err.body, err.message))
-    
-        });
-    
-    }
-
-        
-
-
-        
-
-
+              })
+            }
+          })
+        } 
+    }).catch(err => console.log("err", err.body, err.message))
+    });
+  }
 }
 
 module.exports = Trader
-// let trader = new Trader();
-// // (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize )
+let tradePairs = Generate.tradePairs('EUR','NGN','BTC','BNB')
+
+console.log(tradePairs)
+let trader = new Trader();
 // trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 0.0084, 4.38);
+trader.fullTrade(
+  tradePairs.trade4.tradePair, 
+  tradePairs.trade3.tradePair, 
+  tradePairs.trade2.tradePair, 
+  tradePairs.trade1.tradePair, 
+  4.38, 
+  0.0084
+);
 
 
 

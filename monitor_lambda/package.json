@@ -19,7 +19,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "binance-api-node": "^0.9.17",
-    "ccxt": "^1.23.76",
+    "ccxt": "*",
     "ccxws": "^0.29.6",
     "center-align": "^1.0.1",
     "cheerio": "^1.0.0-rc.3",
