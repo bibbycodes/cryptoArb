@@ -63,10 +63,10 @@ class Arb {
   }
 }
 
-let arb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
+// let arb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
 
-arb.getRates().then(rates => {
-  console.log(rates)
-})
+// arb.getRates().then(rates => {
+//   console.log(rates)
+// })
 
 module.exports = Arb
