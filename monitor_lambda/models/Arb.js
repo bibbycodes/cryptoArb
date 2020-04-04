@@ -38,10 +38,17 @@ class Arb {
   }
 
   getArb() {
-    let EURBTC = this.ratesArr[0].ask
-    let BTCNGN = this.ratesArr[1].bid
-    let NGNBNB = this.ratesArr[2].ask
-    let BNBEUR = this.ratesArr[3].bid
+    console.log(this.rates)
+    let EURBTC = this.rates['BTC/EUR'].ask
+    console.log("EURBTC", EURBTC)
+    let BTCNGN = this.rates['BTC/NGN'].bid
+    console.log("BTCNGN", BTCNGN)
+
+    let NGNBNB = this.rates['BUSD/NGN'].ask
+    console.log("NGNBUSD", NGNBNB)
+    let BNBEUR = this.rates['EUR/BUSD'].bid
+
+    console.log("BUSDEUR", BNBEUR)
 
     let converterAmount = BTCNGN / NGNBNB
     let endCurrAmount

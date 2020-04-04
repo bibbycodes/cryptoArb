@@ -20,10 +20,31 @@ class Trader{
   constructor (){
       console.log("Let the trading begin!!!");
   }
+  
 
   fullTrade (srcArb, arbDest, destBase, baseSrc, arbSize, baseSize ){ 
+    let eur_balance_start
+    let btc_balance_start
+    let ngn_balance_start
+    let bnb_balance_start
+
+    let eur_balance_end
+    let btc_balance_end
+    let ngn_balance_end
+    let bnb_balance_end
+
+    let eur_balance_diff
+    let btc_balance_diff
+    let ngn_balance_diff
+    let bnb_balance_diff
+
     binance.balance((error, balances) => {
         if ( error ) return console.error(error);
+        eur_balance_start = balances.EUR.available
+        btc_balance_start = balances.BTC.available
+        ngn_balance_start = balances.NGN.available
+        bnb_balance_start = balances.BNB.available
+
         console.log("EUR balance: ", balances.EUR.available);
         console.log("BTC balance: ", balances.BTC.available);
         console.log("NGN balance: ", balances.NGN.available);
@@ -44,6 +65,18 @@ class Trader{
                     console.log("BTC balance: ", balances.BTC.available);
                     console.log("NGN balance: ", balances.NGN.available);
                     console.log("BNB balance: ", balances.BNB.available);
+
+                    eur_balance_end = balances.EUR.available
+                    btc_balance_end = balances.BTC.available
+                    ngn_balance_end = balances.BTC.available
+                    bnb_balance_end = balances.BTC.available
+
+                    console.log("EUR balance diff: ", eur_balance_start - eur_balance_end);
+                    console.log("BTC balance diff: ", eur_balance_start - btc_balance_end);
+                    console.log("NGN balance diff: ", eur_balance_start - ngn_balance_end);
+                    console.log("BNB balance diff: ", eur_balance_start - bnb_balance_end);
+
+
                   })
                 })
               })
@@ -56,25 +89,25 @@ class Trader{
 }
 
 module.exports = Trader
-// let busd = new Arb('EUR', 'NGN', 'BTC', 'BUSD')
-let bnb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
+// // let busd = new Arb('EUR', 'NGN', 'BTC', 'BUSD')
+// let bnb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
 
-// busd.getRates().then(rates => {
-//   let tradePairs = busd.tradePairs
-//   let busdArbRate = busd.getArb()
-//   let message = `ArbRate: ${busdArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
-//   Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BUSD EUR NGN: ${busdArbRate}`, message)
+// // busd.getRates().then(rates => {
+// //   let tradePairs = busd.tradePairs
+// //   let busdArbRate = busd.getArb()
+// //   let message = `ArbRate: ${busdArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
+// //   Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BUSD EUR NGN: ${busdArbRate}`, message)
+// // })
+
+// bnb.getRates().then(rates => {
+//   let tradePairs = bnb.tradePairs
+//   let bnbArbRate = bnb.getArb()
+//   console.log(bnbArbRate)
+//   // let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
+//   // Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BNB EUR NGN: ${bnbArbRate}`, message)
 // })
 
-bnb.getRates().then(rates => {
-  let tradePairs = bnb.tradePairs
-  let bnbArbRate = bnb.getArb()
-  console.log(bnbArbRate)
-  // let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
-  // Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BNB EUR NGN: ${bnbArbRate}`, message)
-})
-
-let tradePairs = Generate.tradePairs('EUR','NGN','BTC','BNB')
+let tradePairs = Generate.tradePairs('EUR','NGN','BTC','BUSD')
 
 console.log(tradePairs)
 let trader = new Trader();
@@ -84,8 +117,8 @@ trader.fullTrade(
   tradePairs.trade2.tradePair, 
   tradePairs.trade3.tradePair, 
   tradePairs.trade4.tradePair, 
-  0.0084,
-  4.38
+  0.006,
+  45
 );
 
 
