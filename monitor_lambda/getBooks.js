@@ -19,6 +19,16 @@
 //   }
 // } 
 
+async function mon() {
+  const MonitorRest = require('./models/MonitorRest')
+  const Generate = require('./models/Generate')
+  const Arb = require('./models/Arb')
+
+  let cryptos = ['BTC']
+  let currencires = ['NGN', 'EUR']
+  let symbols = Generate.pairs(cryptos, currencires)
+  let exchanges = ['binance']
+  let arb = new Arb()
 
 
 exports.func = async () => {
@@ -40,7 +50,16 @@ exports.func = async () => {
         }
         await MonitorRest.orderBook(exchange, symbol)
       }
+      let ticker = await MonitorRest.orderBook(exchange, symbol)
+
+      if (ticker != "Pair not Present") {
+        console.log(ticker)
+        arb.add(ticker)
+      }
     }
   }
+
+  console.log('syymbols', arb.symbols)
+  arb.comparePairs(arb.symbols, 'BUSD')
 }
 mon()

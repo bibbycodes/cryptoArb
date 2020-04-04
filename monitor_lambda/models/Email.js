@@ -17,10 +17,8 @@ class Email {
 
     await mg.messages().send(data)
       .then(data => {
-        console.log('sending')
         console.log(data);
       }, err => {
-        console.log('error')
         console.log(err);
         return err; 
       });

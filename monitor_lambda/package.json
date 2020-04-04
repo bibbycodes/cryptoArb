@@ -19,11 +19,12 @@
   "dependencies": {
     "axios": "^0.19.2",
     "binance-api-node": "^0.9.17",
-    "ccxt": "^1.23.76",
+    "ccxt": "^1.25.63",
     "ccxws": "^0.29.6",
     "center-align": "^1.0.1",
     "cheerio": "^1.0.0-rc.3",
     "columnify": "^1.5.4",
+    "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "mailgun-js": "^0.22.0",
     "parse5": "^5.1.1",
