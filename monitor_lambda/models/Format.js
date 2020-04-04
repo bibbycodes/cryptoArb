@@ -30,6 +30,23 @@ class Format {
     return output
   }
 
+  static symbol(crypto, curr, exchange) {
+    
+    if (exchange == 'binance') {
+      if (crytpo == 'BUSD' && curr == 'EUR') {
+        return `${curr.toUpperCase()}/${crypto.toUpperCase()}`
+      }
+      return `${crytpo.toUpperCase()}/${curr.toUpperCase()}`
+    }
+
+    if (exchange == 'trader') {
+      if (crytpo == 'BUSD' && curr == 'EUR') {
+        return `${curr.toUpperCase()}${crypto.toUpperCase()}`
+      }
+      return `${crytpo.toUpperCase()}${curr.toUpperCase()}`
+    }
+  }
+
   static tickerObject(price, pair, exchange, base, quote, converter) {
     return {
       price: price,

@@ -1,4 +1,3 @@
-const cheerio = require('cheerio')
 const axios = require('axios')
 const xpath = require('xpath')
 const parse5 = require('parse5');

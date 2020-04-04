@@ -1,5 +1,4 @@
 const Calculate = require('./Calculate')
-const Format = require('./Format')
 const MonitorRest = require('./MonitorRest')
 const Generate = require('./Generate')
 
@@ -7,8 +6,6 @@ const Generate = require('./Generate')
 // BTC/NGN  = 2600000
 // NGN/BUSD = 460
 // EUR/BUSD = 1.2
-
-
 
 class Arb {
   constructor(startCurr, endCurr, crypto, converter) {
@@ -40,15 +37,15 @@ class Arb {
   getArb() {
     console.log(this.rates)
     let EURBTC = this.rates['BTC/EUR'].ask
-    console.log("EURBTC", EURBTC)
+    // console.log("EURBTC", EURBTC)
     let BTCNGN = this.rates['BTC/NGN'].bid
-    console.log("BTCNGN", BTCNGN)
+    // console.log("BTCNGN", BTCNGN)
 
     let NGNBNB = this.rates['BUSD/NGN'].ask
-    console.log("NGNBUSD", NGNBNB)
+    // console.log("NGNBUSD", NGNBNB)
     let BNBEUR = this.rates['EUR/BUSD'].bid
 
-    console.log("BUSDEUR", BNBEUR)
+    // console.log("BUSDEUR", BNBEUR)
 
     let converterAmount = BTCNGN / NGNBNB
     let endCurrAmount
@@ -65,5 +62,11 @@ class Arb {
     this.symbols[`${ticker.pair} ${ticker.exchange}`] = ticker
   }
 }
+
+let arb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
+
+arb.getRates().then(rates => {
+  console.log(rates)
+})
 
 module.exports = Arb
