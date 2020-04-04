@@ -9,13 +9,12 @@ const Generate = require('./Generate')
 
 class Arb {
   constructor(startCurr, endCurr, crypto, converter) {
-    this.startCurr = startCurr
-    this.endCurr = endCurr
-    this.crypto = crypto
+    // this.startCurr = startCurr
+    // this.endCurr = endCurr
+    // this.crypto = crypto
     this.converter = converter
     this.tradePairs = Generate.tradePairs(startCurr, endCurr, crypto, converter)
     this.rates = {}
-    this.ratesArr = []
   }
 
   async getRates() {
@@ -27,35 +26,32 @@ class Arb {
 
     for (let i = 0; i < pairs.length; i++) {
       let rate = await MonitorRest.orderBook('binance', pairs[i])
-      this.rates[rate.pair] = rate
-      this.ratesArr.push(rate)
+      this.rates[`trade${i + 1}`] = rate
     }
 
     return this.rates
   }
 
   getArb() {
-    console.log(this.rates)
-    let EURBTC = this.rates['BTC/EUR'].ask
-    // console.log("EURBTC", EURBTC)
-    let BTCNGN = this.rates['BTC/NGN'].bid
-    // console.log("BTCNGN", BTCNGN)
+    // console.log(this.rates)
+    let trade1 = this.rates['trade1'].ask
+    console.log(`${this.rates['trade1'].pair}`, trade1)
+    let trade2 = this.rates['trade2'].bid
+    console.log(`${this.rates['trade2'].pair}`, trade2)
+    let trade3 = this.rates['trade3'].ask
+    console.log(`${this.rates['trade3'].pair}`, trade3)
+    let trade4 = this.rates['trade4'].bid
+    console.log(`${this.rates['trade4'].pair}`, trade4)
 
-    let NGNBNB = this.rates['BUSD/NGN'].ask
-    // console.log("NGNBUSD", NGNBNB)
-    let BNBEUR = this.rates['EUR/BUSD'].bid
-
-    // console.log("BUSDEUR", BNBEUR)
-
-    let converterAmount = BTCNGN / NGNBNB
+    let converterAmount = trade2 / trade3
     let endCurrAmount
 
     if (this.converter == "BUSD") {
-      endCurrAmount = converterAmount / BNBEUR
+      endCurrAmount = converterAmount / trade4
     } else {
-      endCurrAmount = converterAmount * BNBEUR
+      endCurrAmount = converterAmount * trade4
     }
-    return Calculate.relativeDifference(endCurrAmount, EURBTC)
+    return Calculate.relativeDifference(endCurrAmount, trade1)
   }
 
   add(ticker) {
@@ -66,7 +62,7 @@ class Arb {
 // let arb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
 
 // arb.getRates().then(rates => {
-//   console.log(rates)
+//   arb.getArb()
 // })
 
 module.exports = Arb

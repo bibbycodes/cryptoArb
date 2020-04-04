@@ -68,12 +68,7 @@ class Generate {
       }
     }
 
-    return {
-      trade1,
-      trade2,
-      trade3,
-      trade4,
-    }
+    return { trade1, trade2, trade3, trade4 }
   }
 }
 
