@@ -1,0 +1,22 @@
+CREATE TABLE arb_rates (
+  id SERIAL PRIMARY KEY,
+  exchange VARCHAR(120) NOT NULL DEFAULT 'binance',
+  timestamp BIGINT NOT NULL,
+  fiat_a VARCHAR(10),
+  fiat_b VARCHAR(10),
+  crypto VARCHAR(10),
+  converter VARCHAR(10),
+  arbRate NUMERIC
+  trade_1_ask NUMERIC,
+  trade_1_bid NUMERIC,
+  trade_2_ask NUMERIC,
+  trade_2_bid NUMERIC,
+  trade_3_ask NUMERIC,
+  trade_3_bid NUMERIC,
+  trade_4_ask NUMERIC,
+  trade_4_bid NUMERIC,
+  trade_1_pair NUMERIC,
+  trade_2_pair NUMERIC,
+  trade_3_pair NUMERIC,
+  trade_4_pair NUMERIC,
+);
