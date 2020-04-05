@@ -157,6 +157,54 @@ class Format {
       VALUES (${timestamp}, '${exchange}', '${pair}', ${ask}, ${askVolume}, ${bid}, ${bidVolume})
       `
   }
+
+  static arbDbString(fiatA, fiatB, crypto, converter, rates, arbRate) {
+    // console.log("trade pairs", rates)
+    // console.log("arb rate", arbRate)
+    let timestamp = Date.now()
+
+    let values = [
+      timestamp, rates.trade1.exchange, fiatA, fiatB, crypto, converter, Number(arbRate[0])
+    ]
+
+    let columns = [
+      'timestamp', 'exchange', 'fiat_a', 'fiat_b', 'crypto', 'converter', 'arb_rate',
+      'trade_1_ask', 'trade_1_bid', 'trade_1_pair',
+      'trade_2_ask', 'trade_2_bid', 'trade_2_pair',
+      'trade_3_ask', 'trade_3_bid', 'trade_3_pair',
+      'trade_4_ask', 'trade_4_bid', 'trade_4_pair'
+    ]
+
+    for (let i = 0; i < 4; i++) {
+      let tradeValues = []
+      tradeValues.push(rates[`trade${i + 1}`].ask)
+      tradeValues.push(rates[`trade${i + 1}`].bid)
+      tradeValues.push(rates[`trade${i + 1}`].pair)
+
+      for (let value of tradeValues) {
+        values.push(value)
+      }
+    }
+
+    let valuesString = ""
+    let columnsString = ""
+
+    for (let i = 0; i < values.length; i++) {
+      if (typeof values[i] == "string") {
+        values[i] = `'${values[i]}'`
+      }
+
+      if (i == values.length - 1) {
+        valuesString += `${values[i]}`
+        columnsString += `${columns[i]}`
+      } else {
+        valuesString += `${values[i]},`
+        columnsString += `${columns[i]},`
+      }
+    }
+
+    return `INSERT INTO arb_rates (${columnsString}) VALUES (${valuesString})`
+  }
 }
 
 module.exports = Format
