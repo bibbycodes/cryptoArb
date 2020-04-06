@@ -29,6 +29,7 @@ async function mon() {
   let symbols = Generate.pairs(cryptos, currencires)
   let exchanges = ['binance']
   let arb = new Arb()
+}
 
 
 exports.func = async () => {
@@ -62,4 +63,3 @@ exports.func = async () => {
   console.log('syymbols', arb.symbols)
   arb.comparePairs(arb.symbols, 'BUSD')
 }
-mon()

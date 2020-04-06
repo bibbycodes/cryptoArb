@@ -15,7 +15,7 @@ class Generate {
     }
     return pairs
   }
-  // trader.fullTrade('BTCEUR', 'BTCNGN', 'BNBNGN', 'BNBEUR', 35);
+
   static tradePairs(source, target, crypto, converter, reverse) {
     let sides = ['buy', 'sell', 'buy', 'sell']
 
@@ -77,14 +77,8 @@ class Generate {
       }
     }
 
-    return {
-      trade4,
-      trade3,
-      trade2,
-      trade1
-    }
+    return { trade1, trade2, trade3, trade4 }
   }
 }
-
 
 module.exports = Generate
