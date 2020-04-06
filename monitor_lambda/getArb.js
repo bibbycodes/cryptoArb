@@ -28,20 +28,6 @@ exports.func = () => {
     await Email.send('arb@afriex.co', 'ARBRATE', recipients, `BUSD EUR NGN: ${res.busdArbRate}`, message)
   })
 
-<<<<<<< HEAD
-  bnb.getRates().then(rates => {
-    let tradePairs = bnb.tradePairs
-    console.log(tradePairs)
-    console.log(rates)
-    let bnbArbRate = bnb.getArb()
-    console.log(bnbArbRate)
-    let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
-    Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BNB EUR NGN: ${bnbArbRate}`, message)
-  })
-}, null, true, 'America/Chicago');
-job.start();
-// } 
-=======
   bnb.getRates()
     .then(rates => {
       let tradePairs = bnb.tradePairs
@@ -64,6 +50,5 @@ job.start();
 }
 
 
->>>>>>> 8e2bd313cf3ccb518f68d9bedc057ea381cbef37
 
 
