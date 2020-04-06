@@ -47,9 +47,11 @@ class Trader{
       console.log("BNB balance start: ", balances.BNB.available);
     
       let baseSize 
+      console.log("buy ", srcArb, "at ", arbSize )
       binance.marketBuy(srcArb, arbSize).then( response => { // buy euro/bnb
           if (response.status == "FILLED") {
             console.log("TRADE 1...")
+            console.log("RESULT", response)
             binance.balance((error, balances) => {
               if ( error ) return console.error(error);
               console.log("EUR balance end: ", balances.EUR.available);
@@ -70,7 +72,7 @@ class Trader{
               return binance.marketSell(arbDest, arbSize).then( result => { // sell bnb/naira
                 if (result.status == "FILLED"){
                   console.log("TRADE 2...")
-                  //console.log("RESULT",result)
+                  console.log("RESULT", result)
                       binance.balance((error, balances) => {
                         if ( error ) return console.error(error);
                         console.log("EUR balance end: ", balances.EUR.available);
@@ -89,7 +91,7 @@ class Trader{
                         console.log("BNB bal diff: ", bnb_balance_end - bnb_balance_start, "percentage diff:", (bnb_balance_end - bnb_balance_start)/ bnb_balance_start );
                         
                         console.log("Naira gotten from bnb sale =", result.cummulativeQuoteQty)
-                        console.log("Expected euro btc rate=", baseRate)
+                        console.log("Expected naira btc rate=", baseRate)
 
                         baseSize = Number((parseFloat(result.cummulativeQuoteQty) / baseRate ).toFixed(5))
                         console.log("baseSize: ", baseSize)
@@ -98,7 +100,7 @@ class Trader{
                         if (result.status == "FILLED"){
                           console.log("TRADE 3...")
 
-                          //console.log("RESULT", result)
+                          console.log("RESULT", result)
 
                           binance.balance((error, balances) => {
                             if ( error ) return console.error(error);
@@ -122,7 +124,7 @@ class Trader{
 
                             if (result.status == "FILLED"){
                               console.log("TRADE 4...")
-                              // console.log("RESULT", result)
+                               console.log("RESULT", result)
                               binance.balance((error, balances) => {
                                 if ( error ) return console.error(error);
                                 console.log("EUR balance end: ", balances.EUR.available);
@@ -179,10 +181,10 @@ let bnb = new Arb('EUR','NGN','BNB','BTC')
 bnb.getRates().then(rates => {
   let tradePairs = bnb.tradePairs
   let bnbArbRate = bnb.getArb()["arbRate"]
-  let ngnBtcRate = bnb.getArb()["ngnBtcRate"]
-  let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
-  console.log(`BNB EUR NGN: ${bnbArbRate}`,"minus fees =", Math.abs(bnbArbRate) - 0.3, "ngnBtcRate", ngnBtcRate, message)
-  return {"rateForBase": ngnBtcRate}
+  let baseRate = bnb.getArb()["baseRate"]
+  let message = `ArbRate: ${bnbArbRate} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
+  console.log(`BNB EUR NGN: ${bnbArbRate}`,"minus fees =", Math.abs(bnbArbRate) - 0.3, "ngnBNBRate", baseRate, message)
+  return {"rateForBase": baseRate}
 }).then(results => {
   console.log("bnb-getRates result", results)
   trader.fullTrade(
@@ -190,7 +192,7 @@ bnb.getRates().then(rates => {
     tradePairs.trade2.tradePair, 
     tradePairs.trade3.tradePair, 
     tradePairs.trade4.tradePair, 
-    4,  //bnb
+    1,  //bnb
     results["rateForBase"]  //
   );
 

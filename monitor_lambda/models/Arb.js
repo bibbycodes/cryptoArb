@@ -34,14 +34,14 @@ class Arb {
 
   getArb() {
     // console.log(this.rates)
-    let trade1 = this.rates['trade1'].ask
-    console.log(`${this.rates['trade1'].pair}`, trade1)
-    let trade2 = this.rates['trade2'].bid
-    console.log(`${this.rates['trade2'].pair}`, trade2)
-    let trade3 = this.rates['trade3'].ask
-    console.log(`${this.rates['trade3'].pair}`, trade3)
-    let trade4 = this.rates['trade4'].bid
-    console.log(`${this.rates['trade4'].pair}`, trade4)
+    let trade1 = this.rates['trade1'].ask //eurbtc
+    // console.log(`${this.rates['trade1'].pair}`, trade1)
+    let trade2 = this.rates['trade2'].bid //btcngn
+    // console.log(`${this.rates['trade2'].pair}`, trade2)
+    let trade3 = this.rates['trade3'].ask //ngnbnb
+    //console.log(`${this.rates['trade3'].pair}`, trade3)
+    let trade4 = this.rates['trade4'].bid //bnbeur
+    //console.log(`${this.rates['trade4'].pair}`, trade4)
 
     let converterAmount = trade2 / trade3
     let endCurrAmount
@@ -50,8 +50,8 @@ class Arb {
       endCurrAmount = converterAmount / trade4
     } else {
       endCurrAmount = converterAmount * trade4
-    }
-    return Calculate.relativeDifference(endCurrAmount, trade1)
+    } //ngnbnb or ngnbtc
+    return {"arbRate": Calculate.relativeDifference(endCurrAmount, trade1), "baseRate": trade3}
   }
 
   add(ticker) {
