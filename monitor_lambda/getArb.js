@@ -19,15 +19,15 @@ var CronJob = require('cron').CronJob;
     //Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BUSD EUR NGN: ${busdArbRate}`, message)
   })
 
-  // bnb.getRates().then(rates => {
-  //   let tradePairs = bnb.tradePairs
-  //   console.log(tradePairs)
-  //   console.log(rates)
-  //   let bnbArbRate = bnb.getArb()
-  //   console.log(bnbArbRate)
-  //   let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
-  //   Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BNB EUR NGN: ${bnbArbRate}`, message)
-  // })
+  bnb.getRates().then(rates => {
+    let tradePairs = bnb.tradePairs
+    console.log(tradePairs)
+    console.log(rates)
+    let bnbArbRate = bnb.getArb()
+    console.log(bnbArbRate)
+    let message = `ArbRate: ${bnbArbRate[0]} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
+    Email.send('arb@afriex.co', 'ARBRATE', ['tope@afriex.co', 'scrapyscraperng@gmail.com'], `BNB EUR NGN: ${bnbArbRate}`, message)
+  })
 }, null, true, 'America/Chicago');
 job.start();
 // } 

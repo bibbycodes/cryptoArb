@@ -38,27 +38,27 @@ class Arb {
   }
 
   getArb() {
-    console.log(this.rates)
+    //console.log(this.rates)
     let EURBTC = this.rates['BTC/EUR'].ask
-    console.log("EURBTC", EURBTC)
+    // console.log("EURBTC", EURBTC)
     let BTCNGN = this.rates['BTC/NGN'].bid
-    console.log("BTCNGN", BTCNGN)
+    // console.log("BTCNGN", BTCNGN)
 
-    let NGNBNB = this.rates['BUSD/NGN'].ask
-    console.log("NGNBUSD", NGNBNB)
-    let BNBEUR = this.rates['EUR/BUSD'].bid
+    let NGNBNB = this.rates['BNB/NGN'].ask
+    // console.log("NGNBNB", NGNBNB)
+    let BNBEUR = this.rates['BNB/EUR'].bid
 
-    console.log("BUSDEUR", BNBEUR)
+    // console.log("BUSDEUR", BNBEUR)
 
-    let converterAmount = BTCNGN / NGNBNB
-    let endCurrAmount
+    let converterAmount = BTCNGN / NGNBNB // lot size of bnb
+    let endCurrAmount 
 
     if (this.converter == "BUSD") {
-      endCurrAmount = converterAmount / BNBEUR
+      endCurrAmount = converterAmount / BUSDEUR
     } else {
       endCurrAmount = converterAmount * BNBEUR
     }
-    return Calculate.relativeDifference(endCurrAmount, EURBTC)
+    return {"arbRate": Calculate.relativeDifference(endCurrAmount, EURBTC), "ngnBtcRate": BTCNGN}
   }
 
   add(ticker) {

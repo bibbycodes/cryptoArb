@@ -66,6 +66,15 @@ class Generate {
         to   : source,
         side : sides[3]
       }
+    } else if (converter == "BTC") {
+      trade4 = {
+        // sell btc for euro
+        pair : `${converter}/${source}`,
+        tradePair : `${converter}${source}`,
+        from : converter,
+        to   : source,
+        side : sides[3]
+      }
     }
 
     return {
