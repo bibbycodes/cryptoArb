@@ -21,7 +21,7 @@ class Arb {
     let pairs = []
 
     for (let trade in this.tradePairs) {
-      pairs.push(this.tradePairs[trade].pair)
+      pairs.push(this.tradePairs[trade].pair) // turn array into object
     }
 
     for (let i = 0; i < pairs.length; i++) {
@@ -35,18 +35,31 @@ class Arb {
   getArb() {
     // console.log(this.rates)
     let trade1 = this.rates['trade1'].ask //eurbtc
-    // console.log(`${this.rates['trade1'].pair}`, trade1)
+    console.log(`Trade 1 ${this.rates['trade1'].pair}`, trade1)
     let trade2 = this.rates['trade2'].bid //btcngn
-    // console.log(`${this.rates['trade2'].pair}`, trade2)
+    console.log(`Trade 2 ${this.rates['trade2'].pair}`, trade2)
     let trade3 = this.rates['trade3'].ask //ngnbnb
-    //console.log(`${this.rates['trade3'].pair}`, trade3)
+    console.log(`Trade 3 ${this.rates['trade3'].pair}`, trade3)
     let trade4 = this.rates['trade4'].bid //bnbeur
-    //console.log(`${this.rates['trade4'].pair}`, trade4)
+    console.log(`Trade 4 ${this.rates['trade4'].pair}`, trade4)
 
-    let converterAmount = trade2 / trade3
+    // inverse
+    let reverseTrade1 = this.rates['trade4'].ask
+    console.log(`Reverse 1 = ${this.rates['trade4'].pair}`, reverseTrade1)
+    let reverseTrade2 = this.rates['trade3'].bid
+    console.log(`Reverse 2 = ${this.rates['trade3'].pair}`, reverseTrade2)
+    let reverseTrade3 = this.rates['trade2'].ask
+    console.log(`Reverse 3 = ${this.rates['trade2'].pair}`, reverseTrade3)
+    let reverseTrade4 = this.rates['trade1'].bid
+    console.log(`Reverse 4 = ${this.rates['trade1'].pair}`, reverseTrade4)
+
+     let reverseConverter = reverseTrade2/reverseTrade3
+     let endReverseAmount = reverseConverter * reverseTrade4
+
+    let converterAmount = trade2 / trade3 //converter amount = how much bnb you need 482
     let endCurrAmount
 
-    if (this.converter == "BUSD") {
+    if (this.converter == "BUSD") { ///does this make sense
       endCurrAmount = converterAmount / trade4
     } else {
       endCurrAmount = converterAmount * trade4

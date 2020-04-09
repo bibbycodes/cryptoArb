@@ -22,7 +22,7 @@ class Trader{
   }
   
 
-  fullTrade (srcArb, arbDest, destBase, baseSrc, arbSize, baseRate ){ 
+  fullTrade (srcArb, srcArbPrice, arbDest, arbDestPrice, destBase, destBasePrice, baseSrc, baseSrcPrice, arbSize, baseRate ){ 
     let eur_balance_start
     let btc_balance_start
     let ngn_balance_start
@@ -48,7 +48,7 @@ class Trader{
     
       let baseSize 
       console.log("buy ", srcArb, "at ", arbSize )
-      binance.marketBuy(srcArb, arbSize).then( response => { // buy euro/bnb
+      binance.buy(srcArb, arbSize, srcArbPrice).then( response => { // buy euro/bnb
           if (response.status == "FILLED") {
             console.log("TRADE 1...")
             console.log("RESULT", response)
@@ -69,7 +69,7 @@ class Trader{
               console.log("NGN bal diff: ", ngn_balance_end - ngn_balance_start, "percentage diff:", (ngn_balance_end - ngn_balance_start)/ ngn_balance_start );
               console.log("BNB bal diff: ", bnb_balance_end - bnb_balance_start, "percentage diff:", (bnb_balance_end - bnb_balance_start)/ bnb_balance_start );
 
-              return binance.marketSell(arbDest, arbSize).then( result => { // sell bnb/naira
+              return binance.sell(arbDest, arbSize, arbDestPrice).then( result => { // sell bnb/naira
                 if (result.status == "FILLED"){
                   console.log("TRADE 2...")
                   console.log("RESULT", result)
@@ -95,7 +95,7 @@ class Trader{
 
                         baseSize = Number((parseFloat(result.cummulativeQuoteQty) / baseRate ).toFixed(5))
                         console.log("baseSize: ", baseSize)
-                        return binance.marketBuy(destBase, baseSize).then( result => {   //buy ngnbtc
+                        return binance.buy(destBase, baseSize, destBasePrice).then( result => {   //buy ngnbtc
                         //balance
                         if (result.status == "FILLED"){
                           console.log("TRADE 3...")
@@ -120,7 +120,7 @@ class Trader{
                             console.log("BNB bal diff: ", bnb_balance_end - bnb_balance_start, "percentage diff:", (bnb_balance_end - bnb_balance_start)/ bnb_balance_start );
                           
                             // baseSize = Number(baseSize.toFixed(2))
-                          return binance.marketSell(baseSrc, baseSize).then( result => { //sell btc for euro
+                          return binance.sell(baseSrc, baseSize, baseSrcPrice).then( result => { //sell btc for euro
 
                             if (result.status == "FILLED"){
                               console.log("TRADE 4...")
@@ -160,7 +160,6 @@ class Trader{
               })
 
             })
-            //tradeAmount = Number((parseFloat(response.executedQty) - (parseFloat(response.executedQty) * 0.01)).toFixed(3))
             
           }
          
@@ -172,29 +171,34 @@ class Trader{
 module.exports = Trader
 
 
-let tradePairs = Generate.tradePairs('EUR','NGN','BNB','BTC')
+let tradePairs = Generate.tradePairs('EUR','NGN','BTC', 'BNB') //why do we need to do this, we already do it in getArb()
 
 // console.log(tradePairs)
 
 let trader = new Trader();
-let bnb = new Arb('EUR','NGN','BNB','BTC')
+let bnb = new Arb('EUR','NGN','BTC','BNB')
 bnb.getRates().then(rates => {
   let tradePairs = bnb.tradePairs
-  let bnbArbRate = bnb.getArb()["arbRate"]
-  let baseRate = bnb.getArb()["baseRate"]
+  let bnbArb = bnb.getArb()
+  let bnbArbRate = bnbArb["arbRate"] // we're calling this twice
+  let baseRate = bnbArb["baseRate"] // we're calling this twice
   let message = `ArbRate: ${bnbArbRate} \n TradePairs: ${JSON.stringify(tradePairs)} \n Rates: ${JSON.stringify(rates)}`
   console.log(`BNB EUR NGN: ${bnbArbRate}`,"minus fees =", Math.abs(bnbArbRate) - 0.3, "ngnBNBRate", baseRate, message)
-  return {"rateForBase": baseRate}
+  return {"rateForBase": baseRate, "rates": rates}
 }).then(results => {
-  console.log("bnb-getRates result", results)
-  trader.fullTrade(
-    tradePairs.trade1.tradePair, 
-    tradePairs.trade2.tradePair, 
-    tradePairs.trade3.tradePair, 
-    tradePairs.trade4.tradePair, 
-    1,  //bnb
-    results["rateForBase"]  //
-  );
+  //console.log("bnb-getRates result", results)
+  // trader.fullTrade(
+  //   tradePairs.trade1.tradePair, 
+  //   results.rates.trade1.ask,
+  //   tradePairs.trade2.tradePair, 
+  //   results.rates.trade2.bid,
+  //   tradePairs.trade3.tradePair, 
+  //   results.rates.trade3.ask,
+  //   tradePairs.trade4.tradePair, 
+  //   results.rates.trade4.bid,
+  //   0.0015,  //bnb
+  //   results["rateForBase"]  //
+  // );
 
   
 
