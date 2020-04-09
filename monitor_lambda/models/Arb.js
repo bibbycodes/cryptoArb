@@ -20,15 +20,27 @@ class Arb {
   async getRates() {
     let pairs = []
 
+    let startTime = Date.now()
+
     for (let trade in this.tradePairs) {
       pairs.push(this.tradePairs[trade].pair)
     }
 
-    for (let i = 0; i < pairs.length; i++) {
-      let rate = await MonitorRest.orderBook('binance', pairs[i])
-      this.rates[`trade${i + 1}`] = rate
-    }
+    [
+      this.rates[`trade${1}`], 
+      this.rates[`trade${2}`], 
+      this.rates[`trade${3}`], 
+      this.rates[`trade${4}`]
+    ] = await Promise.all([
+          MonitorRest.orderBook('binance', pairs[0]),
+          MonitorRest.orderBook('binance', pairs[1]), 
+          MonitorRest.orderBook('binance', pairs[2]), 
+          MonitorRest.orderBook('binance', pairs[3])
+    ])
 
+    let endTime = Date.now()
+
+    console.log(`Time Elapsed: ${(endTime - startTime) / 1000} seconds`)
     return this.rates
   }
 
@@ -58,5 +70,12 @@ class Arb {
     this.symbols[`${ticker.pair} ${ticker.exchange}`] = ticker
   }
 }
+
+let busd = new Arb('EUR', 'NGN', 'BTC', 'BUSD')
+let bnb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
+
+bnb.getRates().then(() =>{
+   console.log(bnb.getArb())
+})
 
 module.exports = Arb
