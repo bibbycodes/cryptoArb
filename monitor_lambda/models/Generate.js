@@ -115,6 +115,7 @@ class Generate {
       quote :  market4.quote,
       base : market4.base
     }
+    //console.log(trade1, trade2, trade3, trade4)
     return { trade1, trade2, trade3, trade4 }
   }
 

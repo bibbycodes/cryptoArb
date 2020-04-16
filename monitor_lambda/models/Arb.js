@@ -43,28 +43,33 @@ class Arb {
   }
 
   outcome(fromAmount, tradePrice, trade) {
-    if (trade.from == trade.quote) {
+    console.log("trade", trade)
+    if (trade.to == trade.quote){
+      console.log('b')
       return fromAmount * tradePrice
-    } else {
+    } else{
+      console.log('c')
       return fromAmount / tradePrice
     }
   }
 
   getArb() {
     // console.log(this.rates)
-    let trade1 = this.rates[0].ask //eurbtc
-    let trade2 = this.rates[1].bid //btcngn
-    let trade3 = this.rates[2].ask //ngnbnb
+    let trade1 = this.rates[0].ask //
+    let trade2 = this.rates[1].bid //
+    let trade3 = this.rates[2].ask 
     let trade4 = this.rates[3].bid //bnbeur
-    let outcome = this.outcome(1, trade1, this.rates[0])
+    let outcome = this.outcome(6000, trade1, this.tradePairs["trade1"])
     // console.log(trade1, trade2, trade3, trade4)
-    console.log(this.rates)
-    console.log(this.tradePairs)
+    // console.log(this.rates)
+    // console.log(this.tradePairs)
     console.log("OutCome 1:", outcome)
-    let outcome2 = this.outcome(outcome, trade2, this.rates[1])
+    let outcome2 = this.outcome(outcome, trade2, this.tradePairs["trade2"])
     console.log("Outcome 2", outcome2)
-    let outcome3 = this.outcome(outcome2, trade3, this.rates[2])
-    console.log(outcome3)
+    let outcome3 = this.outcome(outcome2, trade3, this.tradePairs["trade3"])
+    console.log("Outcome 3", outcome3) //
+    let outcome4 = this.outcome(outcome3, trade4, this.tradePairs["trade4"])
+    console.log("Outcome 4", outcome4) //
     // let trade1Amount = trade1 * trade2
     // let converterAmount = trade1Amount / trade3
     // let endCurrAmount

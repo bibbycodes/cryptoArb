@@ -115,7 +115,9 @@ const Format = require('./models/Format')
       // [ 'BCC', 'BNT', 'ETH', 'BTC' ],
       // [ 'BNT', 'BCC', 'ETH', 'BTC' ],
       // [ 'USDT', 'LTC', 'ETH', 'BTC' ],
-      [ 'LTC', 'USDT', 'ETH', 'BTC' ]]
+      //[ 'LTC', 'USDT', 'ETH', 'BTC' ]
+      ['NGN', 'BTC', 'BNB', 'BUSD' ]
+    ]
 
     // When provided with an exchange rate, currency pairs indicate how much of the 
     // quote currency is needed to buy one unit of the provided base currency. 
