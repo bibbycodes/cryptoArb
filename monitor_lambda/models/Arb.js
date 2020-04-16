@@ -8,12 +8,12 @@ const Generate = require('./Generate')
 // EUR/BUSD = 1.2
 
 class Arb {
-  constructor(startCurr, endCurr, crypto, converter) {
+  constructor(tradePairs) {
     // this.startCurr = startCurr
     // this.endCurr = endCurr
     // this.crypto = crypto
-    this.converter = converter
-    this.tradePairs = Generate.tradePairs(startCurr, endCurr, crypto, converter)
+    // this.converter = converter
+    this.tradePairs = tradePairs
     this.rates = {}
   }
 
@@ -26,56 +26,61 @@ class Arb {
       pairs.push(this.tradePairs[trade].pair)
     }
 
-    [
-      this.rates[`trade${1}`], 
-      this.rates[`trade${2}`], 
-      this.rates[`trade${3}`], 
-      this.rates[`trade${4}`]
-    ] = await Promise.all([
-          MonitorRest.orderBook('binance', pairs[0]),
-          MonitorRest.orderBook('binance', pairs[1]), 
-          MonitorRest.orderBook('binance', pairs[2]), 
-          MonitorRest.orderBook('binance', pairs[3])
-    ])
+    // console.log(pairs)
 
+    let calls = [
+      MonitorRest.orderBook('binance', pairs[0]),
+      MonitorRest.orderBook('binance', pairs[1]), 
+      MonitorRest.orderBook('binance', pairs[2]), 
+      MonitorRest.orderBook('binance', pairs[3])
+    ]
+      
+    let rates = await Promise.all(calls)
+    Object.assign(this.rates, rates)
     let endTime = Date.now()
-
-    console.log(`Time Elapsed: ${(endTime - startTime) / 1000} seconds`)
+    // console.log(`Time Elapsed: ${(endTime - startTime) / 1000} seconds`)
     return this.rates
+  }
+
+  outcome(fromAmount, tradePrice, trade) {
+    if (trade.from == trade.quote) {
+      return fromAmount * tradePrice
+    } else {
+      return fromAmount / tradePrice
+    }
   }
 
   getArb() {
     // console.log(this.rates)
-    let trade1 = this.rates['trade1'].ask //eurbtc
-    // console.log(`${this.rates['trade1'].pair}`, trade1)
-    let trade2 = this.rates['trade2'].bid //btcngn
-    // console.log(`${this.rates['trade2'].pair}`, trade2)
-    let trade3 = this.rates['trade3'].ask //ngnbnb
-    //console.log(`${this.rates['trade3'].pair}`, trade3)
-    let trade4 = this.rates['trade4'].bid //bnbeur
-    //console.log(`${this.rates['trade4'].pair}`, trade4)
+    let trade1 = this.rates[0].ask //eurbtc
+    let trade2 = this.rates[1].bid //btcngn
+    let trade3 = this.rates[2].ask //ngnbnb
+    let trade4 = this.rates[3].bid //bnbeur
+    let outcome = this.outcome(1, trade1, this.rates[0])
+    // console.log(trade1, trade2, trade3, trade4)
+    console.log(this.rates)
+    console.log(this.tradePairs)
+    console.log("OutCome 1:", outcome)
+    let outcome2 = this.outcome(outcome, trade2, this.rates[1])
+    console.log("Outcome 2", outcome2)
+    let outcome3 = this.outcome(outcome2, trade3, this.rates[2])
+    console.log(outcome3)
+    // let trade1Amount = trade1 * trade2
+    // let converterAmount = trade1Amount / trade3
+    // let endCurrAmount
 
-    let converterAmount = trade2 / trade3
-    let endCurrAmount
+    // if (this.converter == "BUSD") { // Needs to be generalised if less than 1?
+    //   endCurrAmount = converterAmount / trade4
+    // } else {
+    //   endCurrAmount = converterAmount * trade4
+    // } //ngnbnb or ngnbtc
 
-    if (this.converter == "BUSD") {
-      endCurrAmount = converterAmount / trade4
-    } else {
-      endCurrAmount = converterAmount * trade4
-    } //ngnbnb or ngnbtc
-    return {"arbRate": Calculate.relativeDifference(endCurrAmount, trade1), "baseRate": trade3}
+    // return {"arbRate": Calculate.relativeDifference(endCurrAmount, trade1), "baseRate": trade3}
   }
 
   add(ticker) {
     this.symbols[`${ticker.pair} ${ticker.exchange}`] = ticker
   }
 }
-
-let busd = new Arb('EUR', 'NGN', 'BTC', 'BUSD')
-let bnb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
-
-bnb.getRates().then(() =>{
-   console.log(bnb.getArb())
-})
 
 module.exports = Arb

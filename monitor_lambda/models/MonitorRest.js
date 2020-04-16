@@ -1,4 +1,5 @@
 const ccxt = require('ccxt')
+const Validate = require('./Validate')
 const Format = require('./Format')
 const Calculate = require('./Calculate')
 const Fetcher = require('./Fetcher')
@@ -10,8 +11,10 @@ class MonitorRest {
     try {
       let exchange = new ccxt[ex]()
       let markets = await exchange.loadMarkets()
-
-      if (markets[pair]) {
+      
+      if (!markets[pair]) { 
+        pair = Validate.switchPairs(pair)
+      }
         let orderBook = await exchange.fetchOrderBook(pair)
         let timestamp = Date.now()
         let crypto = pair.split('/')[0]
@@ -25,16 +28,10 @@ class MonitorRest {
           bid : orderBook.bids[0][0],
           bidVolume : orderBook.bids[0][1],
         }
-
-        // let db = new dbConn()
-        // let queryString = Format.orderBookDbString(best)
-        // await db.query(queryString)
         return best
-      } else {
-        throw new Error('Pair not Present')
-      }
     } catch (err){
-      return err.message
+      throw new Error(`Pair not Present: Pair ${pair}`)
+      // return err.message
     }
   }
 
@@ -51,6 +48,7 @@ class MonitorRest {
       close: ticker.close,
       timestamp: ticker.timestamp,
     }
+    console.log(tickerObj)
     return tickerObj
   }
 }

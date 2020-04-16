@@ -53,13 +53,13 @@ exports.func = async () => {
       }
       let ticker = await MonitorRest.orderBook(exchange, symbol)
 
-      if (ticker != "Pair not Present") {
+      if (ticker != "Pair not Present A") {
         console.log(ticker)
         arb.add(ticker)
       }
     }
   }
 
-  console.log('syymbols', arb.symbols)
+  console.log('symbols', arb.symbols)
   arb.comparePairs(arb.symbols, 'BUSD')
 }
