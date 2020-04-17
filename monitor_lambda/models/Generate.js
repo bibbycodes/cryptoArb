@@ -71,7 +71,6 @@ class Generate {
     let market4 = Validate.correctPair(markets, converter, source)
 
     if ([market1, market2, market3, market4].includes(false)) {
-      console.log([market1.symbol, market2.symbol, market3.symbol, market4.symbol])
       throw new Error("Trade not Viable")
     }
 
@@ -83,7 +82,8 @@ class Generate {
       to   : crypto,
       side : sides[0],
       quote :  market1.quoteId,
-      base : market1.base
+      base : market1.base,
+      precision : market1.precision
     }
 
     let trade2 = {
@@ -94,7 +94,8 @@ class Generate {
       to   : target,
       side : sides[1],
       quote :  market2.quote,
-      base : market2.base
+      base : market2.base,
+      precision : market2.precision
     }
 
     let trade3 = {
@@ -105,7 +106,8 @@ class Generate {
       to   : converter,
       side : sides[2],
       quote :  market3.quote,
-      base : market3.base
+      base : market3.base,
+      precision : market3.precision
     }
 
     let trade4 = {
@@ -116,7 +118,8 @@ class Generate {
       to   : source,
       side : sides[3],
       quote :  market4.quote,
-      base : market4.base
+      base : market4.base,
+      precision : market4.precision
     }
 
     return { trade1, trade2, trade3, trade4 }
@@ -178,44 +181,4 @@ class Generate {
   }
 }
 
-// let midCryptos = ["MATIC", "ENJ", "ALGO", "BAT", "ARK", "XLM", "BAND", "KAVA", "ZRX", "IOTA", "RVN", "WAVES", "KNC", "ATOM", "BTG", "CHZ", "LSK", "QTUM", "LTO"]
-// let topCryptos = ["SNT", "BNB", "BTC", "IOTA", "ETH", "XRP", "BCH", "LTC", "EOS", "XZT", "LINK", "XMR", "XLM", "ADA", "TRX", "DASH"]
-// let topCurrencies = ["NGN", "RUB", "BUSD", "EUR", "TUSD", "TRY", "PAX", "USDC"]
-
-// let binance = new ccxt['binance']()
-// binance.loadMarkets().then(markets => {
-//   let trades = []
-//   let combinations = Generate.combination(topCryptos.concat(topCurrencies))
-  
-//   for (let combo of combinations) {
-//     let permutations = Generate.permutations(combo)
-
-//     let arrayOfTrades = permutations.map(perm => {
-//       try {
-//         return (Generate.validatedTradePairs(perm[0], perm[1], perm[2], perm[3], markets))
-//       } catch {
-//       }
-//     })
-
-//     arrayOfTrades.filter(trade => {
-//       return trade != null
-//     })
-
-//     trades.push(arrayOfTrades)
-//   }
-//   return trades
-// }).then(async (trades) => {
-//   console.log(trades)
-//   for (tradePairs of trades) {
-//     for (trade of tradePairs) {
-//       console.log(trade)
-//       let arb = new Arb(trade)
-//       let rates = await arb.getRates()
-//       console.log(rates)
-//       let arbRate = arb.getArb(2000)
-//       console.log("Arb Rate", arbRate)
-//     }
-//   }
-//   console.log(JSON.stringify(trades))
-// })
 module.exports = Generate

@@ -7,20 +7,21 @@ class Arb {
     this.rates = {}
   }
 
-  async getRates() {
+  
+  async getRates(exchange) {
     let pairs = []
-
     for (let trade in this.tradePairs) {
       pairs.push(this.tradePairs[trade].pair)
     }
 
     let calls = [
-      MonitorRest.orderBook('binance', pairs[0]),
-      MonitorRest.orderBook('binance', pairs[1]), 
-      MonitorRest.orderBook('binance', pairs[2]), 
-      MonitorRest.orderBook('binance', pairs[3])
+      MonitorRest.orderBook(exchange, pairs[0]),
+      MonitorRest.orderBook(exchange, pairs[1]), 
+      MonitorRest.orderBook(exchange, pairs[2]), 
+      MonitorRest.orderBook(exchange, pairs[3])
     ]
-      
+
+    let startTime = Date.now()
     let rates = await Promise.all(calls)
     Object.assign(this.rates, rates)
     let endTime = Date.now()
