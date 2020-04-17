@@ -7,116 +7,60 @@ const Format = require('./models/Format')
 
 // exports.func = () => {
   async function test() {
-
-    // let busd = new Arb('EUR', 'NGN', 'BTC', 'BUSD')`
-    // let bnb = new Arb('EUR', 'NGN', 'BTC', 'BNB')
     let binance = new ccxt['binance']()
     let markets = await binance.loadMarkets()
     let recipients = ['admin@afriex.co', 'scrapyscraperng@gmail.com']
-    // let original = ['EUR', 'NGN', 'BTC', 'BUSD']
-    // let permOrig = Generate.permutations(original)
     let viableTrades = [
-      // [ // 'BNB', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'BNB', 'ETH', 'BTC' ],
-      // [ 'ETH', 'BNB', 'LTC', 'BTC' ],
-      // [ 'BTC', 'BNB', 'LTC', 'ETH' ],
-      // [ 'NEO', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'NEO', 'ETH', 'BTC' ],
-      // [ 'NEO', 'BNB', 'ETH', 'BTC' ],
-      // [ 'BNB', 'NEO', 'ETH', 'BTC' ],
-      // [ 'ETH', 'NEO', 'BNB', 'BTC' ],
-      // [ 'BTC', 'NEO', 'BNB', 'ETH' ],
-      // [ 'LTC', 'NEO', 'BNB', 'BTC' ],
-      // [ 'LTC', 'NEO', 'BNB', 'ETH' ],
-      // [ 'QTUM', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'QTUM', 'BNB', 'ETH', 'BTC' ],
-      // [ 'BNB', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'ETH', 'QTUM', 'BNB', 'BTC' ],
-      // [ 'BTC', 'QTUM', 'BNB', 'ETH' ],
-      // [ 'LTC', 'QTUM', 'BNB', 'BTC' ],
-      // [ 'LTC', 'QTUM', 'BNB', 'ETH' ],
-      // [ 'QTUM', 'NEO', 'ETH', 'BTC' ],
-      // [ 'NEO', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'QTUM', 'NEO', 'BNB', 'BTC' ],
-      // [ 'NEO', 'QTUM', 'BNB', 'BTC' ],
-      // [ 'QTUM', 'NEO', 'BNB', 'ETH' ],
-      // [ 'NEO', 'QTUM', 'BNB', 'ETH' ],
-      // [ 'EOS', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'EOS', 'ETH', 'BTC' ],
-      // [ 'EOS', 'BNB', 'ETH', 'BTC' ],
-      // [ 'BNB', 'EOS', 'ETH', 'BTC' ],
-      // [ 'ETH', 'EOS', 'BNB', 'BTC' ],
-      // [ 'BTC', 'EOS', 'BNB', 'ETH' ],
-      // [ 'LTC', 'EOS', 'BNB', 'BTC' ],
-      // [ 'LTC', 'EOS', 'BNB', 'ETH' ],
-      // [ 'EOS', 'NEO', 'ETH', 'BTC' ],
-      // [ 'NEO', 'EOS', 'ETH', 'BTC' ],
-      // [ 'EOS', 'NEO', 'BNB', 'BTC' ],
-      // [ 'NEO', 'EOS', 'BNB', 'BTC' ],
-      // [ 'EOS', 'NEO', 'BNB', 'ETH' ],
-      // [ 'NEO', 'EOS', 'BNB', 'ETH' ],
-      // [ 'EOS', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'QTUM', 'EOS', 'ETH', 'BTC' ],
-      // [ 'EOS', 'QTUM', 'BNB', 'BTC' ],
-      // [ 'QTUM', 'EOS', 'BNB', 'BTC' ],
-      // [ 'EOS', 'QTUM', 'BNB', 'ETH' ],
-      // [ 'QTUM', 'EOS', 'BNB', 'ETH' ],
-      // [ 'SNT', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'SNT', 'ETH', 'BTC' ],
-      // [ 'SNT', 'BNB', 'ETH', 'BTC' ],
-      // [ 'BNB', 'SNT', 'ETH', 'BTC' ],
-      // [ 'SNT', 'NEO', 'ETH', 'BTC' ],
-      // [ 'NEO', 'SNT', 'ETH', 'BTC' ],
-      // [ 'SNT', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'QTUM', 'SNT', 'ETH', 'BTC' ],
-      // [ 'SNT', 'EOS', 'ETH', 'BTC' ],
-      // [ 'EOS', 'SNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'BNB', 'ETH', 'BTC' ],
-      // [ 'BNB', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'NEO', 'ETH', 'BTC' ],
-      // [ 'NEO', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'QTUM', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'EOS', 'ETH', 'BTC' ],
-      // [ 'EOS', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'SNT', 'ETH', 'BTC' ],
-      // [ 'SNT', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BCC', 'LTC', 'ETH', 'BTC' ],
-      // [ 'LTC', 'BCC', 'ETH', 'BTC' ],
-      // [ 'BCC', 'BNB', 'ETH', 'BTC' ],
-      // [ 'BNB', 'BCC', 'ETH', 'BTC' ],
-      // [ 'ETH', 'BCC', 'BNB', 'BTC' ],
-      // [ 'BTC', 'BCC', 'BNB', 'ETH' ],
-      // [ 'LTC', 'BCC', 'BNB', 'BTC' ],
-      // [ 'LTC', 'BCC', 'BNB', 'ETH' ],
-      // [ 'BCC', 'NEO', 'ETH', 'BTC' ],
-      // [ 'NEO', 'BCC', 'ETH', 'BTC' ],
-      // [ 'BCC', 'NEO', 'BNB', 'BTC' ],
-      // [ 'NEO', 'BCC', 'BNB', 'BTC' ],
-      // [ 'BCC', 'NEO', 'BNB', 'ETH' ],
-      // [ 'NEO', 'BCC', 'BNB', 'ETH' ],
-      // [ 'BCC', 'QTUM', 'ETH', 'BTC' ],
-      // [ 'QTUM', 'BCC', 'ETH', 'BTC' ],
-      // [ 'BCC', 'QTUM', 'BNB', 'BTC' ],
-      // [ 'QTUM', 'BCC', 'BNB', 'BTC' ],
-      // [ 'BCC', 'QTUM', 'BNB', 'ETH' ],
-      // [ 'QTUM', 'BCC', 'BNB', 'ETH' ],
-      // [ 'BCC', 'EOS', 'ETH', 'BTC' ],
-      // [ 'EOS', 'BCC', 'ETH', 'BTC' ],
-      // [ 'BCC', 'EOS', 'BNB', 'BTC' ],
-      // [ 'EOS', 'BCC', 'BNB', 'BTC' ],
-      // [ 'BCC', 'EOS', 'BNB', 'ETH' ],
-      // [ 'EOS', 'BCC', 'BNB', 'ETH' ],
-      // [ 'BCC', 'SNT', 'ETH', 'BTC' ],
-      // [ 'SNT', 'BCC', 'ETH', 'BTC' ],
-      // [ 'BCC', 'BNT', 'ETH', 'BTC' ],
-      // [ 'BNT', 'BCC', 'ETH', 'BTC' ],
-      // [ 'USDT', 'LTC', 'ETH', 'BTC' ],
-      //[ 'LTC', 'USDT', 'ETH', 'BTC' ]
-      ['NGN', 'BTC', 'BNB', 'BUSD' ]
+      [ 'EUR', 'NGN', 'BTC', 'BNB' ],
+      [ 'NGN', 'EUR', 'BTC', 'BNB' ],
+      [ 'EUR', 'NGN', 'BTC', 'BUSD' ],
+      [ 'NGN', 'EUR', 'BTC', 'BUSD' ],
+      [ 'SNT', 'NEO', 'ETH', 'BTC' ],
+      [ 'NEO', 'SNT', 'ETH', 'BTC' ],
+      [ 'BNB', 'LTC', 'ETH', 'BTC' ],
+      [ 'LTC', 'BNB', 'ETH', 'BTC' ],
+      [ 'ETH', 'BNB', 'LTC', 'BTC' ],
+      [ 'BTC', 'BNB', 'LTC', 'ETH' ],
+      [ 'NEO', 'LTC', 'ETH', 'BTC' ],
+      [ 'LTC', 'NEO', 'ETH', 'BTC' ],
+      [ 'NEO', 'BNB', 'ETH', 'BTC' ],
+      [ 'BNB', 'NEO', 'ETH', 'BTC' ],
+      [ 'ETH', 'NEO', 'BNB', 'BTC' ],
+      [ 'BTC', 'NEO', 'BNB', 'ETH' ],
+      [ 'LTC', 'NEO', 'BNB', 'BTC' ],
+      [ 'LTC', 'NEO', 'BNB', 'ETH' ],
+      [ 'QTUM', 'LTC', 'ETH', 'BTC' ],
+      [ 'LTC', 'QTUM', 'ETH', 'BTC' ],
+      [ 'QTUM', 'BNB', 'ETH', 'BTC' ],
+      [ 'BNB', 'QTUM', 'ETH', 'BTC' ],
+      [ 'ETH', 'QTUM', 'BNB', 'BTC' ],
+      [ 'BTC', 'QTUM', 'BNB', 'ETH' ],
+      [ 'LTC', 'QTUM', 'BNB', 'BTC' ],
+      [ 'LTC', 'QTUM', 'BNB', 'ETH' ],
+      [ 'QTUM', 'NEO', 'ETH', 'BTC' ],
+      [ 'NEO', 'QTUM', 'ETH', 'BTC' ],
+      [ 'QTUM', 'NEO', 'BNB', 'BTC' ],
+      [ 'NEO', 'QTUM', 'BNB', 'BTC' ],
+      [ 'QTUM', 'NEO', 'BNB', 'ETH' ],
+      [ 'NEO', 'QTUM', 'BNB', 'ETH' ],
+      [ 'EOS', 'LTC', 'ETH', 'BTC' ],
+      [ 'LTC', 'EOS', 'ETH', 'BTC' ],
+      [ 'EOS', 'BNB', 'ETH', 'BTC' ],
+      [ 'BNB', 'EOS', 'ETH', 'BTC' ],
+      [ 'ETH', 'EOS', 'BNB', 'BTC' ],
+      [ 'BTC', 'EOS', 'BNB', 'ETH' ],
+      [ 'LTC', 'EOS', 'BNB', 'BTC' ],
+      [ 'LTC', 'EOS', 'BNB', 'ETH' ],
+      [ 'EOS', 'NEO', 'ETH', 'BTC' ],
+      [ 'NEO', 'EOS', 'ETH', 'BTC' ],
+      [ 'EOS', 'NEO', 'BNB', 'BTC' ],
+      [ 'NEO', 'EOS', 'BNB', 'BTC' ],
+      [ 'EOS', 'NEO', 'BNB', 'ETH' ],
+      [ 'NEO', 'EOS', 'BNB', 'ETH' ],
+      [ 'EOS', 'QTUM', 'ETH', 'BTC' ],
+      [ 'QTUM', 'EOS', 'ETH', 'BTC' ],
+      [ 'EOS', 'QTUM', 'BNB', 'BTC' ],
+      [ 'QTUM', 'EOS', 'BNB', 'BTC' ],
     ]
 
     // When provided with an exchange rate, currency pairs indicate how much of the 
@@ -130,29 +74,15 @@ const Format = require('./models/Format')
       return quoteCurrAmount / tradePrice
     }
 
-    
-
-
-
-    binance.fetchTicker('BCC/BNB').then(ticker => {
-      // console.log(outcome(5,ticker.ask))
-      // console.log(ticker)
-    })
-    
     for (let trade of viableTrades) {
-      let startTime = Date.now()
       let tradePairs = Generate.validatedTradePairs(trade[0], trade[1], trade[2], trade[3], markets)
-        .then(async pairs => {
-          let busd = new Arb(pairs)
-          busd.getRates()
-            .then(rates => {
-              let tradePairs = busd.tradePairs
-              let busdArbRate = busd.getArb()
-              // console.log(`Arb Rate: ${JSON.stringify(busdArbRate)}`, `Coins: ${trade}`)
-              return { rates, tradePairs, busdArbRate }
-            })
-        })
-      .catch(err => console.log(err.message))
+      let arb = new Arb(tradePairs)
+      arb.getRates().then(rates => {
+        let arbRate = arb.getArb(300)
+        console.log(`Arb Rate: ${JSON.stringify(arbRate)}`, `Coins: ${trade}`)
+      //   arbs.push({arbRate, trade })
+      })
+      // .catch(err => console.log(err.message))
     }
       // .then(async result => {
         //   let rates = result.rates

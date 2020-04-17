@@ -7,18 +7,20 @@ const dbConn = require('./dbConn')
 const axios = require('axios')
 
 class MonitorRest {
+  // issue here
+
   static async orderBook(ex, pair) {
     try {
       let exchange = new ccxt[ex]()
       let markets = await exchange.loadMarkets()
-      
-      if (!markets[pair]) { 
-        pair = Validate.switchPairs(pair)
-      }
-        let orderBook = await exchange.fetchOrderBook(pair)
+      let splitPair = pair.split('/')
+      let pairDetails = Validate.correctPair(markets, splitPair[1], splitPair[0])
+      let symbol = pairDetails.symbol
+
+      if(pair != false) {
+        let orderBook = await exchange.fetchOrderBook(symbol)
         let timestamp = Date.now()
-        let crypto = pair.split('/')[0]
-        let curr = pair.split('/')[1]
+
         let best =  {
           timestamp: timestamp,
           exchange: ex,
@@ -28,7 +30,12 @@ class MonitorRest {
           bid : orderBook.bids[0][0],
           bidVolume : orderBook.bids[0][1],
         }
+
         return best
+      } else {
+        throw new Error('Could not fetch order books')
+      }
+      
     } catch (err){
       throw new Error(`Pair not Present: Pair ${pair}`)
       // return err.message
@@ -48,7 +55,6 @@ class MonitorRest {
       close: ticker.close,
       timestamp: ticker.timestamp,
     }
-    console.log(tickerObj)
     return tickerObj
   }
 }

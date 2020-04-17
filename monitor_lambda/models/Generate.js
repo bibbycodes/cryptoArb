@@ -1,5 +1,7 @@
 const Validate = require('./Validate')
 const ccxt = require('ccxt')
+const Arb = require('./Arb')
+
 class Generate {
   static pairs(cryptos, currencies) {
     let pairs = []
@@ -61,7 +63,7 @@ class Generate {
     return { trade1, trade2, trade3, trade4 }
   }
 
-  static async validatedTradePairs(source, target, crypto, converter, markets) {
+  static validatedTradePairs(source, target, crypto, converter, markets) {
     let sides = ['buy', 'sell', 'buy', 'sell']
     let market1 = Validate.correctPair(markets, source, crypto)
     let market2 = Validate.correctPair(markets, crypto, target)
@@ -69,7 +71,8 @@ class Generate {
     let market4 = Validate.correctPair(markets, converter, source)
 
     if ([market1, market2, market3, market4].includes(false)) {
-      return "Trade not Viable"
+      console.log([market1.symbol, market2.symbol, market3.symbol, market4.symbol])
+      throw new Error("Trade not Viable")
     }
 
     let trade1 = {
@@ -115,7 +118,7 @@ class Generate {
       quote :  market4.quote,
       base : market4.base
     }
-    //console.log(trade1, trade2, trade3, trade4)
+
     return { trade1, trade2, trade3, trade4 }
   }
 
@@ -124,7 +127,7 @@ class Generate {
   //  whose length is four
   //  and consists of unique elements
   static combination(set) {
-    set = set.slice(0,15)
+    // set = set.slice(0,15)
     let foundSets = []
     for (let i = 0; i < set.length; i++) {
       for (let j = 0; j < set.length + 1; j++) {
@@ -140,22 +143,16 @@ class Generate {
               break
             }
             let combo = [set[i], set[j], set[k], set[l]]
-            console.log(combo)
             if (!foundSets.includes(combo)) {
-              foundSets.push([set[i], set[j], set[k], set[l]])
+              foundSets.push(combo)
             }
           }
         }
-        // if (currSet.length == 4) {
-        //   console.log("J:", j)
-        //   console.log(currSet)
-        //   foundSets.push(currSet)
-        //   // j = 1
-        //   break
-        }
       }
-      return foundSets
     }
+
+    return foundSets
+  }
   
 
   static permutations(input) {
@@ -181,5 +178,44 @@ class Generate {
   }
 }
 
-// console.log(Generate.combination(['ngn', 'usd', 'btc', 'eth', 'busd', 'bnb', 'rub', 'xrp']))
+// let midCryptos = ["MATIC", "ENJ", "ALGO", "BAT", "ARK", "XLM", "BAND", "KAVA", "ZRX", "IOTA", "RVN", "WAVES", "KNC", "ATOM", "BTG", "CHZ", "LSK", "QTUM", "LTO"]
+// let topCryptos = ["SNT", "BNB", "BTC", "IOTA", "ETH", "XRP", "BCH", "LTC", "EOS", "XZT", "LINK", "XMR", "XLM", "ADA", "TRX", "DASH"]
+// let topCurrencies = ["NGN", "RUB", "BUSD", "EUR", "TUSD", "TRY", "PAX", "USDC"]
+
+// let binance = new ccxt['binance']()
+// binance.loadMarkets().then(markets => {
+//   let trades = []
+//   let combinations = Generate.combination(topCryptos.concat(topCurrencies))
+  
+//   for (let combo of combinations) {
+//     let permutations = Generate.permutations(combo)
+
+//     let arrayOfTrades = permutations.map(perm => {
+//       try {
+//         return (Generate.validatedTradePairs(perm[0], perm[1], perm[2], perm[3], markets))
+//       } catch {
+//       }
+//     })
+
+//     arrayOfTrades.filter(trade => {
+//       return trade != null
+//     })
+
+//     trades.push(arrayOfTrades)
+//   }
+//   return trades
+// }).then(async (trades) => {
+//   console.log(trades)
+//   for (tradePairs of trades) {
+//     for (trade of tradePairs) {
+//       console.log(trade)
+//       let arb = new Arb(trade)
+//       let rates = await arb.getRates()
+//       console.log(rates)
+//       let arbRate = arb.getArb(2000)
+//       console.log("Arb Rate", arbRate)
+//     }
+//   }
+//   console.log(JSON.stringify(trades))
+// })
 module.exports = Generate

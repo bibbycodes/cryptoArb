@@ -69,32 +69,4 @@ async function checkTradePairs(){
 // })
 
 // checkTradePairs()
-// getCombs()
-
-function fact(n) {
-  if (n == 1) {
-    return 1
-  }
-  return (n * fact(n - 1))
-}
-let cached = {}
-counter = 0
-function fib(n) {
-  if (cached[n]) {
-    console.log(n, cached[n])
-    counter += 1
-    console.log(`${counter} iterations saved`)
-    return cached[n]
-  }
-  if (n == 1 ) {
-    return 1
-  } else if (n == 2) {
-    return 1
-  } else if (n > 2) {
-    value = fib(n - 1) + fib(n - 2)
-    cached[n] = value
-    return(fib(n - 1) + fib(n - 2))
-  }
-}
-
-console.log(fib(400))
+getCombs()

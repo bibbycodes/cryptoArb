@@ -1,6 +1,8 @@
 class Calculate {
   static relativeDifference(source, destination) {
-    let relativeDifference = ((source - destination) / (Math.max(source, destination)) * 100).toFixed(2)
+    let difference = destination - source
+    console.log(difference)
+    let relativeDifference = ((difference / source) * 100).toFixed(2)
     return [relativeDifference]
   }
 
