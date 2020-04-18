@@ -47,6 +47,30 @@ class Parse {
     }
     return object
   }
+
+  static trade(trade, from, to) {
+    let side
+    if (from == trade.base) {
+      side = "Buy"
+    } else {
+      side = "Sell"
+    }
+    let tr = {
+      // buy bitcoin with euro
+      symbol : trade.symbol,
+      tradePair : trade.id,
+      from : from,
+      to   : to,
+      side : side,
+      quote :  trade.quoteId,
+      base : trade.baseId,
+      precision : trade.precision,
+      takerFee : trade.taker,
+      makerFee : trade.maker,
+      limits : trade.limits
+    }
+    return tr
+  }
 }
 
 module.exports = Parse

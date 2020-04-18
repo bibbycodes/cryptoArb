@@ -16,7 +16,7 @@ class MonitorRest {
       let splitPair = pair.split('/')
       let pairDetails = Validate.correctPair(markets, splitPair[1], splitPair[0])
       let symbol = pairDetails.symbol
-
+      console.log(pair)
       if(pair != false) {
         let orderBook = await exchange.fetchOrderBook(symbol)
         let timestamp = Date.now()
@@ -33,10 +33,11 @@ class MonitorRest {
 
         return best
       } else {
-        throw new Error('Could not fetch order books')
+        console.log('Could not fetch order books')
       }
       
     } catch (err){
+      console.log(err.message)
       throw new Error(`Pair not Present: Pair ${pair}`)
       // return err.message
     }

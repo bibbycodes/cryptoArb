@@ -19,6 +19,13 @@ class Validate {
     }
   }
 
+  static side(from, base) {
+    if (from == base) {
+      return "Buy"
+    }
+    return "Sell"
+  }
+
   static switchPairs(pair) {
     let splitPair = pair.split('/')
     return `${splitPair[1]}/${splitPair[0]}`

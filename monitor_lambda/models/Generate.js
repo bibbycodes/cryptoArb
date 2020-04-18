@@ -1,7 +1,8 @@
 const Validate = require('./Validate')
 const ccxt = require('ccxt')
 const Arb = require('./Arb')
-
+const Trade = require('./Trade')
+const Parse = require('./Parse')
 class Generate {
   static pairs(cryptos, currencies) {
     let pairs = []
@@ -22,7 +23,6 @@ class Generate {
 
   static tradePairs(source, target, crypto, converter, reverse) {
     let sides = ['buy', 'sell', 'buy', 'sell']
-
 
     let trade1 = {
       // buy bitcoin with euro
@@ -61,6 +61,26 @@ class Generate {
       }
 
     return { trade1, trade2, trade3, trade4 }
+  }
+
+  static sequentialTrades(coinsArray, markets) {
+    let tradesArray = []
+    for (let i = 0; i < coinsArray.length; i++) {
+      let from, to
+      from = coinsArray[i]
+
+      if (i == coinsArray.length - 1) {
+        to = coinsArray[0]
+      } else {
+        to = coinsArray[i + 1]
+      }
+      let trade = Validate.correctPair(markets, from, to)
+      trade = Parse.trade(trade, from, to)
+      let tradeInstance = new Trade(trade)
+      console.log(trade)
+      tradesArray.push(tradeInstance)
+    }
+    return tradesArray
   }
 
   static validatedTradePairs(source, target, crypto, converter, markets) {

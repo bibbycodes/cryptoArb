@@ -85,6 +85,8 @@ function sleep(ms) {
     [ 'EUR', 'NGN', 'BUSD', 'BNB' ],
     [ 'NGN', 'EUR', 'BUSD', 'BNB' ],
     [ 'EUR', 'NGN', 'BNB', 'BTC' ],
+    [ 'BUSD', 'BNB', 'NGN', 'EUR'],
+    [ 'BNB', 'BTC', 'EUR', 'NGN', ],
     [ 'NGN', 'EUR', 'BNB', 'BTC' ],
     [ 'SNT', 'NEO', 'ETH', 'BTC' ],
     [ 'NEO', 'SNT', 'ETH', 'BTC' ],
@@ -170,15 +172,14 @@ function sleep(ms) {
     [ 'LTC', 'USDT', 'ETH', 'BTC' ],
   ]
 
-// let volatile = await Fetch.viableVolatileTrades(ex)
-
 async function test(ex, data) {
   
   let exchange = new ccxt[ex]()
+  exchange.enableRateLimit = true
   let markets = await exchange.loadMarkets()
   let recipients = ['admin@afriex.co', 'scrapyscraperng@gmail.com']
   for (let trade of data) {
-    await sleep(500);
+    await sleep(750);
 
     let tradePairs = Generate.validatedTradePairs(trade[0], trade[1], trade[2], trade[3], markets)
     let arb = new Arb(tradePairs)
@@ -186,7 +187,7 @@ async function test(ex, data) {
     arb.getRates(ex)
       .then(rates => {
         let arbRate = arb.getArb(1000)
-        // console.log(`Arb Rate: ${arbRate[0]}`, `Coins: ${trade}`)
+        console.log(`Arb Rate: ${arbRate[0]}%`, `Coins: ${trade}`)
         return {rates, arbRate, tradePairs}
       })
       .then(async result => {
@@ -199,8 +200,7 @@ async function test(ex, data) {
         return { rates, arbRate, tradePairs }
       })
       .catch(err => console.log(err.message))
-}
-  
+  }
 }
 
 async function run(exchanges, trades) {
@@ -209,10 +209,23 @@ async function run(exchanges, trades) {
   }
 }
 
-exports.func = () => {
-  run(['bittrex'], viableTrades)
-  run(['binance'], binanceTrades)
-}
+// exports.func = () => {
+  // run(['bittrex', 'binance'], [viableTrades])
+  // run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])
+// }
+
+// exports.volatile = async () => {
+//   Fetch.viableVolatileTrades('binance')
+//     .then(trades => {
+//       run(['binance'], trades)
+//       return trades
+//     })
+//     .then(trades => {
+//       run(['bittrex'], trades)
+//       return trades
+//     })
+//     .catch(err => console.log(err))
+// // }
 
 
 

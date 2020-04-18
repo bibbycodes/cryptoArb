@@ -15,4 +15,4 @@ functions:
   getArb:
     handler: handler.getArb
     events:
-      - schedule: rate(2 minutes)
+      - schedule: rate(20 minutes)

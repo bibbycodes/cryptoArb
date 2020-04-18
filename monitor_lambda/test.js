@@ -1,8 +1,7 @@
 const Generate = require('./models/Generate')
 const Validate = require('./models/Validate')
 const ccxt = require('ccxt')
-
-
+const Trade = require('./models/Trade')
 
 function getCombs(exchange) {
   let bases = []
@@ -65,19 +64,22 @@ async function checkTradePairs(){
 
 // getCombs(exchange)
 
-// let arbRate = 0.0007
-// let iterNum = 100
-// let startVal = 100
+let arbRate = 2
+let iterNum = 100
+let startVal = 100
 
 // let numItersDay = 2 * 60 * 24
 // let numItersWeek = numItersDay * 7
 
 // console.log(numItersDay)
 
-// for (i = 0; i < numItersWeek; i ++) {
-//   startVal = startVal + (arbRate * startVal)
-//   console.log(startVal)
-// }
+function calculateCompoundedAmount(startVal, arbRate, numIterations) {
+  endVal = startVal
+  for (i = 0; i < numIterations; i ++) {
+    endVal += ((arbRate / 100) * startVal)
+    console.log(endVal)
+  }
+}
 
 // // endVal = startVal
 // console.log(startVal)
@@ -109,20 +111,28 @@ async function fetchVolatileSet(exchange, minPercentage) {
 
 let exchange = new ccxt['binance']()
 
-fetchVolatileSet(exchange, 10).then(async set => {
-  let viable = []
-  let markets = await exchange.loadMarkets()
-  let combinations = Generate.combination(set)
-  for (combo of combinations) {
-    let permutated = Generate.permutations(combo)
-    for (let perm of permutated) {
-      try {
-        let tradeSet = Generate.validatedTradePairs(perm[0], perm[1], perm[2], perm[3], markets)
-        viable.push([perm[0], perm[1], perm[2], perm[3]])
-      } catch (err) {
-        1 + 1
-      }
-    }
-    
-  }
+exchange.loadMarkets().then(markets => {
+  let coins = ['XRP', 'BTC', 'ETH']
+  Generate.sequentialTrades(coins, markets)
 })
+
+
+
+// calculateCompoundedAmount(startVal, arbRate, iterNum)
+// fetchVolatileSet(exchange, 10).then(async set => {
+//   let viable = []
+//   let markets = await exchange.loadMarkets()
+//   let combinations = Generate.combination(set)
+//   for (combo of combinations) {
+//     let permutated = Generate.permutations(combo)
+//     for (let perm of permutated) {
+//       try {
+//         let tradeSet = Generate.validatedTradePairs(perm[0], perm[1], perm[2], perm[3], markets)
+//         viable.push([perm[0], perm[1], perm[2], perm[3]])
+//       } catch (err) {
+//         1 + 1
+//       }
+//     }
+    
+//   }
+// })
