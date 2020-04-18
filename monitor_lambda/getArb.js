@@ -172,14 +172,15 @@ function sleep(ms) {
     [ 'LTC', 'USDT', 'ETH', 'BTC' ],
   ]
 
+let recipients = ['admin@afriex.co', 'scrapyscraperng@gmail.com']
+
 async function test(ex, data) {
   
   let exchange = new ccxt[ex]()
   exchange.enableRateLimit = true
   let markets = await exchange.loadMarkets()
-  let recipients = ['admin@afriex.co', 'scrapyscraperng@gmail.com']
   for (let trade of data) {
-    await sleep(750);
+    await sleep(3000);
 
     let tradePairs = Generate.validatedTradePairs(trade[0], trade[1], trade[2], trade[3], markets)
     let arb = new Arb(tradePairs)
@@ -210,8 +211,8 @@ async function run(exchanges, trades) {
 }
 
 // exports.func = () => {
-  // run(['bittrex', 'binance'], [viableTrades])
-  // run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])
+  run(['bittrex', 'binance'], viableTrades)
+  run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])
 // }
 
 // exports.volatile = async () => {

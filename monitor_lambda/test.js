@@ -113,7 +113,8 @@ let exchange = new ccxt['binance']()
 
 exchange.loadMarkets().then(markets => {
   let coins = ['XRP', 'BTC', 'ETH']
-  Generate.sequentialTrades(coins, markets)
+  let trades = Generate.sequentialTrades(coins, markets)
+  console.log(trades)
 })
 
 

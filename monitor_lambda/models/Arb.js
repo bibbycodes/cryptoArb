@@ -2,16 +2,16 @@ const Calculate = require('./Calculate')
 const MonitorRest = require('./MonitorRest')
 
 class Arb {
-  constructor(tradePairs) {
-    this.tradePairs = tradePairs
+  constructor(sequentialTrades) {
+    this.sequentialTrades = sequentialTrades
     this.rates = {}
   }
 
   
   async getRates(exchange) {
     let pairs = []
-    for (let trade in this.tradePairs) {
-      pairs.push(this.tradePairs[trade].pair)
+    for (let trade in this.sequentialTrades) {
+      pairs.push(this.sequentialTrades[trade].pair)
     }
 
     let calls = [
@@ -42,11 +42,11 @@ class Arb {
     let rate3 = this.rates[2].ask 
     let rate4 = this.rates[3].bid //bnbeur
 
-    let outcome = this.outcome(startAmount, rate1, this.tradePairs["trade1"])
-    let outcome2 = this.outcome(outcome, rate2, this.tradePairs["trade2"])
-    let outcome3 = this.outcome(outcome2, rate3, this.tradePairs["trade3"])
-    let outcome4 = this.outcome(outcome3, rate4, this.tradePairs["trade4"])
-    console.log(`${startAmount} ${this.tradePairs['trade1'].from} =>  ${outcome} ${this.tradePairs['trade1'].to}  => ${outcome2} ${this.tradePairs['trade2'].to} => ${outcome3} ${this.tradePairs['trade3'].to} => ${outcome4} ${this.tradePairs['trade4'].to}`)
+    let outcome = this.outcome(startAmount, rate1, this.sequentialTrades["trade1"])
+    let outcome2 = this.outcome(outcome, rate2, this.sequentialTrades["trade2"])
+    let outcome3 = this.outcome(outcome2, rate3, this.sequentialTrades["trade3"])
+    let outcome4 = this.outcome(outcome3, rate4, this.sequentialTrades["trade4"])
+    console.log(`${startAmount} ${this.sequentialTrades['trade1'].from} =>  ${outcome} ${this.sequentialTrades['trade1'].to}  => ${outcome2} ${this.sequentialTrades['trade2'].to} => ${outcome3} ${this.sequentialTrades['trade3'].to} => ${outcome4} ${this.sequentialTrades['trade4'].to}`)
 
     return Calculate.relativeDifference(startAmount, outcome4)
   }

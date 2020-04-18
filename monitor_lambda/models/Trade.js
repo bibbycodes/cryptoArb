@@ -1,12 +1,17 @@
 const ccxt =require('ccxt')
+const Calculate = require('./Calculate')
 
 class Trade {
   constructor(tradeObject) {
-    this.tradeObject = tradeObject
-    // this.symbol = tradeObject.symbol
-    // this.precision = tradeObject.precision
-    // this.from = tradeObject.from
-    // this.amount = amount
+    Object.assign(this, tradeObject)
+  }
+
+  setFee() {
+    if (this.side == "buy") {
+      console.log("deduct from base currency")
+    } else {
+      console.log("deduct from quote currency")
+    }
   }
 }
 

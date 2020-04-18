@@ -5,12 +5,11 @@ class Calculate {
     return [relativeDifference]
   }
 
-  subtractFees(exchange, tradeAmount) {
-    let fees = {
-      binance : 0.01
-    }
-    
-    return tradeAmount - (tradeAmount * fees[exchange])
+  // Without using BNB for fees, Binance deducts fees from the base currency 
+  // for a buy and from the quote currency for the sell. 
+  // When using BNB for fees, Binance deducts from your BNB balance for buys and sells.
+  static subtractFees(fee, tradeAmount) {
+    return tradeAmount - (tradeAmount * fee)
   }
 
   circularArbRate(trade) {

@@ -206,22 +206,7 @@ class Format {
     return `INSERT INTO arb_rates (${columnsString}) VALUES (${valuesString})`
   }
 
-  static trade(trade, from, to) {
-    let tr = {
-      // buy bitcoin with euro
-      symbol : trade.symbol,
-      tradePair : trade.id,
-      from : from,
-      to   : to,
-      quote :  trade.quoteId,
-      base : trade.baseId,
-      precision : trade.precision,
-      takerFee : trade.taker,
-      makerFee : trade.maker,
-      limtAmounts : trade.limits.amount
-    }
-    console.log(tr)
-  }
+  
 }
 
 module.exports = Format

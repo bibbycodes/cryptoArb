@@ -7,6 +7,8 @@ class Validate {
   }
 
   static correctPair(markets, quote, base) {
+    console.log(typeof quote)
+    console.log(quote)
     let forward = markets[`${quote.toUpperCase()}/${base.toUpperCase()}`]
     let backward = markets[`${base.toUpperCase()}/${quote.toUpperCase()}`]
     if (forward != undefined) {

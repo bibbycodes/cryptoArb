@@ -77,7 +77,6 @@ class Generate {
       let trade = Validate.correctPair(markets, from, to)
       trade = Parse.trade(trade, from, to)
       let tradeInstance = new Trade(trade)
-      console.log(trade)
       tradesArray.push(tradeInstance)
     }
     return tradesArray
@@ -85,6 +84,7 @@ class Generate {
 
   static validatedTradePairs(source, target, crypto, converter, markets) {
     let sides = ['buy', 'sell', 'buy', 'sell']
+    console.log(source, target, crypto, converter)
     let market1 = Validate.correctPair(markets, source, crypto)
     let market2 = Validate.correctPair(markets, crypto, target)
     let market3 = Validate.correctPair(markets, target, converter)

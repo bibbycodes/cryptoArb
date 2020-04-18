@@ -9,14 +9,13 @@ const axios = require('axios')
 class MonitorRest {
   // issue here
 
-  static async orderBook(ex, pair) {
+  static async orderBook(ex, pair, markets) {
     try {
       let exchange = new ccxt[ex]()
       let markets = await exchange.loadMarkets()
       let splitPair = pair.split('/')
       let pairDetails = Validate.correctPair(markets, splitPair[1], splitPair[0])
       let symbol = pairDetails.symbol
-      console.log(pair)
       if(pair != false) {
         let orderBook = await exchange.fetchOrderBook(symbol)
         let timestamp = Date.now()

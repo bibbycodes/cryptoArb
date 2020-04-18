@@ -51,9 +51,9 @@ class Parse {
   static trade(trade, from, to) {
     let side
     if (from == trade.base) {
-      side = "Buy"
+      side = "buy"
     } else {
-      side = "Sell"
+      side = "sell"
     }
     let tr = {
       // buy bitcoin with euro
