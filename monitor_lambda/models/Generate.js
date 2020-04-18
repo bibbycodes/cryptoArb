@@ -64,11 +64,16 @@ class Generate {
   }
 
   static validatedTradePairs(source, target, crypto, converter, markets) {
+    
     let sides = ['buy', 'sell', 'buy', 'sell']
     let market1 = Validate.correctPair(markets, source, crypto)
     let market2 = Validate.correctPair(markets, crypto, target)
     let market3 = Validate.correctPair(markets, target, converter)
     let market4 = Validate.correctPair(markets, converter, source)
+   
+
+    
+    // ('XRP', 'SNT', 'BTC', 'ETH')
 
     if ([market1, market2, market3, market4].includes(false)) {
       // console.log("Not Viable")

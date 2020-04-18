@@ -47,7 +47,10 @@ class Arb {
     let outcome3 = this.outcome(outcome2, rate3, this.tradePairs["trade3"])
     let outcome4 = this.outcome(outcome3, rate4, this.tradePairs["trade4"])
     console.log(`${startAmount} ${this.tradePairs['trade1'].from} =>  ${outcome} ${this.tradePairs['trade1'].to}  => ${outcome2} ${this.tradePairs['trade2'].to} => ${outcome3} ${this.tradePairs['trade3'].to} => ${outcome4} ${this.tradePairs['trade4'].to}`)
-
+    this.outcome1 = outcome
+    this.outcome2 = outcome2
+    this.outcome3 = outcome3
+    this.outcome4 = outcome4
     return Calculate.relativeDifference(startAmount, outcome4)
   }
 
