@@ -71,6 +71,7 @@ class Generate {
     let market4 = Validate.correctPair(markets, converter, source)
 
     if ([market1, market2, market3, market4].includes(false)) {
+      // console.log("Not Viable")
       throw new Error("Trade not Viable")
     }
 
@@ -122,7 +123,7 @@ class Generate {
       precision : market4.precision
     }
 
-    return { trade1, trade2, trade3, trade4 }
+    return { trade1, trade2, trade3, trade4}
   }
 
   //  for a set of letters

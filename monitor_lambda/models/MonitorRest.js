@@ -44,7 +44,7 @@ class MonitorRest {
 
   static async ticker(ex, pair) {
     let exchange = new ccxt[ex]()
-    let ticker = await exchange.fetchTicker(pair).catch(err => console.log(err))
+    let ticker = await exchange.fetchTicker(pair).catch(err => console.log(err.message))
     let tickerObj = {
       exchange : ex,
       pair: pair,

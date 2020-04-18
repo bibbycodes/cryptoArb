@@ -164,7 +164,7 @@ class Format {
     let timestamp = Date.now()
 
     let values = [
-      timestamp, rates.trade1.exchange, fiatA, fiatB, crypto, converter, Number(arbRate[0])
+      timestamp, rates[0].exchange, fiatA, fiatB, crypto, converter, Number(arbRate[0])
     ]
 
     let columns = [
@@ -177,9 +177,9 @@ class Format {
 
     for (let i = 0; i < 4; i++) {
       let tradeValues = []
-      tradeValues.push(rates[`trade${i + 1}`].ask)
-      tradeValues.push(rates[`trade${i + 1}`].bid)
-      tradeValues.push(rates[`trade${i + 1}`].pair)
+      tradeValues.push(rates[i].ask)
+      tradeValues.push(rates[i].bid)
+      tradeValues.push(rates[i].pair)
 
       for (let value of tradeValues) {
         values.push(value)

@@ -329,3 +329,123 @@
       [ 'USDT', 'LTC', 'ETH', 'BTC' ],
       [ 'LTC', 'USDT', 'ETH', 'BTC' ],
     ]
+
+
+    [ 'NPXS', 'USDT', 'BTC', 'ETH' ]
+[ 'UKG', 'USDT', 'BTC', 'ETH' ]
+[ 'UKG', 'NPXS', 'BTC', 'ETH' ]
+[ 'GNT', 'USDT', 'BTC', 'ETH' ]
+[ 'GNT', 'NPXS', 'BTC', 'ETH' ]
+[ 'GNT', 'UKG', 'BTC', 'ETH' ]
+[ 'PAY', 'USDT', 'BTC', 'ETH' ]
+[ 'PAY', 'NPXS', 'BTC', 'ETH' ]
+[ 'PAY', 'UKG', 'BTC', 'ETH' ]
+[ 'PAY', 'GNT', 'BTC', 'ETH' ]
+[ 'USD', 'USDT', 'BTC', 'ETH' ]
+[ 'USD', 'NPXS', 'BTC', 'ETH' ]
+[ 'USD', 'NPXS', 'USDT', 'ETH' ]
+[ 'USD', 'NPXS', 'USDT', 'BTC' ]
+[ 'USD', 'UKG', 'BTC', 'ETH' ]
+[ 'USD', 'GNT', 'BTC', 'ETH' ]
+[ 'USD', 'PAY', 'BTC', 'ETH' ]
+[ 'MDT', 'NPXS', 'USDT', 'BTC' ]
+[ 'MDT', 'USD', 'USDT', 'BTC' ]
+[ 'SOLVE', 'USDT', 'BTC', 'ETH' ]
+[ 'SOLVE', 'NPXS', 'BTC', 'ETH' ]
+[ 'SOLVE', 'UKG', 'BTC', 'ETH' ]
+[ 'SOLVE', 'GNT', 'BTC', 'ETH' ]
+[ 'SOLVE', 'PAY', 'BTC', 'ETH' ]
+[ 'SOLVE', 'USD', 'BTC', 'ETH' ]
+[ 'GNO', 'USDT', 'BTC', 'ETH' ]
+[ 'GNO', 'NPXS', 'BTC', 'ETH' ]
+[ 'GNO', 'UKG', 'BTC', 'ETH' ]
+[ 'GNO', 'GNT', 'BTC', 'ETH' ]
+[ 'GNO', 'PAY', 'BTC', 'ETH' ]
+[ 'GNO', 'USD', 'BTC', 'ETH' ]
+[ 'GNO', 'SOLVE', 'BTC', 'ETH' ]
+[ 'ANT', 'USDT', 'BTC', 'ETH' ]
+[ 'ANT', 'NPXS', 'BTC', 'ETH' ]
+[ 'ANT', 'UKG', 'BTC', 'ETH' ]
+[ 'ANT', 'GNT', 'BTC', 'ETH' ]
+[ 'ANT', 'PAY', 'BTC', 'ETH' ]
+[ 'ANT', 'USD', 'BTC', 'ETH' ]
+[ 'ANT', 'SOLVE', 'BTC', 'ETH' ]
+[ 'ANT', 'GNO', 'BTC', 'ETH' ]
+[ 'BNT', 'USDT', 'BTC', 'ETH' ]
+[ 'BNT', 'NPXS', 'BTC', 'ETH' ]
+[ 'BNT', 'UKG', 'BTC', 'ETH' ]
+[ 'BNT', 'GNT', 'BTC', 'ETH' ]
+[ 'BNT', 'PAY', 'BTC', 'ETH' ]
+[ 'BNT', 'USD', 'BTC', 'ETH' ]
+[ 'BNT', 'SOLVE', 'BTC', 'ETH' ]
+[ 'BNT', 'GNO', 'BTC', 'ETH' ]
+[ 'BNT', 'ANT', 'BTC', 'ETH' ]
+[ 'ADX', 'USDT', 'BTC', 'ETH' ]
+[ 'ADX', 'NPXS', 'BTC', 'ETH' ]
+[ 'ADX', 'UKG', 'BTC', 'ETH' ]
+[ 'ADX', 'GNT', 'BTC', 'ETH' ]
+[ 'ADX', 'PAY', 'BTC', 'ETH' ]
+[ 'ADX', 'USD', 'BTC', 'ETH' ]
+[ 'ADX', 'SOLVE', 'BTC', 'ETH' ]
+[ 'ADX', 'GNO', 'BTC', 'ETH' ]
+[ 'ADX', 'ANT', 'BTC', 'ETH' ]
+[ 'ADX', 'BNT', 'BTC', 'ETH' ]
+Arb Rate: 1.37 Coins: GNT,USDT,BTC,ETH
+Arb Rate: 27.25 Coins: NPXS,USDT,BTC,ETH
+Arb Rate: 21.13 Coins: PAY,USDT,BTC,ETH
+Arb Rate: 87.38 Coins: UKG,NPXS,BTC,ETH
+Arb Rate: 14.03 Coins: GNO,UKG,BTC,ETH
+Arb Rate: 96.24 Coins: PAY,NPXS,BTC,ETH
+Arb Rate: 8.88 Coins: GNT,UKG,BTC,ETH
+Arb Rate: 7.17 Coins: GNO,GNT,BTC,ETH
+Arb Rate: 72.00 Coins: GNO,NPXS,BTC,ETH
+Arb Rate: 13.46 Coins: BNT,ANT,BTC,ETH
+Arb Rate: 3.97 Coins: ANT,PAY,BTC,ETH
+Arb Rate: 9.26 Coins: ANT,UKG,BTC,ETH
+Arb Rate: 8.32 Coins: BNT,USDT,BTC,ETH
+Arb Rate: 15.67 Coins: UKG,USDT,BTC,ETH
+Arb Rate: 64.22 Coins: GNT,NPXS,BTC,ETH
+Arb Rate: 5.11 Coins: SOLVE,PAY,BTC,ETH
+Arb Rate: -0.18 Coins: USD,USDT,BTC,ETH
+Arb Rate: 11.45 Coins: ADX,USDT,BTC,ETH
+Arb Rate: 1.73 Coins: ANT,USDT,BTC,ETH
+Arb Rate: 6.27 Coins: GNO,USD,BTC,ETH
+Arb Rate: 30.09 Coins: PAY,UKG,BTC,ETH
+Arb Rate: 34.36 Coins: USD,NPXS,USDT,BTC
+Arb Rate: 2.84 Coins: SOLVE,USDT,BTC,ETH
+Arb Rate: 2.02 Coins: USD,PAY,BTC,ETH
+Arb Rate: 2.96 Coins: SOLVE,USD,BTC,ETH
+Arb Rate: 6.17 Coins: GNO,USDT,BTC,ETH
+Arb Rate: 4.51 Coins: MDT,USD,USDT,BTC
+Arb Rate: 66.61 Coins: SOLVE,NPXS,BTC,ETH
+Arb Rate: 22.27 Coins: PAY,GNT,BTC,ETH
+Arb Rate: 61.71 Coins: USD,NPXS,BTC,ETH
+Arb Rate: 0.76 Coins: USD,GNT,BTC,ETH
+Arb Rate: 8.70 Coins: USD,NPXS,USDT,ETH
+Arb Rate: 9.38 Coins: BNT,GNT,BTC,ETH
+Arb Rate: 3.82 Coins: SOLVE,GNT,BTC,ETH
+Arb Rate: 10.66 Coins: BNT,PAY,BTC,ETH
+Arb Rate: 8.51 Coins: GNO,PAY,BTC,ETH
+Arb Rate: 7.21 Coins: USD,UKG,BTC,ETH
+Arb Rate: 80.56 Coins: ADX,NPXS,BTC,ETH
+Arb Rate: 10.48 Coins: SOLVE,UKG,BTC,ETH
+Arb Rate: 13.01 Coins: ANT,SOLVE,BTC,ETH
+Arb Rate: 64.80 Coins: ANT,NPXS,BTC,ETH
+Arb Rate: 17.95 Coins: GNO,SOLVE,BTC,ETH
+Arb Rate: 8.38 Coins: BNT,USD,BTC,ETH
+Arb Rate: 40.55 Coins: MDT,NPXS,USDT,BTC
+Arb Rate: 10.51 Coins: ANT,GNO,BTC,ETH
+Arb Rate: 1.82 Coins: ANT,USD,BTC,ETH
+Arb Rate: 16.30 Coins: BNT,UKG,BTC,ETH
+Arb Rate: 17.71 Coins: BNT,GNO,BTC,ETH
+Arb Rate: 20.29 Coins: BNT,SOLVE,BTC,ETH
+Arb Rate: 24.04 Coins: ADX,BNT,BTC,ETH
+Arb Rate: 75.42 Coins: BNT,NPXS,BTC,ETH
+Arb Rate: 21.05 Coins: ADX,GNO,BTC,ETH
+Arb Rate: 23.80 Coins: ADX,SOLVE,BTC,ETH
+Arb Rate: 19.68 Coins: ADX,UKG,BTC,ETH
+Arb Rate: 13.89 Coins: ADX,PAY,BTC,ETH
+Arb Rate: 12.27 Coins: ADX,GNT,BTC,ETH
+Arb Rate: 11.56 Coins: ADX,USD,BTC,ETH
+Arb Rate: 2.69 Coins: ANT,GNT,BTC,ETH
+Arb Rate: 16.66 Coins: ADX,ANT,BTC,ETH
