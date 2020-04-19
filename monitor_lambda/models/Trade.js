@@ -14,9 +14,9 @@ class Trade {
 
   setFee() {
     if (this.side == "buy") {
-      // console.log("deduct from base currency")
+      console.log("deduct from base currency")
     } else {
-      // console.log("deduct from quote currency")
+      console.log("deduct from quote currency")
     }
   }
 }

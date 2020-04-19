@@ -76,9 +76,12 @@ class Generate {
       }
 
       let trade = Validate.correctPair(markets, from, to)
-      trade = Parse.trade(trade, from, to)
-      let tradeInstance = new Trade(trade, tickers)
-      tradesArray.push(tradeInstance)
+      
+      if (trade) {
+        trade = Parse.trade(trade, from, to)
+        let tradeInstance = new Trade(trade, tickers)
+        tradesArray.push(tradeInstance)
+      }
     }
     return tradesArray
   }
@@ -98,9 +101,9 @@ class Generate {
       tradesArray.push(trade.symbol)
     }
     if (tradesArray.includes(undefined)) {
-      throw new Error("Trade not Viable")
+      return false
+      // throw new Error("Trade not Viable")
     }
-    console.log(tradesArray)
     return tradesArray
   }
 

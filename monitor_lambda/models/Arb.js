@@ -55,6 +55,7 @@ class Arb {
   fromSequence(startAmount) {
     let firstOutcome
     let firstTrade = this.sequentialTrades[0]
+    console.log(firstTrade)
     let price 
 
     if (firstTrade.side == "buy") {

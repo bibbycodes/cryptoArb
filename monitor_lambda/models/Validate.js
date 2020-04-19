@@ -16,7 +16,6 @@ class Validate {
     } else if (backward != undefined) {
       return backward
     } else {
-      console.log("No Trade")
       return false
     }
   }

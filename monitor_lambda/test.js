@@ -209,40 +209,60 @@ let midCryptos = ["MATIC", "ENJ", "ALGO", "BAT", "ARK", "XLM", "BAND", "KAVA", "
 let topCryptos = ["SNT", "BNB", "BTC", "IOTA", "ETH", "XRP", "BCH", "LTC", "EOS", "XZT", "LINK", "XMR", "XLM", "ADA", "TRX", "DASH"]
 let topCurrencies = ["NGN", "RUB", "BUSD", "EUR", "TUSD", "TRY", "PAX", "USDC", 'GBP']
 
-let set = ['BTC', 'BNB', 'EUR', 'NGN', 'IOTA', 'BUSD', 'ETH', 'NEO']
+let set = ['BTC', 'BNB', 'EUR', 'NGN']
 let largeSet = Array.from(new Set(topCryptos.concat(topCurrencies.concat(midCryptos))))
 
 let comb = Combinatorics.combination(largeSet, 4);
-console.log(comb)
+let combinations = []
+while(a = comb.next()) combinations.push(a);
 
-// let coins = [['XRP', 'ETH', 'SNT', 'BTC'], ['NGN', 'BTC', 'BNB'], ['IOTX', 'BTC', 'ETH']]
+let coins = [['XRP', 'ETH', 'SNT', 'BTC'], ['NGN', 'BTC', 'BNB'], ['IOTX', 'BTC', 'ETH']]
 
-// exchange.loadMarkets().then(async markets => {
-//   let coins = getCombs(markets)
+exchange.loadMarkets().then(async markets => {
 
-//   tradeSymbols = coins.map((coinSet) => {
-//     return Generate.sequentialSymbols(coinSet, markets)
-//   })
+  // Get Set of all symbols for which tickers are needed => [ [ 'XRP/ETH', 'SNT/ETH', 'SNT/BTC', 'XRP/BTC' ] ]
+  //  Get Set of sequential coins from all possible combinations
+  let coinSequence = []
+  let arrayOfSequentialTradeSymbols = combinations.map((coinSet) => {
+    let tradeSymbols = Generate.sequentialSymbols(coinSet, markets)
+    if (tradeSymbols) {
+      coinSequence.push(coinSet)
+      return tradeSymbols
+    }
+  }).filter(item => item != null)
 
-//   let setOfSymbols = Array.from(new Set(flatten(tradeSymbols)))
+  console.log(arrayOfSequentialTradeSymbols)
 
-//   let calls = setOfSymbols.map(async ticker => {
-//     return exchange.fetchTicker(ticker)
-//   })
+  let setOfSymbols = Array.from(new Set(flatten(arrayOfSequentialTradeSymbols)))
+  
+  // Get set of async calls to fetch tickers
+  let calls = setOfSymbols.map(async ticker => {
+    return exchange.fetchTicker(ticker)
+  })
+  
+  // Fetch all tickers in Parallel
+  let tickers = await Promise.all(calls)
+  
+  // Convert Tickers to hash with symbols as keys
+  let tickersObj = {}
+  for (let ticker of tickers) {
+    tickersObj[ticker.symbol] = ticker
+  }
 
-//   let tickers = await Promise.all(calls)
-//   let tickersObj = {}
+  // console.log(arrayOfSequentialTradeSymbols)
 
-//   for (let ticker of tickers) {
-//     tickersObj[ticker.symbol] = ticker
-//   }
+  // Generate Trade Instances using tickers (Each trade instance has prices and market details)
+  let tradeSequences = coinSequence.map((coinSet) => {
+    // console.log(coinSet)
+    return Generate.sequentialTrades(coinSet, markets, tickersObj)
+  })
 
-//   for (let coinSet of coins) {
-//     let trades = Generate.sequentialTrades(coinSet, markets, tickersObj)
-//     let arb = new Arb(trades)
-//     let arbRate = arb.fromSequence(10000)
-//   }
-// })
+
+  for (let tradeSequence of tradeSequences) {
+    let arb = new Arb(tradeSequence)
+    let arbRate = arb.fromSequence(10000)
+  }
+})
 
 
 
