@@ -71,7 +71,10 @@ async function getArbs(exchange, setOfCombinations) {
     })
 
     for (let tradeSequence of tradeSequences) {
-      let arb = new Arb(tradeSequence)
+      let arb = new Arb(tradeSequence, 1000)
+      if (arb.arbRate > 5) {
+        console.log("Arb High!", arb.arbRate)
+      }
       // console.log(arb.sequentialTrades)
     }
   })
@@ -89,12 +92,22 @@ exchange.enableRateLimit = true
 let midCryptos = ["MATIC", "ENJ", "ALGO", "BAT", "ARK", "XLM", "BAND", "KAVA", "ZRX", "IOTA", "RVN", "WAVES", "KNC", "ATOM", "BTG", "CHZ", "LSK", "QTUM", "LTO", "IOTX"]
 let topCryptos = ["SNT", "BNB", "BTC", "IOTA", "ETH", "XRP", "BCH", "LTC", "EOS", "XZT", "LINK", "XMR", "XLM", "ADA", "TRX", "DASH"]
 let topCurrencies = ["NGN", "RUB", "BUSD", "EUR", "TUSD", "TRY", "PAX", "USDC", 'GBP']
+let topByMarketCap = ['ETH', 'BTC', 'XRP', 'BCH', 'LTC', 'BNB', 'EOS', 'XZT', 'LINK', 'XMR', 'XLM', 'ADA', 'TRX', 'DASH', 'ETC', 'ALGO', 'NEO', 'ATOM', 'IOTA', 'XEM', 'ONT', 'FFT', 'DOGE', 'ZEC']
 
-let largeSet = Array.from(new Set(topCryptos.concat(topCurrencies.concat(midCryptos))))
-
-let comb = Combinatorics.combination(largeSet, 4);
+let numCoins = 4 // The number of individual coins involved in each trade
+let largeSet = Array.from(new Set(topByMarketCap.concat(topCurrencies.concat(midCryptos).concat(topCryptos))))
+let newSet = Array.from(new Set(topByMarketCap.concat(topCurrencies)))
+let comb = Combinatorics.combination(largeSet, numCoins);
 let combinations = []
-while(a = comb.next()) combinations.push(a);
+while(a = comb.next()) {
+  // combinations.push(a)
+  perm = Combinatorics.permutation(a)
+  while(b = perm.next()) {
+    combinations.push(b)
+  };
+};
 
+console.log(combinations)
+// permutated = Combinatorics.permutation(combinations)
 getArbs(exchange, combinations)
 
