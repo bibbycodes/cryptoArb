@@ -210,6 +210,24 @@ async function run(exchanges, trades) {
   }
 }
 
+// let exchange = new ccxt['binance']()
+
+// exchange.loadMarkets().then(async markets => {
+//   // let coins = ['LTC', 'BTC', 'BNB', 'ETH']
+//   listOfSequentialTrades = []
+//   let tickers = await exchange.fetchTickers(tradeSymbols)
+//   for (let coins of binanceTrades) {
+//     let tradeSymbols = Generate.sequentialSymbols(coins, markets)
+//     listOfSequentialTrades.push(tradeSymbols)
+//   }
+//   for (let coins of binanceTrades) {
+//     let trades = Generate.sequentialTrades(coins, markets, tickers)
+//     let arb = new Arb(trades)
+//     let arbRate = arb.getArbFromSequence(10000)
+//     console.log(arbRate)
+//   }
+// })
+
 // exports.func = () => {
   // run(['bittrex', 'binance'], viableTrades)
   // run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])

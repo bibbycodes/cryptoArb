@@ -55,7 +55,6 @@ class Arb {
   getArbFromSequence(startAmount) {
     let firstOutcome
     let firstTrade = this.sequentialTrades[0]
-    console.log(this.sequentialTrades.length)
     let price 
 
     if (firstTrade.side == "buy") {
@@ -68,7 +67,6 @@ class Arb {
       this.outcomes.push(firstOutcome)
     }
     
-    console.log(0, firstOutcome)
     for (let i = 1; i < this.sequentialTrades.length; i++) {
       let trade = this.sequentialTrades[i]
       // console.log(trade)
@@ -81,15 +79,13 @@ class Arb {
       }
       
       let outcome = this.outcome(previousEndAmount, price, trade)
-      console.log(i, previousEndAmount, outcome)
       this.outcomes.push(outcome)
       
-      // console.log(outcome)
-      //   // let outcome = this.outcome(startAmount, price)
-      //   console.log(this.sequentialTrades[i])
     }
+
     let arbRate = Calculate.relativeDifference(startAmount, this.outcomes[this.outcomes.length - 1])
-    console.log(arbRate, startAmount, this.outcomes[this.outcomes.length - 1])
+    // console.log(`Predicted Profit: ${arbRate}%, Sequence: ${startAmount} ${this.sequentialTrades[0].from} =>  ${this.outcomes[0]} ${this.sequentialTrades[0].to}  => ${this.outcomes[1]} ${this.sequentialTrades[1].to} => ${this.outcomes[2]} ${this.sequentialTrades[2].to} => ${this.outcomes[3]} ${this.sequentialTrades[0].from}`)
+    console.log(arbRate)
     return arbRate
   }
 

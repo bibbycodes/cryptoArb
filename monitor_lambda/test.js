@@ -3,6 +3,102 @@ const Validate = require('./models/Validate')
 const ccxt = require('ccxt')
 const Trade = require('./models/Trade')
 const Arb = require('./models/Arb')
+const flatten = require('array-flatten').flatten
+
+let binanceTrades = [
+  [ 'EUR', 'NGN', 'BTC', 'BNB' ],
+  [ 'NGN', 'EUR', 'BTC', 'BNB' ],
+  [ 'EUR', 'NGN', 'BTC', 'BUSD' ],
+  [ 'NGN', 'EUR', 'BTC', 'BUSD' ],
+  [ 'EUR', 'NGN', 'BUSD', 'BNB' ],
+  [ 'NGN', 'EUR', 'BUSD', 'BNB' ],
+  [ 'EUR', 'NGN', 'BNB', 'BTC' ],
+  [ 'BUSD', 'BNB', 'NGN', 'EUR'],
+  [ 'BNB', 'BTC', 'EUR', 'NGN', ],
+  [ 'NGN', 'EUR', 'BNB', 'BTC' ],
+  [ 'SNT', 'NEO', 'ETH', 'BTC' ],
+  [ 'NEO', 'SNT', 'ETH', 'BTC' ],
+  [ 'BNB', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'BNB', 'ETH', 'BTC' ],
+  [ 'ETH', 'BNB', 'LTC', 'BTC' ],
+  [ 'BTC', 'BNB', 'LTC', 'ETH' ],
+  [ 'NEO', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'NEO', 'ETH', 'BTC' ],
+  [ 'NEO', 'BNB', 'ETH', 'BTC' ],
+  [ 'BNB', 'NEO', 'ETH', 'BTC' ],
+  [ 'ETH', 'NEO', 'BNB', 'BTC' ],
+  [ 'BTC', 'NEO', 'BNB', 'ETH' ],
+  [ 'LTC', 'NEO', 'BNB', 'BTC' ],
+  [ 'LTC', 'NEO', 'BNB', 'ETH' ],
+  [ 'QTUM', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'QTUM', 'ETH', 'BTC' ],
+  [ 'QTUM', 'BNB', 'ETH', 'BTC' ],
+  [ 'BNB', 'QTUM', 'ETH', 'BTC' ],
+  [ 'ETH', 'QTUM', 'BNB', 'BTC' ],
+  [ 'BTC', 'QTUM', 'BNB', 'ETH' ],
+  [ 'LTC', 'QTUM', 'BNB', 'BTC' ],
+  [ 'LTC', 'QTUM', 'BNB', 'ETH' ],
+  [ 'QTUM', 'NEO', 'ETH', 'BTC' ],
+  [ 'NEO', 'QTUM', 'ETH', 'BTC' ],
+  [ 'QTUM', 'NEO', 'BNB', 'BTC' ],
+  [ 'NEO', 'QTUM', 'BNB', 'BTC' ],
+  [ 'QTUM', 'NEO', 'BNB', 'ETH' ],
+  [ 'NEO', 'QTUM', 'BNB', 'ETH' ],
+  [ 'EOS', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'EOS', 'ETH', 'BTC' ],
+  [ 'EOS', 'BNB', 'ETH', 'BTC' ],
+  [ 'BNB', 'EOS', 'ETH', 'BTC' ],
+  [ 'ETH', 'EOS', 'BNB', 'BTC' ],
+  [ 'BTC', 'EOS', 'BNB', 'ETH' ],
+  [ 'LTC', 'EOS', 'BNB', 'BTC' ],
+  [ 'LTC', 'EOS', 'BNB', 'ETH' ],
+  [ 'EOS', 'NEO', 'ETH', 'BTC' ],
+  [ 'NEO', 'EOS', 'ETH', 'BTC' ],
+  [ 'EOS', 'NEO', 'BNB', 'BTC' ],
+  [ 'NEO', 'EOS', 'BNB', 'BTC' ],
+  [ 'EOS', 'NEO', 'BNB', 'ETH' ],
+  [ 'NEO', 'EOS', 'BNB', 'ETH' ],
+  [ 'EOS', 'QTUM', 'ETH', 'BTC' ],
+  [ 'QTUM', 'EOS', 'ETH', 'BTC' ],
+  [ 'EOS', 'QTUM', 'BNB', 'BTC' ],
+  [ 'QTUM', 'EOS', 'BNB', 'BTC' ],
+  [ 'EOS', 'QTUM', 'BNB', 'ETH' ],
+  [ 'QTUM', 'EOS', 'BNB', 'ETH' ],
+  [ 'SNT', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'SNT', 'ETH', 'BTC' ],
+  [ 'SNT', 'BNB', 'ETH', 'BTC' ],
+  [ 'BNB', 'SNT', 'ETH', 'BTC' ],
+  [ 'SNT', 'NEO', 'ETH', 'BTC' ],
+  [ 'NEO', 'SNT', 'ETH', 'BTC' ],
+  [ 'SNT', 'QTUM', 'ETH', 'BTC' ],
+  [ 'QTUM', 'SNT', 'ETH', 'BTC' ],
+  [ 'SNT', 'EOS', 'ETH', 'BTC' ],
+  [ 'EOS', 'SNT', 'ETH', 'BTC' ],
+  [ 'BNT', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'BNT', 'ETH', 'BTC' ],
+  [ 'BNT', 'BNB', 'ETH', 'BTC' ],
+  [ 'KMD', 'BNB', 'ETH', 'BTC' ],
+  [ 'IOTX', 'BNB', 'ETH', 'BTC' ],
+  [ 'KMD', 'BNB', 'ETH', 'BTC' ],
+  [ 'ZEN', 'BNB', 'ETH', 'BTC' ],
+  [ 'NKN', 'ETH', 'BTC', 'BNB' ],
+  [ 'NKN', 'LTC', 'BTC', 'BNB' ],
+  [ 'NKN', 'ETH', 'BTC', 'BNB' ],
+  [ 'KMD', 'BNB', 'ETH', 'BTC' ],
+  [ 'IOTX', 'LTC', 'BTC', 'ETH' ],
+  [ 'SOL', 'LTC', 'BNB', 'BTC' ],
+  [ 'NKN', 'LTC', 'BNB', 'BTC' ],
+  [ 'ARK', 'BNB', 'BTC', 'ETH' ],
+  [ 'NEO', 'BNT', 'ETH', 'BTC' ],
+  [ 'BNT', 'QTUM', 'ETH', 'BTC' ],
+  [ 'QTUM', 'BNT', 'ETH', 'BTC' ],
+  [ 'BNT', 'EOS', 'ETH', 'BTC' ],
+  [ 'EOS', 'BNT', 'ETH', 'BTC' ],
+  [ 'BNT', 'SNT', 'ETH', 'BTC' ],
+  [ 'SNT', 'BNT', 'ETH', 'BTC' ],
+  [ 'USDT', 'LTC', 'ETH', 'BTC' ],
+  [ 'LTC', 'USDT', 'ETH', 'BTC' ],
+]
 
 function getCombs(exchange) {
   let bases = []
@@ -107,15 +203,29 @@ async function fetchVolatileSet(exchange, minPercentage) {
 }
 
 let exchange = new ccxt['binance']()
+exchange.enableRateLimit = true
 
+let coins = [['XRP', 'ETH', 'SNT', 'BTC'], ['NGN', 'BTC', 'BNB']]
+let setOfCoins = Array.from(new Set(flatten(coins)))
+
+console.log(setOfCoins)
 exchange.loadMarkets().then(async markets => {
-  let coins = ['LTC', 'BTC', 'BNB', 'ETH']
-  let tradeSymbols = Generate.sequentialSymbols(coins, markets)
-  let tickers = await exchange.fetchTickers(tradeSymbols)
-  let trades = Generate.sequentialTrades(coins, markets, tickers)
-  let arb = new Arb(trades)
-  let arbRate = arb.getArbFromSequence(10000)
-  console.log(arbRate)
+  tradeSymbols = coins.map((coinSet) => {
+    console.log(Generate.sequentialSymbols(coinSet, markets))
+    return Generate.sequentialSymbols(coinSet, markets)
+  })
+
+  console.log(tradeSymbols)
+
+  //   let trades = Generate.sequentialTrades(coinSet, markets, tickers)
+  // let setOfSymbols = Array.from(new Set(flatten(tradeSymbols)))
+  // let tickers = await exchange.fetchTickers()
+
+  // for (let coinSet of coins) {
+  //   let arb = new Arb(trades)
+  //   let arbRate = arb.getArbFromSequence(10000)
+  //   console.log(arbRate)
+  // }
 })
 
 
