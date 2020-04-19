@@ -2,7 +2,7 @@ class Calculate {
   static relativeDifference(source, destination) {
     let difference = destination - source
     let relativeDifference = ((difference / source) * 100).toFixed(2)
-    return [relativeDifference]
+    return relativeDifference
   }
 
   // Without using BNB for fees, Binance deducts fees from the base currency 

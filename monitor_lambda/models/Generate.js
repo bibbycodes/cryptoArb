@@ -63,21 +63,44 @@ class Generate {
     return { trade1, trade2, trade3, trade4 }
   }
 
-  static sequentialTrades(coinsArray, markets, tickers) {
+  static sequentialTrades(sequentialCoins, markets, tickers) {
     let tradesArray = []
-    for (let i = 0; i < coinsArray.length; i++) {
+    for (let i = 0; i < sequentialCoins.length; i++) {
       let from, to
-      from = coinsArray[i]
-
-      if (i == coinsArray.length - 1) {
-        to = coinsArray[0]
+      from = sequentialCoins[i]
+      
+      if (i == sequentialCoins.length - 1) {
+        to = sequentialCoins[0]
       } else {
-        to = coinsArray[i + 1]
+        to = sequentialCoins[i + 1]
       }
+
       let trade = Validate.correctPair(markets, from, to)
       trade = Parse.trade(trade, from, to)
       let tradeInstance = new Trade(trade, tickers)
       tradesArray.push(tradeInstance)
+    }
+    return tradesArray
+  }
+
+  static sequentialSymbols(sequentialCoins, markets) {
+
+    let tradesArray = []
+    for (let i = 0; i < sequentialCoins.length; i++) {
+      let from, to
+      from = sequentialCoins[i]
+      if (i == sequentialCoins.length - 1) {
+        to = sequentialCoins[0]
+      } else {
+        to = sequentialCoins[i + 1]
+      }
+      let trade = Validate.correctPair(markets, from, to)
+      // console.log(trade.symbol)
+      tradesArray.push(trade.symbol)
+    }
+    if (tradesArray.includes(undefined)) {
+      // console.log("Not Viable")
+      throw new Error("Trade not Viable")
     }
     return tradesArray
   }

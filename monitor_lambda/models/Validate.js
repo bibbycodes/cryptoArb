@@ -7,14 +7,18 @@ class Validate {
   }
 
   static correctPair(markets, quote, base) {
+
     let forward = markets[`${quote.toUpperCase()}/${base.toUpperCase()}`]
     let backward = markets[`${base.toUpperCase()}/${quote.toUpperCase()}`]
+    
     if (forward != undefined) {
+      console.log(forward.symbol)
       return forward
     } else if (backward != undefined) {
+      console.log(backward.symbol)
       return backward
     } else {
-      // console.log("No Trade")
+      console.log("No Trade")
       return false
     }
   }

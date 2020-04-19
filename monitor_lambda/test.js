@@ -78,7 +78,6 @@ function calculateCompoundedAmount(startVal, arbRate, numIterations) {
   endVal = startVal
   for (i = 0; i < numIterations; i ++) {
     endVal += ((arbRate / 100) * startVal)
-    console.log(endVal)
   }
 }
 
@@ -107,15 +106,16 @@ async function fetchVolatileSet(exchange, minPercentage) {
   return cryptos
 }
 
-let exchange = new ccxt['bittrex']()
+let exchange = new ccxt['binance']()
 
 exchange.loadMarkets().then(async markets => {
-  let coins = ['LTC', 'BTC', 'ETH']
-  let tickers = await exchange.fetchTickers()
+  let coins = ['LTC', 'BTC', 'BNB', 'ETH']
+  let tradeSymbols = Generate.sequentialSymbols(coins, markets)
+  let tickers = await exchange.fetchTickers(tradeSymbols)
   let trades = Generate.sequentialTrades(coins, markets, tickers)
   let arb = new Arb(trades)
-  arb.getArbFromSequence(100000)
-  // console.log(trades)
+  let arbRate = arb.getArbFromSequence(10000)
+  console.log(arbRate)
 })
 
 
