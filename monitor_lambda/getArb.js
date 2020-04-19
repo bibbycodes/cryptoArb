@@ -211,8 +211,8 @@ async function run(exchanges, trades) {
 }
 
 // exports.func = () => {
-  run(['bittrex', 'binance'], viableTrades)
-  run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])
+  // run(['bittrex', 'binance'], viableTrades)
+  // run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])
 // }
 
 // exports.volatile = async () => {

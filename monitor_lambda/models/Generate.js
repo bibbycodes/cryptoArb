@@ -63,7 +63,7 @@ class Generate {
     return { trade1, trade2, trade3, trade4 }
   }
 
-  static sequentialTrades(coinsArray, markets) {
+  static sequentialTrades(coinsArray, markets, tickers) {
     let tradesArray = []
     for (let i = 0; i < coinsArray.length; i++) {
       let from, to
@@ -76,7 +76,7 @@ class Generate {
       }
       let trade = Validate.correctPair(markets, from, to)
       trade = Parse.trade(trade, from, to)
-      let tradeInstance = new Trade(trade)
+      let tradeInstance = new Trade(trade, tickers)
       tradesArray.push(tradeInstance)
     }
     return tradesArray
@@ -178,7 +178,6 @@ class Generate {
     return foundSets
   }
   
-
   static permutations(input) {
     let permArr = []
     let usedChars = []

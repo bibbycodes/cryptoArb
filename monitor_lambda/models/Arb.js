@@ -4,7 +4,8 @@ const MonitorRest = require('./MonitorRest')
 class Arb {
   constructor(sequentialTrades) {
     this.sequentialTrades = sequentialTrades
-    this.rates = {}
+    // console.log(sequentialTrades)
+    this.outcomes = []
   }
 
   
@@ -49,6 +50,47 @@ class Arb {
     console.log(`${startAmount} ${this.sequentialTrades['trade1'].from} =>  ${outcome} ${this.sequentialTrades['trade1'].to}  => ${outcome2} ${this.sequentialTrades['trade2'].to} => ${outcome3} ${this.sequentialTrades['trade3'].to} => ${outcome4} ${this.sequentialTrades['trade4'].to}`)
 
     return Calculate.relativeDifference(startAmount, outcome4)
+  }
+
+  getArbFromSequence(startAmount) {
+    let firstOutcome
+    let firstTrade = this.sequentialTrades[0]
+    console.log(this.sequentialTrades.length)
+    let price 
+
+    if (firstTrade.side == "buy") {
+      price = this.sequentialTrades[0].ask
+      firstOutcome = this.outcome(startAmount, price, firstTrade)
+      this.outcomes.push(firstOutcome)
+    } else {
+      price = this.sequentialTrades[0].bid
+      firstOutcome = this.outcome(startAmount, price, firstTrade)
+      this.outcomes.push(firstOutcome)
+    }
+    
+    console.log(0, firstOutcome)
+    for (let i = 1; i < this.sequentialTrades.length; i++) {
+      let trade = this.sequentialTrades[i]
+      // console.log(trade)
+      let previousEndAmount = this.outcomes[i - 1]
+      
+      if (trade.side == 'buy') {
+        price = trade.ask
+      } else if (trade.side == 'sell' ) {
+        price = trade.bid
+      }
+      
+      let outcome = this.outcome(previousEndAmount, price, trade)
+      console.log(i, previousEndAmount, outcome)
+      this.outcomes.push(outcome)
+      
+      // console.log(outcome)
+      //   // let outcome = this.outcome(startAmount, price)
+      //   console.log(this.sequentialTrades[i])
+    }
+    let arbRate = Calculate.relativeDifference(startAmount, this.outcomes[this.outcomes.length - 1])
+    console.log(arbRate, startAmount, this.outcomes[this.outcomes.length - 1])
+    return arbRate
   }
 
   add(ticker) {

@@ -2,8 +2,14 @@ const ccxt =require('ccxt')
 const Calculate = require('./Calculate')
 
 class Trade {
-  constructor(tradeObject) {
+  constructor(tradeObject, tickers) {
     Object.assign(this, tradeObject)
+    // this.ticker = tickers[this.symbol]
+    this.ask = tickers[this.symbol].ask
+    this.bid = tickers[this.symbol].bid
+    this.change =  tickers[this.symbol].change
+    this.baseVolume = tickers[this.symbol].baseVolume
+    this.quoteVolume = tickers[this.symbol].quoteVolume
   }
 
   setFee() {

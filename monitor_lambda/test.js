@@ -2,6 +2,7 @@ const Generate = require('./models/Generate')
 const Validate = require('./models/Validate')
 const ccxt = require('ccxt')
 const Trade = require('./models/Trade')
+const Arb = require('./models/Arb')
 
 function getCombs(exchange) {
   let bases = []
@@ -81,9 +82,6 @@ function calculateCompoundedAmount(startVal, arbRate, numIterations) {
   }
 }
 
-// // endVal = startVal
-// console.log(startVal)
-
 async function fetchVolatileSet(exchange, minPercentage) {
   let cryptos = []
   let tickers = await exchange.fetchTickers()
@@ -109,12 +107,15 @@ async function fetchVolatileSet(exchange, minPercentage) {
   return cryptos
 }
 
-let exchange = new ccxt['binance']()
+let exchange = new ccxt['bittrex']()
 
-exchange.loadMarkets().then(markets => {
-  let coins = ['XRP', 'BTC', 'ETH']
-  let trades = Generate.sequentialTrades(coins, markets)
-  console.log(trades)
+exchange.loadMarkets().then(async markets => {
+  let coins = ['LTC', 'BTC', 'ETH']
+  let tickers = await exchange.fetchTickers()
+  let trades = Generate.sequentialTrades(coins, markets, tickers)
+  let arb = new Arb(trades)
+  arb.getArbFromSequence(100000)
+  // console.log(trades)
 })
 
 
