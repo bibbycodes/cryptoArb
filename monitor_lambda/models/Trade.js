@@ -4,7 +4,6 @@ const Calculate = require('./Calculate')
 class Trade {
   constructor(tradeObject, tickers) {
     Object.assign(this, tradeObject)
-    // this.ticker = tickers[this.symbol]
     this.ask = tickers[this.symbol].ask
     this.bid = tickers[this.symbol].bid
     this.change =  tickers[this.symbol].change
@@ -15,9 +14,9 @@ class Trade {
 
   setFee() {
     if (this.side == "buy") {
-      console.log("deduct from base currency")
+      // console.log("deduct from base currency")
     } else {
-      console.log("deduct from quote currency")
+      // console.log("deduct from quote currency")
     }
   }
 }

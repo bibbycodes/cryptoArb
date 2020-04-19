@@ -84,24 +84,23 @@ class Generate {
   }
 
   static sequentialSymbols(sequentialCoins, markets) {
-
     let tradesArray = []
     for (let i = 0; i < sequentialCoins.length; i++) {
-      let from, to
-      from = sequentialCoins[i]
+      let to
+      let from = sequentialCoins[i]
+
       if (i == sequentialCoins.length - 1) {
         to = sequentialCoins[0]
       } else {
         to = sequentialCoins[i + 1]
       }
       let trade = Validate.correctPair(markets, from, to)
-      // console.log(trade.symbol)
       tradesArray.push(trade.symbol)
     }
     if (tradesArray.includes(undefined)) {
-      // console.log("Not Viable")
       throw new Error("Trade not Viable")
     }
+    console.log(tradesArray)
     return tradesArray
   }
 
@@ -191,6 +190,7 @@ class Generate {
             }
             let combo = [set[i], set[j], set[k], set[l]]
             if (!foundSets.includes(combo)) {
+              console.log(combo)
               foundSets.push(combo)
             }
           }

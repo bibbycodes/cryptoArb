@@ -4,6 +4,7 @@ const ccxt = require('ccxt')
 const Trade = require('./models/Trade')
 const Arb = require('./models/Arb')
 const flatten = require('array-flatten').flatten
+const Combinatorics = require('js-combinatorics');
 
 let binanceTrades = [
   [ 'EUR', 'NGN', 'BTC', 'BNB' ],
@@ -100,9 +101,9 @@ let binanceTrades = [
   [ 'LTC', 'USDT', 'ETH', 'BTC' ],
 ]
 
-function getCombs(exchange) {
+function getCombs(markets) {
   let bases = []
-  let markets = exchange.loadMarkets().then(async markets => {
+  // let markets = exchange.loadMarkets().then(async markets => {
   let keys = Object.keys(markets)
 
   for (let key of keys) {
@@ -118,25 +119,25 @@ function getCombs(exchange) {
   }
 
   let combinations = Generate.combination(bases)
-  // console.log(JSON.stringify(combinations))
 
   let viable = []
   for (let com of combinations) {
-    let permutated = Generate.permutations(com)
-    for (let perm of permutated) {
-      let tradePairs = await Generate.validatedTradePairs(perm[0], perm[1], perm[2], perm[3], markets)
-      if (tradePairs != "Trade not Viable") {
-        if (permutated.indexOf(perm) % 6 == 0) {
-          viable.push(perm)
-        }
+    // let permutated = Generate.permutations(com)
+    // for (let perm of permutated) {
+      let tradePairs = Generate.sequentialSymbols(com[0], com[1], com[2], com[3], markets)
+      // if (permutated.indexOf(perm) % 6 == 0) {
+        if (tradePairs != "Trade not Viable") {
+          console.log(tradePairs)
+          viable.push(tradePairs)
+        // }
         // console.log(tradePairs)
       }
-    }
+    // }
     
   }
   return viable
   // console.log(combinations)
-})
+// })
 }
 
 async function checkTradePairs(){
@@ -204,29 +205,44 @@ async function fetchVolatileSet(exchange, minPercentage) {
 
 let exchange = new ccxt['binance']()
 exchange.enableRateLimit = true
+let midCryptos = ["MATIC", "ENJ", "ALGO", "BAT", "ARK", "XLM", "BAND", "KAVA", "ZRX", "IOTA", "RVN", "WAVES", "KNC", "ATOM", "BTG", "CHZ", "LSK", "QTUM", "LTO", "IOTX"]
+let topCryptos = ["SNT", "BNB", "BTC", "IOTA", "ETH", "XRP", "BCH", "LTC", "EOS", "XZT", "LINK", "XMR", "XLM", "ADA", "TRX", "DASH"]
+let topCurrencies = ["NGN", "RUB", "BUSD", "EUR", "TUSD", "TRY", "PAX", "USDC", 'GBP']
 
-let coins = [['XRP', 'ETH', 'SNT', 'BTC'], ['NGN', 'BTC', 'BNB']]
-let setOfCoins = Array.from(new Set(flatten(coins)))
+let set = ['BTC', 'BNB', 'EUR', 'NGN', 'IOTA', 'BUSD', 'ETH', 'NEO']
+let largeSet = Array.from(new Set(topCryptos.concat(topCurrencies.concat(midCryptos))))
 
-console.log(setOfCoins)
-exchange.loadMarkets().then(async markets => {
-  tradeSymbols = coins.map((coinSet) => {
-    console.log(Generate.sequentialSymbols(coinSet, markets))
-    return Generate.sequentialSymbols(coinSet, markets)
-  })
+let comb = Combinatorics.combination(largeSet, 4);
+console.log(comb)
 
-  console.log(tradeSymbols)
+// let coins = [['XRP', 'ETH', 'SNT', 'BTC'], ['NGN', 'BTC', 'BNB'], ['IOTX', 'BTC', 'ETH']]
 
-  //   let trades = Generate.sequentialTrades(coinSet, markets, tickers)
-  // let setOfSymbols = Array.from(new Set(flatten(tradeSymbols)))
-  // let tickers = await exchange.fetchTickers()
+// exchange.loadMarkets().then(async markets => {
+//   let coins = getCombs(markets)
 
-  // for (let coinSet of coins) {
-  //   let arb = new Arb(trades)
-  //   let arbRate = arb.getArbFromSequence(10000)
-  //   console.log(arbRate)
-  // }
-})
+//   tradeSymbols = coins.map((coinSet) => {
+//     return Generate.sequentialSymbols(coinSet, markets)
+//   })
+
+//   let setOfSymbols = Array.from(new Set(flatten(tradeSymbols)))
+
+//   let calls = setOfSymbols.map(async ticker => {
+//     return exchange.fetchTicker(ticker)
+//   })
+
+//   let tickers = await Promise.all(calls)
+//   let tickersObj = {}
+
+//   for (let ticker of tickers) {
+//     tickersObj[ticker.symbol] = ticker
+//   }
+
+//   for (let coinSet of coins) {
+//     let trades = Generate.sequentialTrades(coinSet, markets, tickersObj)
+//     let arb = new Arb(trades)
+//     let arbRate = arb.fromSequence(10000)
+//   }
+// })
 
 
 

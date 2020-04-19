@@ -52,7 +52,7 @@ class Arb {
     return Calculate.relativeDifference(startAmount, outcome4)
   }
 
-  getArbFromSequence(startAmount) {
+  fromSequence(startAmount) {
     let firstOutcome
     let firstTrade = this.sequentialTrades[0]
     let price 

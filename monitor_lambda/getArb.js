@@ -175,7 +175,6 @@ function sleep(ms) {
 let recipients = ['admin@afriex.co', 'scrapyscraperng@gmail.com']
 
 async function test(ex, data) {
-  
   let exchange = new ccxt[ex]()
   exchange.enableRateLimit = true
   let markets = await exchange.loadMarkets()
