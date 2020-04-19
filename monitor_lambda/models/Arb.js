@@ -4,8 +4,8 @@ const MonitorRest = require('./MonitorRest')
 class Arb {
   constructor(sequentialTrades) {
     this.sequentialTrades = sequentialTrades
-    // console.log(sequentialTrades)
     this.outcomes = []
+    this.arbRate = this.fromSequence()
   }
 
   
@@ -52,10 +52,9 @@ class Arb {
     return Calculate.relativeDifference(startAmount, outcome4)
   }
 
-  fromSequence(startAmount) {
+  fromSequence(startAmount = 1000) {
     let firstOutcome
     let firstTrade = this.sequentialTrades[0]
-    console.log(firstTrade)
     let price 
 
     if (firstTrade.side == "buy") {
@@ -85,8 +84,7 @@ class Arb {
     }
 
     let arbRate = Calculate.relativeDifference(startAmount, this.outcomes[this.outcomes.length - 1])
-    // console.log(`Predicted Profit: ${arbRate}%, Sequence: ${startAmount} ${this.sequentialTrades[0].from} =>  ${this.outcomes[0]} ${this.sequentialTrades[0].to}  => ${this.outcomes[1]} ${this.sequentialTrades[1].to} => ${this.outcomes[2]} ${this.sequentialTrades[2].to} => ${this.outcomes[3]} ${this.sequentialTrades[0].from}`)
-    console.log(arbRate)
+    console.log(`Predicted Profit: ${arbRate}%, Sequence: ${startAmount} ${this.sequentialTrades[0].from} =>  ${this.outcomes[0]} ${this.sequentialTrades[0].to}  => ${this.outcomes[1]} ${this.sequentialTrades[1].to} => ${this.outcomes[2]} ${this.sequentialTrades[2].to} => ${this.outcomes[3]} ${this.sequentialTrades[0].from}`)
     return arbRate
   }
 

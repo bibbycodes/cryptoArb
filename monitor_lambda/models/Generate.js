@@ -76,7 +76,6 @@ class Generate {
       }
 
       let trade = Validate.correctPair(markets, from, to)
-      
       if (trade) {
         trade = Parse.trade(trade, from, to)
         let tradeInstance = new Trade(trade, tickers)

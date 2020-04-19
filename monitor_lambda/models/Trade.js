@@ -9,7 +9,7 @@ class Trade {
     this.change =  tickers[this.symbol].change
     this.baseVolume = tickers[this.symbol].baseVolume
     this.quoteVolume = tickers[this.symbol].quoteVolume
-    this.setFee()
+    // this.setFee()
   }
 
   setFee() {
