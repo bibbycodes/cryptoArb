@@ -100,7 +100,6 @@ let newSet = Array.from(new Set(topByMarketCap.concat(topCurrencies)))
 let comb = Combinatorics.combination(largeSet, numCoins);
 let combinations = []
 while(a = comb.next()) {
-  // combinations.push(a)
   perm = Combinatorics.permutation(a)
   while(b = perm.next()) {
     combinations.push(b)

@@ -170,10 +170,6 @@ class Generate {
     return { trade1, trade2, trade3, trade4}
   }
 
-  //  for a set of letters
-  //  find all possible subsets
-  //  whose length is four
-  //  and consists of unique elements
   static combination(set) {
     // set = set.slice(0,15)
     let foundSets = []
