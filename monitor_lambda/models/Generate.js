@@ -77,10 +77,11 @@ class Generate {
 
       let trade = Validate.correctPair(markets, from, to)
       if (trade) {
+        // move this line into Trade.js?
         trade = Parse.trade(trade, from, to)
         let tradeInstance = new Trade(trade, tickers)
         tradesArray.push(tradeInstance)
-      }
+        }
     }
     return tradesArray
   }
@@ -118,6 +119,8 @@ class Generate {
       // console.log("Not Viable")
       throw new Error("Trade not Viable")
     }
+
+    // if trade.from == trade.base => trade.side = sell
 
     let trade1 = {
       // buy bitcoin with euro

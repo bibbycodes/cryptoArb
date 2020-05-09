@@ -1,7 +1,7 @@
 class Calculate {
-  static relativeDifference(source, destination) {
-    let difference = destination - source
-    let relativeDifference = ((difference / source) * 100).toFixed(2)
+  static relativeDifference(sourceAmount, destinationAmount) {
+    let difference = destinationAmount - sourceAmount
+    let relativeDifference = ((difference / sourceAmount) * 100).toFixed(2)
     return relativeDifference
   }
 
@@ -12,9 +12,6 @@ class Calculate {
     return tradeAmount - (tradeAmount * fee)
   }
 
-  circularArbRate(trade) {
-
-  }
 }
 
 module.exports = Calculate

@@ -49,12 +49,14 @@ class Parse {
   }
 
   static trade(trade, from, to) {
+    // let side = Validate.side(from, trade.base)
     let side
     if (from == trade.base) {
-      side = "buy"
-    } else {
       side = "sell"
+    } else {
+      side = "buy"
     }
+    
     let tr = {
       // buy bitcoin with euro
       symbol : trade.symbol,

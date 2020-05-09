@@ -206,6 +206,62 @@ class Format {
     return `INSERT INTO arb_rates (${columnsString}) VALUES (${valuesString})`
   }
 
+  static dbArbString(arbObj, exchange) {
+    let coins = []
+    let asks = []
+    let bids = []
+    let pairs = []
+    let outcomes = arbObj.outcomes
+    let timestamp = Date.now()
+
+    let columns = [
+      'timestamp', 'exchange', 'arb_rate',
+      'coin_1', 'coin_2', 'coin_3', 'coin_4', 
+      'trade_1_ask', 'trade_1_bid', 'trade_1_pair', 'outcome_1',
+      'trade_2_ask', 'trade_2_bid', 'trade_2_pair', 'outcome_2',
+      'trade_3_ask', 'trade_3_bid', 'trade_3_pair', 'outcome_3',
+      'trade_4_ask', 'trade_4_bid', 'trade_4_pair', 'outcome_4'
+    ]
+
+    let valuesString = ""
+    let columnsString = ""
+    let values = [
+      timestamp, exchange, arbObj.arbRate
+    ]
+    
+    for (let trade of arbObj.sequentialTrades) {
+      coins.push(trade.from)
+      asks.push(trade.ask)
+      bids.push(trade.bid)
+      pairs.push(trade.symbol)
+    }
+
+    values = values.concat(coins)
+
+    for(let i = 0; i < 4; i++) {
+      values.push(asks[i])
+      values.push(bids[i])
+      values.push(pairs[i])
+      values.push(outcomes[i])
+    }
+
+    for (let i = 0; i < values.length; i++) {
+      if (typeof values[i] == "string") {
+        values[i] = `'${values[i]}'`
+      }
+
+      if (i == values.length - 1) {
+        valuesString += `${values[i]}`
+        columnsString += `${columns[i]}`
+      } else {
+        valuesString += `${values[i]},`
+        columnsString += `${columns[i]},`
+      }
+    }
+
+    return `INSERT INTO arb_rates (${columnsString}) VALUES (${valuesString})`
+  }
+
   
 }
 

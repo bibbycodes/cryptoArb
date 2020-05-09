@@ -246,9 +246,6 @@ async function run(exchanges, trades) {
 // // }
 
 
-
-
-
 // .then(async result => {
   //   let rates = result.rates
   //   let arbRate = result.arbRate

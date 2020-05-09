@@ -1,4 +1,4 @@
-const ccxt =require('ccxt')
+const ccxt = require('ccxt')
 const Calculate = require('./Calculate')
 
 class Trade {
@@ -9,8 +9,8 @@ class Trade {
     this.change =  tickers[this.symbol].change
     this.baseVolume = tickers[this.symbol].baseVolume
     this.quoteVolume = tickers[this.symbol].quoteVolume
-    console.log(`side: ${this.side}, base: ${this.base}, quote: ${this.quote}, ${this.symbol}, price: ${this.side == 'sell' ? this.bid : this.ask}`)
-    
+    this.spread = Math.abs(Calculate.relativeDifference(this.ask, this.bid))
+    // console.log(`side: ${this.side}, base: ${this.base}, quote: ${this.quote}, ${this.symbol}, using: ${this.side == 'sell' ? "bid" : "ask"}, ask ${this.ask}, bid ${this.bid} spread: ${this.spread}`)
   }
 
   setFee() {
@@ -23,7 +23,7 @@ class Trade {
 
   getAmount(previousAmount) {
     if (this.from == this.base) {
-      return previousAmount * this.side == 'sell' ? this.bid : this.ask
+      return this.side == 'sell' ? previousAmount * this.bid : this.ask
     } else {
       return previousAmount
     }

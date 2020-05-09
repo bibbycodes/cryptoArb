@@ -20,10 +20,11 @@ class Validate {
   }
 
   static side(from, base) {
+    console.log("Getting side")
     if (from == base) {
-      return "Buy"
+      return "sell"
     }
-    return "Sell"
+    return "buy"
   }
 
   static switchPairs(pair) {
