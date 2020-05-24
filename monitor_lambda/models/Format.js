@@ -259,10 +259,8 @@ class Format {
       }
     }
 
-    return `INSERT INTO arb_rates (${columnsString}) VALUES (${valuesString})`
+    return `INSERT INTO arb_rates_2 (${columnsString}) VALUES (${valuesString})`
   }
-
-  
 }
 
 module.exports = Format

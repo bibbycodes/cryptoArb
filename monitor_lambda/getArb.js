@@ -2,261 +2,91 @@ const Arb = require('./models/Arb')
 const dbConn = require('./models/dbConn')
 const ccxt = require('ccxt')
 const Email = require('./models/Email')
-const Fetch = require('./models/Fetch')
+const Combinatorics = require('js-combinatorics');
 const Generate = require('./models/Generate')
 const Format = require('./models/Format')
+const flatten = require('array-flatten').flatten
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-  let viableTrades = [ 
-    [ 'XRP', 'SNT', 'ETH', 'BTC' ],
-    [ 'XRP', 'SNT', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'XRP', 'SNT' ],
-    [ 'ETH', 'BTC', 'SNT', 'XRP' ],
-    [ 'BTC', 'ETH', 'XRP', 'SNT' ],
-    [ 'BTC', 'ETH', 'SNT', 'XRP' ],
-    [ 'SNT', 'XRP', 'ETH', 'BTC' ],
-    [ 'SNT', 'XRP', 'BTC', 'ETH' ],
-    [ 'LTC', 'SNT', 'ETH', 'BTC' ],
-    [ 'LTC', 'SNT', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'LTC', 'SNT' ],
-    [ 'ETH', 'BTC', 'SNT', 'LTC' ],
-    [ 'BTC', 'ETH', 'LTC', 'SNT' ],
-    [ 'BTC', 'ETH', 'SNT', 'LTC' ],
-    [ 'SNT', 'LTC', 'ETH', 'BTC' ],
-    [ 'SNT', 'LTC', 'BTC', 'ETH' ],
-    [ 'LTC', 'XRP', 'ETH', 'BTC' ],
-    [ 'LTC', 'XRP', 'BTC', 'ETH' ],
-    [ 'XRP', 'LTC', 'ETH', 'BTC' ],
-    [ 'XRP', 'LTC', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'LTC', 'XRP' ],
-    [ 'ETH', 'BTC', 'XRP', 'LTC' ],
-    [ 'BTC', 'ETH', 'LTC', 'XRP' ],
-    [ 'BTC', 'ETH', 'XRP', 'LTC' ],
-    [ 'EOS', 'SNT', 'ETH', 'BTC' ],
-    [ 'EOS', 'SNT', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'EOS', 'SNT' ],
-    [ 'ETH', 'BTC', 'SNT', 'EOS' ],
-    [ 'BTC', 'ETH', 'EOS', 'SNT' ],
-    [ 'BTC', 'ETH', 'SNT', 'EOS' ],
-    [ 'SNT', 'EOS', 'ETH', 'BTC' ],
-    [ 'SNT', 'EOS', 'BTC', 'ETH' ],
-    [ 'EOS', 'XRP', 'ETH', 'BTC' ],
-    [ 'EOS', 'XRP', 'BTC', 'ETH' ],
-    [ 'XRP', 'EOS', 'ETH', 'BTC' ],
-    [ 'XRP', 'EOS', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'EOS', 'XRP' ],
-    [ 'ETH', 'BTC', 'XRP', 'EOS' ],
-    [ 'BTC', 'ETH', 'EOS', 'XRP' ],
-    [ 'BTC', 'ETH', 'XRP', 'EOS' ],
-    [ 'EOS', 'LTC', 'ETH', 'BTC' ],
-    [ 'EOS', 'LTC', 'BTC', 'ETH' ],
-    [ 'LTC', 'EOS', 'ETH', 'BTC' ],
-    [ 'LTC', 'EOS', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'EOS', 'LTC' ],
-    [ 'ETH', 'BTC', 'LTC', 'EOS' ],
-    [ 'BTC', 'ETH', 'EOS', 'LTC' ],
-    [ 'BTC', 'ETH', 'LTC', 'EOS' ],
-    [ 'LINK', 'SNT', 'ETH', 'BTC' ],
-    [ 'LINK', 'SNT', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'LINK', 'SNT' ],
-    [ 'ETH', 'BTC', 'SNT', 'LINK' ],
-    [ 'BTC', 'ETH', 'LINK', 'SNT' ],
-    [ 'BTC', 'ETH', 'SNT', 'LINK' ],
-    [ 'SNT', 'LINK', 'ETH', 'BTC' ],
-    [ 'SNT', 'LINK', 'BTC', 'ETH' ],
-    [ 'LINK', 'XRP', 'ETH', 'BTC' ],
-    [ 'LINK', 'XRP', 'BTC', 'ETH' ],
-    [ 'XRP', 'LINK', 'ETH', 'BTC' ],
-    [ 'XRP', 'LINK', 'BTC', 'ETH' ],
-    [ 'ETH', 'BTC', 'LINK', 'XRP' ],
-    [ 'ETH', 'BTC', 'XRP', 'LINK' ],
-    [ 'BTC', 'ETH', 'LINK', 'XRP' ],
-    [ 'BTC', 'ETH', 'XRP', 'LINK' ],
-  ]
+exports.func = async () => {
+  console.log("Starting")
 
-  let binanceTrades = [
-    [ 'EUR', 'NGN', 'BTC', 'BNB' ],
-    [ 'NGN', 'EUR', 'BTC', 'BNB' ],
-    [ 'EUR', 'NGN', 'BTC', 'BUSD' ],
-    [ 'NGN', 'EUR', 'BTC', 'BUSD' ],
-    [ 'EUR', 'NGN', 'BUSD', 'BNB' ],
-    [ 'NGN', 'EUR', 'BUSD', 'BNB' ],
-    [ 'EUR', 'NGN', 'BNB', 'BTC' ],
-    [ 'BUSD', 'BNB', 'NGN', 'EUR'],
-    [ 'BNB', 'BTC', 'EUR', 'NGN', ],
-    [ 'NGN', 'EUR', 'BNB', 'BTC' ],
-    [ 'SNT', 'NEO', 'ETH', 'BTC' ],
-    [ 'NEO', 'SNT', 'ETH', 'BTC' ],
-    [ 'BNB', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'BNB', 'ETH', 'BTC' ],
-    [ 'ETH', 'BNB', 'LTC', 'BTC' ],
-    [ 'BTC', 'BNB', 'LTC', 'ETH' ],
-    [ 'NEO', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'NEO', 'ETH', 'BTC' ],
-    [ 'NEO', 'BNB', 'ETH', 'BTC' ],
-    [ 'BNB', 'NEO', 'ETH', 'BTC' ],
-    [ 'ETH', 'NEO', 'BNB', 'BTC' ],
-    [ 'BTC', 'NEO', 'BNB', 'ETH' ],
-    [ 'LTC', 'NEO', 'BNB', 'BTC' ],
-    [ 'LTC', 'NEO', 'BNB', 'ETH' ],
-    [ 'QTUM', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'QTUM', 'ETH', 'BTC' ],
-    [ 'QTUM', 'BNB', 'ETH', 'BTC' ],
-    [ 'BNB', 'QTUM', 'ETH', 'BTC' ],
-    [ 'ETH', 'QTUM', 'BNB', 'BTC' ],
-    [ 'BTC', 'QTUM', 'BNB', 'ETH' ],
-    [ 'LTC', 'QTUM', 'BNB', 'BTC' ],
-    [ 'LTC', 'QTUM', 'BNB', 'ETH' ],
-    [ 'QTUM', 'NEO', 'ETH', 'BTC' ],
-    [ 'NEO', 'QTUM', 'ETH', 'BTC' ],
-    [ 'QTUM', 'NEO', 'BNB', 'BTC' ],
-    [ 'NEO', 'QTUM', 'BNB', 'BTC' ],
-    [ 'QTUM', 'NEO', 'BNB', 'ETH' ],
-    [ 'NEO', 'QTUM', 'BNB', 'ETH' ],
-    [ 'EOS', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'EOS', 'ETH', 'BTC' ],
-    [ 'EOS', 'BNB', 'ETH', 'BTC' ],
-    [ 'BNB', 'EOS', 'ETH', 'BTC' ],
-    [ 'ETH', 'EOS', 'BNB', 'BTC' ],
-    [ 'BTC', 'EOS', 'BNB', 'ETH' ],
-    [ 'LTC', 'EOS', 'BNB', 'BTC' ],
-    [ 'LTC', 'EOS', 'BNB', 'ETH' ],
-    [ 'EOS', 'NEO', 'ETH', 'BTC' ],
-    [ 'NEO', 'EOS', 'ETH', 'BTC' ],
-    [ 'EOS', 'NEO', 'BNB', 'BTC' ],
-    [ 'NEO', 'EOS', 'BNB', 'BTC' ],
-    [ 'EOS', 'NEO', 'BNB', 'ETH' ],
-    [ 'NEO', 'EOS', 'BNB', 'ETH' ],
-    [ 'EOS', 'QTUM', 'ETH', 'BTC' ],
-    [ 'QTUM', 'EOS', 'ETH', 'BTC' ],
-    [ 'EOS', 'QTUM', 'BNB', 'BTC' ],
-    [ 'QTUM', 'EOS', 'BNB', 'BTC' ],
-    [ 'EOS', 'QTUM', 'BNB', 'ETH' ],
-    [ 'QTUM', 'EOS', 'BNB', 'ETH' ],
-    [ 'SNT', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'SNT', 'ETH', 'BTC' ],
-    [ 'SNT', 'BNB', 'ETH', 'BTC' ],
-    [ 'BNB', 'SNT', 'ETH', 'BTC' ],
-    [ 'SNT', 'NEO', 'ETH', 'BTC' ],
-    [ 'NEO', 'SNT', 'ETH', 'BTC' ],
-    [ 'SNT', 'QTUM', 'ETH', 'BTC' ],
-    [ 'QTUM', 'SNT', 'ETH', 'BTC' ],
-    [ 'SNT', 'EOS', 'ETH', 'BTC' ],
-    [ 'EOS', 'SNT', 'ETH', 'BTC' ],
-    [ 'BNT', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'BNT', 'ETH', 'BTC' ],
-    [ 'BNT', 'BNB', 'ETH', 'BTC' ],
-    [ 'KMD', 'BNB', 'ETH', 'BTC' ],
-    [ 'IOTX', 'BNB', 'ETH', 'BTC' ],
-    [ 'KMD', 'BNB', 'ETH', 'BTC' ],
-    [ 'ZEN', 'BNB', 'ETH', 'BTC' ],
-    [ 'NKN', 'ETH', 'BTC', 'BNB' ],
-    [ 'NKN', 'LTC', 'BTC', 'BNB' ],
-    [ 'NKN', 'ETH', 'BTC', 'BNB' ],
-    [ 'KMD', 'BNB', 'ETH', 'BTC' ],
-    [ 'IOTX', 'LTC', 'BTC', 'ETH' ],
-    [ 'SOL', 'LTC', 'BNB', 'BTC' ],
-    [ 'NKN', 'LTC', 'BNB', 'BTC' ],
-    [ 'ARK', 'BNB', 'BTC', 'ETH' ],
-    [ 'NEO', 'BNT', 'ETH', 'BTC' ],
-    [ 'BNT', 'QTUM', 'ETH', 'BTC' ],
-    [ 'QTUM', 'BNT', 'ETH', 'BTC' ],
-    [ 'BNT', 'EOS', 'ETH', 'BTC' ],
-    [ 'EOS', 'BNT', 'ETH', 'BTC' ],
-    [ 'BNT', 'SNT', 'ETH', 'BTC' ],
-    [ 'SNT', 'BNT', 'ETH', 'BTC' ],
-    [ 'USDT', 'LTC', 'ETH', 'BTC' ],
-    [ 'LTC', 'USDT', 'ETH', 'BTC' ],
-  ]
+  async function getArbs(exchange, setOfCombinations) {
+    console.log("inside get Arbs")
+    exchange.loadMarkets().then(async markets => {
+      console.log("loading markets")
+      let coinSequence = []
+      let arrayOfSequentialTradeSymbols = setOfCombinations.map((coinSet) => {
+        console.log("sequential trade symbol[0]", arrayOfSequentialTradeSymbols[0])
+        let tradeSymbols = Generate.sequentialSymbols(coinSet, markets)     
+        if (tradeSymbols) {
+          coinSequence.push(coinSet)
+          return tradeSymbols
+        }
+      }).filter(item => item != null)
 
-let recipients = ['admin@afriex.co', 'scrapyscraperng@gmail.com']
-
-async function test(ex, data) {
-  let exchange = new ccxt[ex]()
-  exchange.enableRateLimit = true
-  let markets = await exchange.loadMarkets()
-  for (let trade of data) {
-    await sleep(3000);
-
-    let tradePairs = Generate.validatedTradePairs(trade[0], trade[1], trade[2], trade[3], markets)
-    let arb = new Arb(tradePairs)
-
-    arb.getRates(ex)
-      .then(rates => {
-        let arbRate = arb.getArb(1000)
-        console.log(`Arb Rate: ${arbRate[0]}%`, `Coins: ${trade}`)
-        return {rates, arbRate, tradePairs}
+      console.log("Coin Sequence: ", coinSequence)
+      let setOfSymbols = Array.from(new Set(flatten(arrayOfSequentialTradeSymbols)))
+      
+      // Get set of async calls to fetch tickers
+      let calls = setOfSymbols.map(async ticker => {
+        return exchange.fetchTicker(ticker)
       })
-      .then(async result => {
-        let rates = result.rates
-        let arbRate = result.arbRate
-        let tradePairs = result.tradePairs
-        let queryString = Format.arbDbString(trade[0], trade[1], trade[2], trade[3], rates, arbRate)
+      
+      // Fetch all tickers in Parallel
+      let tickers = await Promise.all(calls)
+      console.log("tickers: ", tickers)
+      
+      // Convert Tickers to hash with symbols as keys
+      let tickersObj = {}
+      for (let ticker of tickers) {
+        tickersObj[ticker.symbol] = ticker
+      }
+
+      console.log("tickersObj:", tickersObj)
+    
+      // Generate Trade Instances using tickers (Each trade instance has prices and market details)
+      let tradeSequences = coinSequence.map((coinSet) => {
+        return Generate.sequentialTrades(coinSet, markets, tickersObj)
+      })
+  
+      for (let tradeSequence of tradeSequences) {
+        let arb = new Arb(tradeSequence, 1000)
+        let dbString = Format.dbArbString(arb, 'binance')
         let db = new dbConn()
-        await db.query(queryString)
-        return { rates, arbRate, tradePairs }
-      })
-      .catch(err => console.log(err.message))
+        console.log("db Query:", dbString)
+        await db.query(dbString)
+      }
+    })
   }
+  
+  async function intrestingArbs(numOfTrades) {
+    console.log("inside interesting arbs")
+    let exchange = new ccxt['binance']()
+    let topByMarketCap = ['ETH', 'BTC', 'XRP', 'BCH', 'LTC', 'BNB', 'EOS', 'XZT', 'LINK', 'XMR', 'XLM', 'ADA', 'TRX', 'DASH', 'ETC', 'ALGO', 'NEO', 'ATOM', 'IOTA', 'XEM', 'ONT', 'FFT', 'DOGE', 'ZEC']
+    let topCurrencies = ["NGN", "RUB", "BUSD", "EUR", "TRY", "USDT", "ZAR", "IDRT", "BKRW", "USDC", "PAX"]
+    let setOfCoins = Array.from(new Set(topByMarketCap.concat(topCurrencies))).slice(0,10)
+    let comb = Combinatorics.bigCombination(setOfCoins, numOfTrades);
+    let combinations = []
+    
+    while(a = comb.next()) {
+      perm = Combinatorics.permutation(a)
+      while(b = perm.next()) {
+        combinations.push(b)
+      };
+    };
+    
+    console.log("getting arbs")
+    await getArbs(exchange, combinations)
+  }
+
+  await intrestingArbs(4)
+  console.log("Ending")
 }
 
-async function run(exchanges, trades) {
-  for (let exchange of exchanges) {
-    await test(exchange, trades).then(console.log("Done"))
-  }
-}
-
-// let exchange = new ccxt['binance']()
-
-// exchange.loadMarkets().then(async markets => {
-//   // let coins = ['LTC', 'BTC', 'BNB', 'ETH']
-//   listOfSequentialTrades = []
-//   let tickers = await exchange.fetchTickers(tradeSymbols)
-//   for (let coins of binanceTrades) {
-//     let tradeSymbols = Generate.sequentialSymbols(coins, markets)
-//     listOfSequentialTrades.push(tradeSymbols)
-//   }
-//   for (let coins of binanceTrades) {
-//     let trades = Generate.sequentialTrades(coins, markets, tickers)
-//     let arb = new Arb(trades)
-//     let arbRate = arb.getArbFromSequence(10000)
-//     console.log(arbRate)
-//   }
-// })
-
-// exports.func = () => {
-  // run(['bittrex', 'binance'], viableTrades)
-  // run(['binance'], [['XRP', 'SNT', 'BTC', 'ETH']])
-// }
-
-// exports.volatile = async () => {
-//   Fetch.viableVolatileTrades('binance')
-//     .then(trades => {
-//       run(['binance'], trades)
-//       return trades
-//     })
-//     .then(trades => {
-//       run(['bittrex'], trades)
-//       return trades
-//     })
-//     .catch(err => console.log(err))
-// // }
-
-
-// .then(async result => {
-  //   let rates = result.rates
-  //   let arbRate = result.arbRate
-  //   let tradePairs = result.tradePairs
-  //   let queryString = Format.arbDbString(trade[0], trade[1], trade[2], trade[3], rates, arbRate)
-  //   let db = new dbConn()
-  //   await db.query(queryString)
-//   let endTime = Date.now()
-//   console.log(`Time elapsed for ${trade}: ${endTime - startTime}ms`)
-//   return { rates, arbRate, tradePairs }
-// })
 // .then(async res => {
 //   let message = `ArbRate: ${res.arbRate[0]} \n TradePairs: ${JSON.stringify(res.tradePairs)} \n Rates: ${JSON.stringify(res.rates)}`
 //   await Email.send('arb@afriex.co', 'ARBRATE', recipients, `BUSD EUR NGN: ${res.arbRate}`, message)

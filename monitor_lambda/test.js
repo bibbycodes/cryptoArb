@@ -4,6 +4,7 @@ const Arb = require('./models/Arb')
 const Format = require('./models/Format')
 const flatten = require('array-flatten').flatten
 const Combinatorics = require('js-combinatorics');
+const dbConn = require('./models/dbConn')
 
 let binanceTrades = [
   ['ETH', 'SNT', 'BTC' ],
@@ -171,9 +172,9 @@ async function getArbs(exchange, setOfCombinations) {
 
     for (let tradeSequence of tradeSequences) {
       let arb = new Arb(tradeSequence, 1000)
-      console.log(arb.arbString)
       let dbString = Format.dbArbString(arb, 'binance')
-      console.log(dbString)
+      let db = new dbConn()
+      await db.query(dbString)
     }
   })
 }
